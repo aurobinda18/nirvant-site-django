@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    
     <style>
         /* ================= RESET & GLOBAL ================= */
         * {
@@ -339,6 +342,15 @@
             }
         }
         
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        
         /* ================= GENERIC SECTIONS ================= */
         section {
             padding: 6rem 0;
@@ -434,7 +446,7 @@
             padding: 2.5rem 2rem;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(249, 115, 22, 0.1);
             opacity: 0;
             transform: translateY(20px);
@@ -449,8 +461,9 @@
         .offer-card:nth-child(3).animated { animation-delay: 0.6s; }
         
         .offer-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(249, 115, 22, 0.3);
         }
         
         .offer-icon {
@@ -470,6 +483,56 @@
             line-height: 1.6;
         }
         
+        /* ================= WHY CHOOSE NIRVANT SECTION ================= */
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        
+        .why-choose-card {
+            background: #fffef6;
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .why-choose-card.animated {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .why-choose-card:nth-child(1).animated { animation-delay: 0.2s; }
+        .why-choose-card:nth-child(2).animated { animation-delay: 0.4s; }
+        .why-choose-card:nth-child(3).animated { animation-delay: 0.6s; }
+        
+        .why-choose-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        
+        .why-choose-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .why-choose-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #0f172a;
+        }
+        
+        .why-choose-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
         /* ================= TEAM ================= */
         .team-grid {
             display: grid;
@@ -483,7 +546,7 @@
             padding: 2.5rem 2rem;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(249, 115, 22, 0.1);
             opacity: 0;
             transform: translateY(20px);
@@ -498,8 +561,9 @@
         .team-card:nth-child(3).animated { animation-delay: 0.6s; }
         
         .team-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(249, 115, 22, 0.3);
         }
         
         .team-avatar {
@@ -538,101 +602,7 @@
             font-size: 0.95rem;
         }
         
-        /* ================= NEET ================= */
-        .neet-section {
-            background: #0f172a;
-            color: #fff;
-            border-radius: 30px;
-            margin: 0 2rem 4rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s ease-out;
-        }
-        
-        .neet-section.animated {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .neet-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-        
-        .neet-highlights {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-        
-        .neet-highlights li {
-            padding: 0.8rem 0;
-            font-size: 1.1rem;
-            position: relative;
-            padding-left: 2rem;
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        
-        .neet-highlights li.animated {
-            animation: fadeInRight 0.5s ease-out forwards;
-        }
-        
-        .neet-highlights li:nth-child(1).animated { animation-delay: 0.2s; }
-        .neet-highlights li:nth-child(2).animated { animation-delay: 0.4s; }
-        .neet-highlights li:nth-child(3).animated { animation-delay: 0.6s; }
-        .neet-highlights li:nth-child(4).animated { animation-delay: 0.8s; }
-        .neet-highlights li:nth-child(5).animated { animation-delay: 1s; }
-        .neet-highlights li:nth-child(6).animated { animation-delay: 1.2s; }
-        
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .neet-highlights li::before {
-            content: "✔";
-            color: #facc15;
-            position: absolute;
-            left: 0;
-            font-weight: bold;
-        }
-        
-        .neet-price {
-            font-size: 2.5rem;
-            color: #facc15;
-            margin: 1.5rem 0;
-            font-weight: 800;
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        
-        .neet-price.animated {
-            animation: fadeInUp 0.6s ease-out 0.8s forwards, pulse 2s infinite 2s;
-        }
-        
-        .neet-desc {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #cbd5e1;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease-out;
-        }
-        
-        .neet-section.animated .neet-desc {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* ================= BACKGROUND FOR NIRVANT CIRCLE ================= */
+        /* ================= BACKGROUND FOR NEET & NIRVANT CIRCLE ================= */
         .background-section {
             background: radial-gradient(circle at top, #ffe7c2 0%, #ffffff 40%, #fff7e6 100%);
             padding: 4rem 0;
@@ -642,6 +612,7 @@
             align-items: center;
             justify-content: center;
             z-index: 0;
+            overflow: hidden;
         }
         
         .background-section::before {
@@ -658,6 +629,174 @@
             z-index: 0;
         }
 
+        /* ================= NEET SECTION (NEW DESIGN - LIKE NIRVANT CIRCLE) ================= */
+        .neet-section {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            max-width: 1100px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            opacity: 1;
+            transform: none;
+            transition: all 0.8s ease-out;
+            overflow: hidden;
+        }
+        
+        .neet-container {
+            padding: 3rem 2.5rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .neet-content {
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .neet-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 1.2rem;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .neet-tagline {
+            font-size: 1.2rem;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .neet-highlights {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .neet-highlights li {
+            padding: 0.6rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            position: relative;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .neet-highlights li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.6rem;
+            line-height: 1;
+        }
+        
+        .neet-price-container {
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .neet-price-text {
+            font-size: 1.8rem;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .neet-price {
+            font-size: 1.8rem;
+            color: #0f172a;
+            font-weight: 900;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .neet-price-currency {
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 1.8rem;
+        }
+
+        .neet-price-number {
+            color: #0f172a;
+            font-weight: 900;
+        }
+        
+        .neet-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .neet-benefits {
+            background: #ffffff;
+            padding: 2.3rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .neet-benefits-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+        }
+        
+        .neet-benefits-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .neet-benefits-list li {
+            padding: 0.8rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            position: relative;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .neet-benefits-list li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.8rem;
+            line-height: 1;
+        }
+        
+        .neet-benefits-desc {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        
         /* ================= NIRVANT CIRCLE SECTION ================= */
         .nirvant-circle-section {
             background: transparent;
@@ -783,7 +922,9 @@
             font-size: 1.05rem;
             color: #475569;
             position: relative;
-            padding-left: 2rem;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
         }
         
         .benefits-list li::before {
@@ -792,7 +933,9 @@
             font-weight: bold;
             position: absolute;
             left: 0;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            top: 0.8rem;
+            line-height: 1;
         }
         
         .benefits-link {
@@ -956,6 +1099,17 @@
         }
         
         /* ================= RESPONSIVE ================= */
+        @media (max-width: 1200px) {
+            .neet-title {
+                font-size: 2.5rem;
+            }
+            
+            .neet-container,
+            .nirvant-circle-container {
+                gap: 2.5rem;
+            }
+        }
+        
         @media (max-width: 992px) {
             .logo-img {
                 height: 120px;
@@ -987,13 +1141,28 @@
                 text-align: center;
             }
 
+            .neet-container,
             .nirvant-circle-container {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 2rem;
             }
 
+            .neet-content,
             .nirvant-circle-content {
                 text-align: center;
+            }
+            
+            .neet-title {
+                font-size: 2.3rem;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.6rem;
             }
             
             .circle-input-group {
@@ -1067,15 +1236,6 @@
                 margin: 1rem auto 2rem;
             }
             
-            .neet-section {
-                margin: 0 1rem 3rem;
-            }
-            
-            .neet-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
             .background-section {
                 padding: 3rem 1rem;
             }
@@ -1085,18 +1245,32 @@
                 border-radius: 28px;
             }
 
+            .neet-container,
             .nirvant-circle-container {
                 padding: 2.5rem 1.5rem;
-                max-width: 480px;
+                max-width: 100%;
                 margin: 0 auto;
             }
 
-            .nirvant-circle-title {
-                font-size: 2.4rem;
+            .neet-title {
+                font-size: 1.9rem;
+                line-height: 1.3;
+                word-break: break-word;
+                hyphens: auto;
             }
             
+            .nirvant-circle-title {
+                font-size: 2.2rem;
+            }
+            
+            .neet-tagline,
             .nirvant-circle-tagline {
                 font-size: 1.05rem;
+                line-height: 1.5;
+            }
+            
+            .nirvant-circle-tagline br {
+                display: block;
             }
             
             .circle-input-group {
@@ -1110,8 +1284,28 @@
                 max-width: 320px;
             }
             
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.4rem;
+            }
+            
+            .neet-highlights li,
+            .neet-benefits-list li,
             .benefits-list li {
                 font-size: 0.98rem;
+                padding-left: 1.5rem;
+                align-items: flex-start;
+                padding-top: 0.5rem;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                font-size: 1rem;
+                left: 0;
+                top: 0.5rem;
+                position: absolute;
             }
 
             .footer-content {
@@ -1148,11 +1342,13 @@
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 0.8rem;
             }
             
             .btn {
                 width: 100%;
                 max-width: 300px;
+                padding: 12px 24px;
             }
             
             .hero-img {
@@ -1198,19 +1394,37 @@
                 border-radius: 24px;
             }
 
+            .neet-container,
             .nirvant-circle-container {
-                padding: 2.2rem 1.2rem 2.4rem;
-                max-width: 360px;
+                padding: 2rem 1.2rem;
+                max-width: 100%;
             }
 
-            .nirvant-circle-title {
-                font-size: 2.1rem;
+            .neet-title {
+                font-size: 1.7rem;
+                line-height: 1.35;
+                margin-bottom: 0.8rem;
+                hyphens: auto;
+                word-break: break-word;
             }
             
+            .nirvant-circle-title {
+                font-size: 1.9rem;
+            }
+            
+            .neet-tagline,
             .nirvant-circle-tagline {
                 font-size: 0.98rem;
+                line-height: 1.5;
             }
-
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.2rem;
+                animation: float 2.5s ease-in-out infinite;
+            }
+            
             .circle-input-group {
                 gap: 0.6rem;
             }
@@ -1218,31 +1432,157 @@
             .circle-email-input,
             .circle-subscribe-btn {
                 max-width: 100%;
+                padding: 12px 18px;
+            }
+            
+            .circle-subscribe-btn {
+                padding: 12px 24px;
             }
 
-            .circle-benefits {
+            .circle-benefits,
+            .neet-benefits {
                 margin-top: 1.8rem;
-                padding: 1.8rem 1.4rem;
+                padding: 1.5rem 1.2rem;
             }
 
-            .benefits-title {
+            .benefits-title,
+            .neet-benefits-title {
                 font-size: 1.25rem;
             }
             
-            .nirvant-circle-title {
-                font-size: 2rem;
+            .neet-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
             }
             
+            .neet-buttons .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .neet-highlights li,
+            .neet-benefits-list li,
             .benefits-list li {
-                font-size: 0.96rem;
+                font-size: 0.92rem;
+                padding: 0.5rem 0;
+                padding-left: 1.5rem;
+                align-items: flex-start;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                font-size: 0.95rem;
+                top: 0.5rem;
+                left: 0;
+                position: absolute;
+            }
+            
+            .nirvant-circle-tagline {
+                display: block;
+            }
+            
+            .nirvant-circle-tagline br {
+                display: block;
+                content: "";
+                margin-bottom: 0.3rem;
             }
 
             .footer-bottom {
                 align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
             }
 
             .footer-bottom-right {
                 text-align: left;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .neet-title {
+                font-size: 1.55rem;
+                line-height: 1.4;
+                word-break: break-word;
+                hyphens: auto;
+            }
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.1rem;
+            }
+            
+            .neet-buttons .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .neet-tagline {
+                font-size: 0.9rem;
+            }
+            
+            .neet-highlights li,
+            .neet-benefits-list li {
+                font-size: 0.85rem;
+                padding-left: 1.3rem;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before {
+                font-size: 0.9rem;
+                top: 0.45rem;
+            }
+            
+            .nirvant-circle-tagline {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+        }
+        
+        /* Fix for tick symbol alignment on all devices */
+        .neet-highlights li,
+        .neet-benefits-list li,
+        .benefits-list li {
+            position: relative;
+            padding-left: 1.8rem;
+        }
+        
+        .neet-highlights li::before,
+        .neet-benefits-list li::before,
+        .benefits-list li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.6rem;
+            line-height: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                top: 0.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .neet-highlights li,
+            .neet-benefits-list li,
+            .benefits-list li {
+                padding-left: 1.5rem;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                top: 0.45rem;
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -1260,6 +1600,7 @@
             <a href="#home" class="active">Home</a>
             <a href="#mission">Mission</a>
             <a href="#offers">Offers</a>
+            <a href="#why-choose">Why Choose Us</a>
             <a href="#team">Team</a>
             <a href="#neet">NEET</a>
             <a href="#nirvant-circle">Join</a>
@@ -1337,6 +1678,32 @@
     </div>
 </section>
 
+<!-- WHY CHOOSE NIRVANT -->
+<section id="why-choose">
+    <div class="container">
+        <div class="section-header">
+            <h2>Why Choose Nirvant?</h2>
+        </div>
+        <div class="why-choose-grid">
+            <div class="why-choose-card" id="why1">
+                <div class="why-choose-icon">🧠</div>
+                <h3>Expert Team</h3>
+                <p>Highly qualified mentors, wellness coaches, and tech specialists dedicated to your success.</p>
+            </div>
+            <div class="why-choose-card" id="why2">
+                <div class="why-choose-icon">🌐</div>
+                <h3>Holistic Approach</h3>
+                <p>We combine wellness, education, and career growth seamlessly for balanced development.</p>
+            </div>
+            <div class="why-choose-card" id="why3">
+                <div class="why-choose-icon">⚡</div>
+                <h3>Innovative Tools</h3>
+                <p>Tech-driven solutions to track your progress and enhance learning with modern methodologies.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- TEAM -->
 <section id="team">
     <div class="container">
@@ -1366,31 +1733,48 @@
     </div>
 </section>
 
-<!-- NEET -->
-<section class="neet-section" id="neet">
-    <div class="container">
-        <div class="section-header">
-            <h2 style="color: white;">NEET 2026 Program</h2>
-        </div>
-        <div class="neet-content">
-            <div>
+<!-- NEET - NEW DESIGN LIKE NIRVANT CIRCLE -->
+<div class="background-section">
+    <div class="neet-section" id="neet">
+        <div class="neet-container">
+            <div class="neet-content">
+                <h2 class="neet-title">NEET 2026 Complete Mentorship Program</h2>
+                <p class="neet-tagline">Personalized guidance, 1-on-1 mentorship, live doctor sessions, week-wise study plans, and complete NEET preparation — all in one course.</p>
+                
                 <ul class="neet-highlights">
-                    <li id="highlight1">1-on-1 mentorship with medical experts</li>
-                    <li id="highlight2">Live interactive sessions with doctors</li>
-                    <li id="highlight3">Personalized weekly study plans</li>
-                    <li id="highlight4">Comprehensive test series and analysis</li>
-                    <li id="highlight5">Doubt clearing sessions</li>
-                    <li id="highlight6">Mental wellness support</li>
+                    <li>1-on-1 mentorship</li>
+                    <li>Live doctor sessions</li>
+                    <li>Week-wise study plans</li>
+                    <li>Mock tests & reports</li>
                 </ul>
-                <div class="neet-price" id="neetPrice">₹3500</div>
-                <a class="btn btn-primary" href="#nirvant-circle">Enroll Now</a>
+                
+                <div class="neet-buttons">
+                    <a class="btn btn-primary" href="#nirvant-circle">Email Now</a>
+                    <a class="btn btn-secondary" href="#offers">Learn More</a>
+                </div>
+                
+                <div class="neet-price-container">
+                    <span class="neet-price-text">from</span>
+                    <span class="neet-price">
+                        <span class="neet-price-currency">₹</span>
+                        <span class="neet-price-number">3500</span>
+                    </span>
+                </div>
             </div>
-            <div>
-                <p class="neet-desc">Our NEET 2026 program provides complete preparation with expert guidance from medical professionals. We combine structured academics with mental wellness support to ensure you're prepared not just academically, but also mentally and emotionally for the challenges ahead.</p>
+            <div class="neet-benefits">
+                <h3 class="neet-benefits-title">What this includes</h3>
+                <ul class="neet-benefits-list">
+                    <li>Personal mentorship & weekly plans</li>
+                    <li>Live expert sessions</li>
+                    <li>Timed mock tests & analytics</li>
+                    <li>Post-NEET counselling</li>
+                </ul>
+                <p class="neet-benefits-desc">Quick overview — view the course page for full details.</p>
+                <a href="#nirvant-circle" class="benefits-link">Enroll Now</a>
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <!-- WHITE–ORANGE BACKGROUND + CENTERED NIRVANT CIRCLE -->
 <div class="background-section">
@@ -1398,7 +1782,7 @@
         <div class="nirvant-circle-container">
             <div class="nirvant-circle-content">
                 <h2 class="nirvant-circle-title">Join the Nirvant Circle</h2>
-                <p class="nirvant-circle-tagline">Weekly reflections, clarity prompts, and growth insights — straight to your inbox.</p>
+                <p class="nirvant-circle-tagline">Weekly reflections, clarity prompts,<br>and growth insights — straight to your inbox.</p>
                 <div class="nirvant-circle-form">
                     <div class="circle-input-group">
                         <input type="email" class="circle-email-input" placeholder="Enter your email" required>
@@ -1430,6 +1814,7 @@
                     <a href="#home">Home</a>
                     <a href="#offers">Courses</a>
                     <a href="#mission">About</a>
+                    <a href="#why-choose">Why Choose Us</a>
                     <a href="#nirvant-circle">Contact</a>
                     <a href="#neet">T&amp;C</a>
                 </div>
@@ -1509,19 +1894,8 @@
             if (rect.top < triggerPoint) {
                 section.classList.add('animated');
                 
-                if (section.classList.contains('neet-section')) {
-                    const highlights = section.querySelectorAll('.neet-highlights li');
-                    highlights.forEach((highlight, index) => {
-                        setTimeout(() => { highlight.classList.add('animated'); }, index * 200);
-                    });
-                    const neetPrice = section.querySelector('.neet-price');
-                    if (neetPrice) {
-                        setTimeout(() => { neetPrice.classList.add('animated'); }, 1400);
-                    }
-                }
-                
-                if (section.id === 'offers' || section.id === 'team') {
-                    const cards = section.querySelectorAll('.offer-card, .team-card');
+                if (section.id === 'offers' || section.id === 'team' || section.id === 'why-choose') {
+                    const cards = section.querySelectorAll('.offer-card, .team-card, .why-choose-card');
                     cards.forEach((card, index) => {
                         setTimeout(() => { card.classList.add('animated'); }, index * 200);
                     });
