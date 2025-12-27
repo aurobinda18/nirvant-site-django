@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ================= RESET & GLOBAL ================= */
         * {
@@ -68,7 +68,6 @@
             height: 100%;
         }
         
-        /* ================= LOGO STYLES (YOUR SIZES) ================= */
         .logo {
             display: flex;
             align-items: center;
@@ -128,7 +127,7 @@
             cursor: pointer;
         }
         
-        /* ================= HERO SECTION (UPDATED: Text Left, Image Right) ================= */
+        /* ================= HERO SECTION ================= */
         .hero {
             min-height: 100vh;
             padding-top: 70px;
@@ -144,39 +143,40 @@
             padding: 0 2rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 3rem;
             align-items: center;
         }
         
         .hero-content {
             position: relative;
             z-index: 2;
+            text-align: left;
         }
         
         .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800; /* KEEP THIS BOLD */
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -0.025em;
             color: #0f172a;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             opacity: 0;
             animation: fadeInUp 1s ease-out 0.2s forwards;
-            letter-spacing: -0.5px; /* ADDED: Slight letter spacing like image */
         }
         
         .hero-tagline {
+            font-size: 1.5rem;
+            color: #1e293b;
             max-width: 550px;
-            font-size: 1.15rem;
-            color: #475569;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            font-weight: 500;
             opacity: 0;
             animation: fadeInUp 1s ease-out 0.4s forwards;
-            line-height: 1.7; /* ADDED: Better line height */
-            font-weight: 400; /* ADDED: Normal weight for paragraph */
         }
         
         .hero-buttons {
-            margin-top: 2rem;
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
@@ -184,7 +184,6 @@
             animation: fadeInUp 1s ease-out 0.6s forwards;
         }
         
-        /* HERO IMAGE - SIMPLE STYLE */
         .hero-image {
             display: flex;
             justify-content: center;
@@ -243,7 +242,13 @@
             margin: 0 2rem 5rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
             opacity: 0;
-            animation: fadeIn 1.2s ease-out 1s forwards;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .mentor-section.animated {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .mentor-content {
@@ -260,6 +265,14 @@
             letter-spacing: 2px;
             margin-bottom: 1rem;
             text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.2s;
+        }
+        
+        .mentor-section.animated .mentor-subtitle {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .mentor-title {
@@ -267,6 +280,14 @@
             font-weight: 800;
             margin-bottom: 1.5rem;
             color: #0f172a;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.4s;
+        }
+        
+        .mentor-section.animated .mentor-title {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .mentor-tagline {
@@ -275,6 +296,14 @@
             font-weight: 500;
             max-width: 600px;
             margin: 0 auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.6s;
+        }
+        
+        .mentor-section.animated .mentor-tagline {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* ================= ANIMATIONS ================= */
@@ -310,9 +339,17 @@
             }
         }
         
-        /* ================= SECTIONS ================= */
+        /* ================= GENERIC SECTIONS ================= */
         section {
             padding: 6rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        section.animated {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .container {
@@ -324,41 +361,64 @@
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        
+        section.animated .section-header {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .section-header h2 {
-            font-size: 2.4rem;
-            font-weight: 800; /* KEEP THIS BOLD */
+            font-size: 3.5rem;
+            font-weight: 900;
             color: #0f172a;
             display: inline-block;
-            letter-spacing: -0.5px; /* ADDED: Match hero title */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            letter-spacing: -0.025em;
         }
         
-        .section-header h2::after {
+        .section-header::after {
             content: "";
-            width: 60px;
-            height: 4px;
-            background: #f97316;
+            width: 112px;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fbbf24);
             display: block;
-            margin: 1rem auto;
-            border-radius: 2px;
+            margin: 1.5rem auto 2.5rem;
+            border-radius: 999px;
+            opacity: 0;
+            transform: scaleX(0);
+            transition: all 0.6s ease-out 0.3s;
         }
         
-        /* ================= MISSION ================= */
+        section.animated .section-header::after {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+        
         .mission-content {
             text-align: center;
-            max-width: 800px;
+            max-width: 48rem;
             margin: 0 auto;
-            color: #475569;
-            font-size: 1.1rem;
-            line-height: 1.8; /* CHANGED: Increased line height */
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.5s;
+        }
+        
+        section.animated .mission-content {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .mission-content p {
-            font-size: 1.1rem;
-            line-height: 1.8; /* CHANGED: Increased line height */
-            color: #475569;
-            font-weight: 400; /* ADDED: Normal weight for paragraph */
+            font-size: 1.5rem;
+            line-height: 1.7;
+            color: #1e293b;
+            font-weight: 500;
         }
         
         /* ================= OFFERS ================= */
@@ -384,17 +444,9 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
         
-        .offer-card:nth-child(1).animated {
-            animation-delay: 0.2s;
-        }
-        
-        .offer-card:nth-child(2).animated {
-            animation-delay: 0.4s;
-        }
-        
-        .offer-card:nth-child(3).animated {
-            animation-delay: 0.6s;
-        }
+        .offer-card:nth-child(1).animated { animation-delay: 0.2s; }
+        .offer-card:nth-child(2).animated { animation-delay: 0.4s; }
+        .offer-card:nth-child(3).animated { animation-delay: 0.6s; }
         
         .offer-card:hover {
             transform: translateY(-8px);
@@ -441,17 +493,9 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
         
-        .team-card:nth-child(1).animated {
-            animation-delay: 0.2s;
-        }
-        
-        .team-card:nth-child(2).animated {
-            animation-delay: 0.4s;
-        }
-        
-        .team-card:nth-child(3).animated {
-            animation-delay: 0.6s;
-        }
+        .team-card:nth-child(1).animated { animation-delay: 0.2s; }
+        .team-card:nth-child(2).animated { animation-delay: 0.4s; }
+        .team-card:nth-child(3).animated { animation-delay: 0.6s; }
         
         .team-card:hover {
             transform: translateY(-8px);
@@ -499,13 +543,15 @@
             background: #0f172a;
             color: #fff;
             border-radius: 30px;
-            margin: 0 2rem;
+            margin: 0 2rem 4rem;
             opacity: 0;
             transform: translateY(20px);
+            transition: all 0.8s ease-out;
         }
         
         .neet-section.animated {
-            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .neet-content {
@@ -533,29 +579,12 @@
             animation: fadeInRight 0.5s ease-out forwards;
         }
         
-        .neet-highlights li:nth-child(1).animated {
-            animation-delay: 0.2s;
-        }
-        
-        .neet-highlights li:nth-child(2).animated {
-            animation-delay: 0.4s;
-        }
-        
-        .neet-highlights li:nth-child(3).animated {
-            animation-delay: 0.6s;
-        }
-        
-        .neet-highlights li:nth-child(4).animated {
-            animation-delay: 0.8s;
-        }
-        
-        .neet-highlights li:nth-child(5).animated {
-            animation-delay: 1s;
-        }
-        
-        .neet-highlights li:nth-child(6).animated {
-            animation-delay: 1.2s;
-        }
+        .neet-highlights li:nth-child(1).animated { animation-delay: 0.2s; }
+        .neet-highlights li:nth-child(2).animated { animation-delay: 0.4s; }
+        .neet-highlights li:nth-child(3).animated { animation-delay: 0.6s; }
+        .neet-highlights li:nth-child(4).animated { animation-delay: 0.8s; }
+        .neet-highlights li:nth-child(5).animated { animation-delay: 1s; }
+        .neet-highlights li:nth-child(6).animated { animation-delay: 1.2s; }
         
         @keyframes fadeInRight {
             from {
@@ -571,7 +600,6 @@
         .neet-highlights li::before {
             content: "✔";
             color: #facc15;
-            margin-right: .5rem;
             position: absolute;
             left: 0;
             font-weight: bold;
@@ -594,166 +622,341 @@
             font-size: 1.1rem;
             line-height: 1.7;
             color: #cbd5e1;
-        }
-        
-        /* ================= NEWSLETTER ================= */
-        .newsletter-box {
-            background: #fffef6;
-            padding: 3.5rem;
-            border-radius: 24px;
-            max-width: 600px;
-            margin: 0 auto;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            border: 1px solid rgba(249, 115, 22, 0.1);
             opacity: 0;
             transform: translateY(20px);
+            transition: all 0.6s ease-out;
         }
         
-        .newsletter-box.animated {
-            animation: fadeInUp 0.8s ease-out forwards;
+        .neet-section.animated .neet-desc {
+            opacity: 1;
+            transform: translateY(0);
         }
         
-        .newsletter-box h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #0f172a;
-        }
-        
-        .newsletter-box p {
-            color: #64748b;
-            margin-bottom: 1.5rem;
-        }
-        
-        .newsletter-form {
+        /* ================= BACKGROUND FOR NIRVANT CIRCLE ================= */
+        .background-section {
+            background: radial-gradient(circle at top, #ffe7c2 0%, #ffffff 40%, #fff7e6 100%);
+            padding: 4rem 0;
+            margin: 0;
+            position: relative;
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
         }
         
-        .newsletter-input {
+        .background-section::before {
+            content: "";
+            position: absolute;
+            inset: 8%;
+            max-width: 1200px;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 244, 225, 0.9));
+            box-shadow: 0 18px 45px rgba(249, 115, 22, 0.18);
+            border-radius: 32px;
+            z-index: 0;
+        }
+
+        /* ================= NIRVANT CIRCLE SECTION ================= */
+        .nirvant-circle-section {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            max-width: 1100px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            opacity: 1;
+            transform: none;
+            transition: all 0.8s ease-out;
+        }
+        
+        .nirvant-circle-container {
+            padding: 3rem 2.5rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nirvant-circle-content {
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nirvant-circle-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 1.2rem;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+        }
+        
+        .nirvant-circle-tagline {
+            font-size: 1.2rem;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .nirvant-circle-form {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .circle-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .circle-email-input {
             flex: 1;
-            padding: 14px 18px;
+            padding: 15px 20px;
             border-radius: 999px;
-            border: 2px solid #f97316;
+            border: 2px solid #e2e8f0;
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
         }
         
-        .newsletter-input:focus {
-            border-color: #ea580c;
+        .circle-email-input:focus {
+            border-color: #f97316;
             box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
         }
         
-        .newsletter-button {
+        .circle-subscribe-btn {
             background: #f97316;
             color: #fff;
             border: none;
-            padding: 14px 26px;
+            padding: 15px 35px;
             border-radius: 999px;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
         
-        .newsletter-button:hover {
+        .circle-subscribe-btn:hover {
             background: #ea580c;
             transform: translateY(-2px);
         }
         
-        /* ================= FOOTER ================= */
-        .footer {
-            background: #0f172a;
-            color: #cbd5e1;
-            padding: 4rem 0 2rem;
+        .circle-privacy-note {
+            font-size: 0.9rem;
+            color: #64748b;
         }
         
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 1rem;
+        .circle-benefits {
+            background: #ffffff;
+            padding: 2.3rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            z-index: 2;
         }
         
-        .footer-logo span {
-            color: #facc15;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-        
-        .footer-about p {
+        .benefits-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
             margin-bottom: 1.5rem;
-            max-width: 300px;
-            line-height: 1.6;
         }
         
-        .footer-heading {
-            color: #fff;
+        .benefits-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .benefits-list li {
+            padding: 0.8rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .benefits-list li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
             font-size: 1.2rem;
-            margin-bottom: 1.5rem;
+        }
+        
+        .benefits-link {
+            display: inline-block;
+            color: #f97316;
             font-weight: 600;
-        }
-        
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-        
-        .footer-links a {
             text-decoration: none;
-            color: #cbd5e1;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-links a:hover {
-            color: #facc15;
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .social-icons a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            color: #cbd5e1;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
         
+        .benefits-link:hover {
+            color: #ea580c;
+            transform: translateX(5px);
+        }
+        
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 3.5rem 0 2.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .footer.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a i {
+            color: #f97316;
+            font-size: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #f97316;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
         .social-icons a:hover {
             background: #f97316;
             color: #fff;
-            transform: translateY(-3px);
         }
-        
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.25rem;
+            padding-top: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-size: 0.9rem;
-            color: #94a3b8;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
         }
         
         /* ================= RESPONSIVE ================= */
         @media (max-width: 992px) {
-            /* For tablets and smaller laptops */
             .logo-img {
                 height: 120px;
                 max-height: 110px;
@@ -766,19 +969,49 @@
             }
             
             .hero-title {
-                font-size: 3rem;
+                font-size: 3.4rem;
+                text-align: center;
             }
             
             .hero-tagline {
-                margin: 0 auto 2.5rem;
+                margin: 0 auto 2rem;
+                text-align: center;
+                font-size: 1.25rem;
             }
             
             .hero-buttons {
                 justify-content: center;
             }
             
-            .hero {
-                padding-top: 70px; /* CHANGED: Keep same padding as desktop */
+            .hero-content {
+                text-align: center;
+            }
+
+            .nirvant-circle-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .nirvant-circle-content {
+                text-align: center;
+            }
+            
+            .circle-input-group {
+                justify-content: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
             }
         }
         
@@ -805,11 +1038,11 @@
             }
             
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
             .hero-tagline {
-                font-size: 1.1rem;
+                font-size: 1.125rem;
             }
             
             .mentor-section {
@@ -826,11 +1059,16 @@
             }
             
             .section-header h2 {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+            
+            .section-header::after {
+                width: 80px;
+                margin: 1rem auto 2rem;
             }
             
             .neet-section {
-                margin: 0 1rem;
+                margin: 0 1rem 3rem;
             }
             
             .neet-content {
@@ -838,33 +1076,58 @@
                 gap: 2rem;
             }
             
-            .newsletter-form {
-                flex-direction: column;
+            .background-section {
+                padding: 3rem 1rem;
             }
-            
-            .newsletter-box {
+
+            .background-section::before {
+                inset: 4%;
+                border-radius: 28px;
+            }
+
+            .nirvant-circle-container {
                 padding: 2.5rem 1.5rem;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            .nirvant-circle-title {
+                font-size: 2.4rem;
             }
             
-            .logo-img {
-                height: 100px;
-                max-height: 90px;
+            .nirvant-circle-tagline {
+                font-size: 1.05rem;
             }
             
-            .navbar {
-                height: 100px;
+            .circle-input-group {
+                flex-direction: column;
+                align-items: center;
             }
             
-            .hero {
-                padding-top: 100px; /* CHANGED: Match navbar height */
-                min-height: calc(100vh - 30px); /* CHANGED: Adjust min-height */
+            .circle-email-input,
+            .circle-subscribe-btn {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            .benefits-list li {
+                font-size: 0.98rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
             }
         }
         
         @media (max-width: 576px) {
             .hero {
-                padding-top: 60px; /* CHANGED: Match navbar height */
-                min-height: calc(100vh - 10px); /* CHANGED: Adjust min-height */
+                padding-top: 60px;
+                min-height: calc(100vh - 10px);
             }
             
             .hero-container {
@@ -873,12 +1136,13 @@
             }
             
             .hero-title {
-                font-size: 2.2rem;
-                margin-top: 0.5rem; /* ADDED: Extra spacing on very small screens */
+                font-size: 2.5rem;
+                margin-top: 0.5rem;
             }
             
             .hero-tagline {
                 font-size: 1rem;
+                margin-bottom: 1.5rem;
             }
             
             .hero-buttons {
@@ -913,13 +1177,72 @@
                 min-height: 50px;
             }
             
-            .hero {
-                padding-top: 60px; /* CHANGED: Match navbar height */
-            }
-            
-            /* ADDED: Ensure hero content has proper spacing on very small screens */
             .hero-content {
                 padding-top: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .mission-content p {
+                font-size: 1.125rem;
+            }
+            
+            .background-section {
+                padding: 2.5rem 0.8rem;
+            }
+
+            .background-section::before {
+                inset: 6%;
+                border-radius: 24px;
+            }
+
+            .nirvant-circle-container {
+                padding: 2.2rem 1.2rem 2.4rem;
+                max-width: 360px;
+            }
+
+            .nirvant-circle-title {
+                font-size: 2.1rem;
+            }
+            
+            .nirvant-circle-tagline {
+                font-size: 0.98rem;
+            }
+
+            .circle-input-group {
+                gap: 0.6rem;
+            }
+
+            .circle-email-input,
+            .circle-subscribe-btn {
+                max-width: 100%;
+            }
+
+            .circle-benefits {
+                margin-top: 1.8rem;
+                padding: 1.8rem 1.4rem;
+            }
+
+            .benefits-title {
+                font-size: 1.25rem;
+            }
+            
+            .nirvant-circle-title {
+                font-size: 2rem;
+            }
+            
+            .benefits-list li {
+                font-size: 0.96rem;
+            }
+
+            .footer-bottom {
+                align-items: flex-start;
+            }
+
+            .footer-bottom-right {
+                text-align: left;
             }
         }
     </style>
@@ -939,7 +1262,7 @@
             <a href="#offers">Offers</a>
             <a href="#team">Team</a>
             <a href="#neet">NEET</a>
-            <a href="#newsletter">Join</a>
+            <a href="#nirvant-circle">Join</a>
         </div>
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
@@ -947,340 +1270,303 @@
     </div>
 </nav>
 
-    <!-- HERO SECTION (UPDATED: Text Left, Image Right) -->
-    <section class="hero" id="home">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">Empowering Mind, Career and Identity.</h1>
-                <p class="hero-tagline">
-                    Nirvant is where clarity meets growth. We help students, professionals,
-                    and leaders find balance between mind, purpose, and performance.
-                </p>
-                <div class="hero-buttons">
-                    <a class="btn btn-primary" href="#neet">Enroll Now</a>
-                    <a class="btn btn-secondary" href="#offers">Explore Nirvant</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <!-- Add your hero image here -->
-                <img src="{% static 'images/hero-image.png' %}" alt="Nirvant Hero Image" class="hero-img">
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 class="hero-title">Empowering Mind, Career and Identity.</h1>
+            <p class="hero-tagline">
+                Nirvant is where clarity meets growth. We help students, professionals,
+                and leaders find balance between mind, purpose, and performance.
+            </p>
+            <div class="hero-buttons">
+                <a class="btn btn-primary" href="#neet">Enroll Now</a>
+                <a class="btn btn-secondary" href="#offers">Explore Nirvant</a>
             </div>
         </div>
-    </section>
-
-    <!-- MENTOR SECTION -->
-    <div class="mentor-section" id="mentors">
-        <div class="mentor-content">
-            <div class="mentor-subtitle">FROM ASPIRANTS TO ACHIEVERS</div>
-            <h2 class="mentor-title">NOW YOUR MENTORS</h2>
-            <p class="mentor-tagline">THE RANKERS BEHIND YOUR RANK.</p>
+        <div class="hero-image">
+            <img src="{% static 'images/hero-image.png' %}" alt="Nirvant Hero Image" class="hero-img">
         </div>
     </div>
+</section>
 
-    <!-- MISSION SECTION -->
-    <section id="mission">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our Mission</h2>
+<!-- MENTOR -->
+<div class="mentor-section" id="mentors">
+    <div class="mentor-content">
+        <div class="mentor-subtitle">FROM ASPIRANTS TO ACHIEVERS</div>
+        <h2 class="mentor-title">NOW YOUR MENTORS</h2>
+        <p class="mentor-tagline">THE RANKERS BEHIND YOUR RANK.</p>
+    </div>
+</div>
+
+<!-- MISSION -->
+<section id="mission">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Mission</h2>
+        </div>
+        <div class="mission-content">
+            <p>At Nirvant, we believe personal and professional growth begins from within. Our mission is to bring mental wellness, education, and technology together—helping individuals build emotional strength, career clarity, and inner confidence through content, mentorship, and meaningful connections.</p>
+        </div>
+    </div>
+</section>
+
+<!-- OFFERS -->
+<section id="offers">
+    <div class="container">
+        <div class="section-header">
+            <h2>What We Offer</h2>
+        </div>
+        <div class="offers-grid">
+            <div class="offer-card" id="offer1">
+                <div class="offer-icon">👥</div>
+                <h3>Mentorship</h3>
+                <p>One-on-one guidance from experienced mentors to help you navigate your career and personal growth journey.</p>
             </div>
-            <div class="mission-content">
-                <p>We bring mental wellness, mentorship and education together to help individuals grow with clarity, confidence and direction. Our approach is holistic, addressing the mind, career, and personal identity to create lasting transformation.</p>
+            <div class="offer-card" id="offer2">
+                <div class="offer-icon">📚</div>
+                <h3>Courses</h3>
+                <p>Structured learning programs designed to build skills, knowledge, and confidence in your chosen field.</p>
+            </div>
+            <div class="offer-card" id="offer3">
+                <div class="offer-icon">💻</div>
+                <h3>Tech Tools</h3>
+                <p>Innovative digital tools and resources to enhance learning, productivity, and personal development.</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- OFFERS SECTION -->
-    <section id="offers">
-        <div class="container">
-            <div class="section-header">
-                <h2>What We Offer</h2>
+<!-- TEAM -->
+<section id="team">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Team</h2>
+        </div>
+        <div class="team-grid">
+            <div class="team-card" id="team1">
+                <div class="team-avatar">SS</div>
+                <div class="team-name">Sandipta Sahoo</div>
+                <div class="team-role">Medico</div>
+                <p class="team-desc">Expert in medical education with focus on holistic learning approaches.</p>
             </div>
-            <div class="offers-grid">
-                <div class="offer-card" id="offer1">
-                    <div class="offer-icon">👥</div>
-                    <h3>Mentorship</h3>
-                    <p>One-on-one guidance from experienced mentors to help you navigate your career and personal growth journey.</p>
-                </div>
-                <div class="offer-card" id="offer2">
-                    <div class="offer-icon">📚</div>
-                    <h3>Courses</h3>
-                    <p>Structured learning programs designed to build skills, knowledge, and confidence in your chosen field.</p>
-                </div>
-                <div class="offer-card" id="offer3">
-                    <div class="offer-icon">💻</div>
-                    <h3>Tech Tools</h3>
-                    <p>Innovative digital tools and resources to enhance learning, productivity, and personal development.</p>
-                </div>
+            <div class="team-card" id="team2">
+                <div class="team-avatar">PD</div>
+                <div class="team-name">Prachurya Das</div>
+                <div class="team-role">Medico</div>
+                <p class="team-desc">Specializes in academic mentoring and career guidance for medical students.</p>
+            </div>
+            <div class="team-card" id="team3">
+                <div class="team-avatar">JN</div>
+                <div class="team-name">Jeeban Nayak</div>
+                <div class="team-role">Medico</div>
+                <p class="team-desc">Focuses on integrating mental wellness with academic excellence.</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- TEAM SECTION -->
-    <section id="team">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our Team</h2>
+<!-- NEET -->
+<section class="neet-section" id="neet">
+    <div class="container">
+        <div class="section-header">
+            <h2 style="color: white;">NEET 2026 Program</h2>
+        </div>
+        <div class="neet-content">
+            <div>
+                <ul class="neet-highlights">
+                    <li id="highlight1">1-on-1 mentorship with medical experts</li>
+                    <li id="highlight2">Live interactive sessions with doctors</li>
+                    <li id="highlight3">Personalized weekly study plans</li>
+                    <li id="highlight4">Comprehensive test series and analysis</li>
+                    <li id="highlight5">Doubt clearing sessions</li>
+                    <li id="highlight6">Mental wellness support</li>
+                </ul>
+                <div class="neet-price" id="neetPrice">₹3500</div>
+                <a class="btn btn-primary" href="#nirvant-circle">Enroll Now</a>
             </div>
-            <div class="team-grid">
-                <div class="team-card" id="team1">
-                    <div class="team-avatar">SS</div>
-                    <div class="team-name">Sandipta Sahoo</div>
-                    <div class="team-role">Medico</div>
-                    <p class="team-desc">Expert in medical education with focus on holistic learning approaches.</p>
-                </div>
-                <div class="team-card" id="team2">
-                    <div class="team-avatar">PD</div>
-                    <div class="team-name">Prachurya Das</div>
-                    <div class="team-role">Medico</div>
-                    <p class="team-desc">Specializes in academic mentoring and career guidance for medical students.</p>
-                </div>
-                <div class="team-card" id="team3">
-                    <div class="team-avatar">JN</div>
-                    <div class="team-name">Jeeban Nayak</div>
-                    <div class="team-role">Medico</div>
-                    <p class="team-desc">Focuses on integrating mental wellness with academic excellence.</p>
-                </div>
+            <div>
+                <p class="neet-desc">Our NEET 2026 program provides complete preparation with expert guidance from medical professionals. We combine structured academics with mental wellness support to ensure you're prepared not just academically, but also mentally and emotionally for the challenges ahead.</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- NEET SECTION -->
-    <section class="neet-section" id="neet">
-        <div class="container">
-            <div class="section-header">
-                <h2 style="color: white;">NEET 2026 Program</h2>
-            </div>
-            <div class="neet-content">
-                <div>
-                    <ul class="neet-highlights">
-                        <li id="highlight1">1-on-1 mentorship with medical experts</li>
-                        <li id="highlight2">Live interactive sessions with doctors</li>
-                        <li id="highlight3">Personalized weekly study plans</li>
-                        <li id="highlight4">Comprehensive test series and analysis</li>
-                        <li id="highlight5">Doubt clearing sessions</li>
-                        <li id="highlight6">Mental wellness support</li>
-                    </ul>
-                    <div class="neet-price" id="neetPrice">₹3500</div>
-                    <a class="btn btn-primary" href="#newsletter">Enroll Now</a>
-                </div>
-                <div>
-                    <p class="neet-desc">Our NEET 2026 program provides complete preparation with expert guidance from medical professionals. We combine structured academics with mental wellness support to ensure you're prepared not just academically, but also mentally and emotionally for the challenges ahead. Join thousands of successful aspirants who have achieved their medical dreams with our holistic approach.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEWSLETTER SECTION -->
-    <section id="newsletter">
-        <div class="container">
-            <div class="newsletter-box" id="newsletterBox">
-                <h2>Join Nirvant Circle</h2>
-                <p>Subscribe to our newsletter for updates on new programs, events, and resources.</p>
-                <form class="newsletter-form" id="subscribeForm">
-                    <input type="email" class="newsletter-input" placeholder="Enter your email" required>
-                    <button type="submit" class="newsletter-button">Subscribe</button>
-                </form>
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">We respect your privacy. Unsubscribe at any time.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-about">
-                    <div class="footer-logo">Nirv<span>ant</span></div>
-                    <p>Empowering Mind, Career and Identity through holistic education and mentorship.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+<!-- WHITE–ORANGE BACKGROUND + CENTERED NIRVANT CIRCLE -->
+<div class="background-section">
+    <div class="nirvant-circle-section" id="nirvant-circle">
+        <div class="nirvant-circle-container">
+            <div class="nirvant-circle-content">
+                <h2 class="nirvant-circle-title">Join the Nirvant Circle</h2>
+                <p class="nirvant-circle-tagline">Weekly reflections, clarity prompts, and growth insights — straight to your inbox.</p>
+                <div class="nirvant-circle-form">
+                    <div class="circle-input-group">
+                        <input type="email" class="circle-email-input" placeholder="Enter your email" required>
+                        <button type="submit" class="circle-subscribe-btn">Subscribe</button>
                     </div>
-                </div>
-                <div>
-                    <h3 class="footer-heading">Quick Links</h3>
-                    <div class="footer-links">
-                        <a href="#home">Home</a>
-                        <a href="#mentors">Mentors</a>
-                        <a href="#mission">Our Mission</a>
-                        <a href="#offers">What We Offer</a>
-                        <a href="#team">Our Team</a>
-                        <a href="#neet">NEET Program</a>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="footer-heading">Contact</h3>
-                    <div class="footer-links">
-                        <a href="mailto:contact@nirvant.page">contact@nirvant.page</a>
-                        <a href="https://www.nirvant.page" target="_blank">www.nirvant.page</a>
-                    </div>
+                    <p class="circle-privacy-note">We respect your privacy. Unsubscribe anytime.</p>
                 </div>
             </div>
-            <div class="copyright">
-                © 2025 Nirvant. All rights reserved.
+            <div class="circle-benefits">
+                <h3 class="benefits-title">What you'll get</h3>
+                <ul class="benefits-list">
+                    <li>Short clarity prompts</li>
+                    <li>Weekly practice & reflection</li>
+                    <li>Tools for focus & growth</li>
+                </ul>
+                <a href="#offers" class="benefits-link">See course benefits</a>
             </div>
         </div>
-    </footer>
+    </div>
+</div>
 
-    <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.getElementById('navLinks');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3 class="footer-heading">Navigate Nirvant</h3>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#offers">Courses</a>
+                    <a href="#mission">About</a>
+                    <a href="#nirvant-circle">Contact</a>
+                    <a href="#neet">T&amp;C</a>
+                </div>
+            </div>
+            <div>
+                <h3 class="footer-heading">Connect With Us</h3>
+                <div class="footer-links">
+                    <a href="tel:+917735932023"><i class="fas fa-phone"></i>+91 77359 32023</a>
+                    <a href="tel:+916371214085"><i class="fas fa-phone"></i>+91 63712 14085</a>
+                    <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i>nirvant.trgyy@gmail.com</a>
+                </div>
+            </div>
+            <div>
+                <h3 class="footer-heading">Stay Connected</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fas fa-comment-dots"></i></a>
+                </div>
+                <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <div class="footer-circle">N</div>
+                <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+            </div>
+            <div class="footer-bottom-right">
+                Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+            ? '<i class="fas fa-times"></i>' 
+            : '<i class="fas fa-bars"></i>';
+    });
+    
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
         });
+    });
+    
+    // Form: Nirvant Circle
+    const circleSubscribeBtn = document.querySelector('.circle-subscribe-btn');
+    const circleEmailInput = document.querySelector('.circle-email-input');
+    
+    circleSubscribeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = circleEmailInput.value;
+        if (email) {
+            alert(`Thank you for joining the Nirvant Circle with ${email}! You'll receive weekly insights and prompts.`);
+            circleEmailInput.value = '';
+        } else {
+            alert('Please enter your email address.');
+        }
+    });
+    
+    const sections = document.querySelectorAll('section, .mentor-section, .background-section, .footer');
+    const navItems = document.querySelectorAll('.nav-links a');
+    
+    function checkScroll() {
+        const windowHeight = window.innerHeight;
+        const triggerPoint = windowHeight * 0.8;
         
-        // Close mobile menu when clicking a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-        
-        // Form submission
-        const subscribeForm = document.getElementById('subscribeForm');
-        
-        subscribeForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = subscribeForm.querySelector('input[type="email"]').value;
-            
-            if (email) {
-                alert(`Thank you for subscribing with ${email}! We'll keep you updated.`);
-                subscribeForm.reset();
-            }
-        });
-        
-        // Active navigation link highlighting on scroll
-        const sections = document.querySelectorAll('section, .mentor-section');
-        const navItems = document.querySelectorAll('.nav-links a');
-        
-        window.addEventListener('scroll', () => {
-            let current = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top < triggerPoint) {
+                section.classList.add('animated');
                 
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href').substring(1) === current) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Trigger animations when elements come into view
-            triggerAnimations();
-        });
-        
-        // Animation trigger function
-        function triggerAnimations() {
-            // Offer cards animation
-            const offerCards = document.querySelectorAll('.offer-card');
-            offerCards.forEach(card => {
-                const cardPosition = card.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (cardPosition < screenPosition) {
-                    card.classList.add('animated');
-                }
-            });
-            
-            // Team cards animation
-            const teamCards = document.querySelectorAll('.team-card');
-            teamCards.forEach(card => {
-                const cardPosition = card.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (cardPosition < screenPosition) {
-                    card.classList.add('animated');
-                }
-            });
-            
-            // NEET section animation
-            const neetSection = document.querySelector('.neet-section');
-            if (neetSection) {
-                const sectionPosition = neetSection.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (sectionPosition < screenPosition) {
-                    neetSection.classList.add('animated');
-                    
-                    // NEET highlights animation
-                    const highlights = document.querySelectorAll('.neet-highlights li');
+                if (section.classList.contains('neet-section')) {
+                    const highlights = section.querySelectorAll('.neet-highlights li');
                     highlights.forEach((highlight, index) => {
-                        setTimeout(() => {
-                            highlight.classList.add('animated');
-                        }, index * 200);
+                        setTimeout(() => { highlight.classList.add('animated'); }, index * 200);
                     });
-                    
-                    // NEET price animation
-                    const neetPrice = document.getElementById('neetPrice');
-                    setTimeout(() => {
-                        neetPrice.classList.add('animated');
-                    }, 1400);
+                    const neetPrice = section.querySelector('.neet-price');
+                    if (neetPrice) {
+                        setTimeout(() => { neetPrice.classList.add('animated'); }, 1400);
+                    }
                 }
-            }
-            
-            // Newsletter box animation
-            const newsletterBox = document.getElementById('newsletterBox');
-            if (newsletterBox) {
-                const boxPosition = newsletterBox.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
                 
-                if (boxPosition < screenPosition) {
-                    newsletterBox.classList.add('animated');
+                if (section.id === 'offers' || section.id === 'team') {
+                    const cards = section.querySelectorAll('.offer-card, .team-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => { card.classList.add('animated'); }, index * 200);
+                    });
                 }
             }
-            
-            // Mentor section animation (already triggered on load with delay)
+        });
+        
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href').substring(1) === current) {
+                item.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('load', () => {
+        setTimeout(() => {
             const mentorSection = document.querySelector('.mentor-section');
             if (mentorSection) {
-                const sectionPosition = mentorSection.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (sectionPosition < screenPosition && !mentorSection.classList.contains('animated')) {
-                    mentorSection.classList.add('animated');
-                }
+                mentorSection.style.animationDelay = '0.5s';
+                mentorSection.classList.add('animated');
             }
-        }
-        
-        // Initial trigger of animations
-        window.addEventListener('load', () => {
-            // Trigger mentor section animation after hero
-            setTimeout(() => {
-                const mentorSection = document.querySelector('.mentor-section');
-                if (mentorSection) {
-                    mentorSection.style.animationDelay = '0.5s';
-                    mentorSection.classList.add('animated');
-                }
-            }, 1000);
-            
-            triggerAnimations();
+        }, 1000);
+        checkScroll();
+    });
+    
+    window.addEventListener('scroll', checkScroll);
+    
+    const buttons = document.querySelectorAll('.btn, .circle-subscribe-btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            button.style.transform = 'translateY(-2px)';
         });
-        
-        // Button hover effects
-        const buttons = document.querySelectorAll('.btn');
-        buttons.forEach(button => {
-            button.addEventListener('mouseenter', () => {
-                button.style.transform = 'translateY(-2px)';
-            });
-            
-            button.addEventListener('mouseleave', () => {
-                button.style.transform = 'translateY(0)';
-            });
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'translateY(0)';
         });
-    </script>
+    });
+</script>
 </body>
 </html>
