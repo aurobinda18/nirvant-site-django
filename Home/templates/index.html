@@ -92,19 +92,20 @@
         
 .nav-links {
     display: flex;
-    gap: 3rem; /* Increased gap for better spacing like the image */
+    gap: 2.5rem;
     align-items: center;
-    margin-right: 0; /* Remove any right margin */
+    margin-right: 0;
 }
         
 .nav-links a {
     text-decoration: none;
     font-weight: 500;
     color: #334155;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     position: relative;
-    font-size: 1rem; /* Adjust if needed */
-    white-space: nowrap; /* Prevent line breaks */
+    font-size: 1rem;
+    white-space: nowrap;
+    padding: 8px 0;
 }
         
 .nav-links a:hover,
@@ -122,6 +123,40 @@
     border-radius: 2px;
 }
         
+        /* Special styling for Dashboard link (ONLY for logged-in users) */
+        .nav-links a.dashboard-link {
+            color: #1e40af; /* Royal blue color */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+        .nav-links a.dashboard-link.active::after {
+            background-color: #1e40af;
+        }
+        
+        /* Special styling for Logout link (ONLY for logged-in users) */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: rgba(220, 38, 38, 0.05);
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
         .mobile-menu-btn {
             display: none;
             font-size: 1.5rem;
@@ -132,6 +167,7 @@
         }
         
         /* ================= ACCOUNT DROPDOWN STYLES ================= */
+        /* Account dropdown for NON-logged-in users - Normal styling */
         .account-dropdown {
             position: relative;
             display: inline-block;
@@ -143,13 +179,17 @@
             gap: 5px;
             cursor: pointer;
             position: relative;
-            padding: 5px 10px;
+            padding: 8px 0;
             border-radius: 6px;
             transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
         }
         
         .account-dropbtn:hover {
-            background: rgba(249, 115, 22, 0.05);
+            color: #f97316;
         }
         
         .account-dropbtn i {
@@ -1520,12 +1560,37 @@
                 border-bottom: 1px solid rgba(0, 0, 0, 0.05);
                 width: 100%;
                 display: block;
+                text-align: left;
             }
             
             .nav-links a.active::after {
                 display: none;
             }
             
+            /* Mobile styles for dashboard and logout links (logged-in users) */
+            .nav-links a.dashboard-link {
+                color: #1e40af;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: rgba(220, 38, 38, 0.05);
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) */
             .account-dropdown {
                 width: 100%;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -1535,6 +1600,11 @@
                 padding: 1rem 0;
                 justify-content: space-between;
                 border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
             }
             
             .account-dropdown-content {
@@ -2221,16 +2291,23 @@
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'terms' %}">T&C</a>
             
-            <!-- Account Dropdown -->
-            <div class="account-dropdown">
-                <a href="#" class="account-dropbtn">
-                    Account <i class="fas fa-chevron-down"></i>
-                </a>
-                <div class="account-dropdown-content">
-                    <a href="{% url 'login' %}">Log in</a>
-                    <a href="{% url 'register' %}">Create account</a>
+            <!-- Show different options based on authentication status -->
+            {% if user.is_authenticated %}
+                <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+            {% else %}
+                <!-- User is not logged in: Show Account as normal dropdown link -->
+                <div class="account-dropdown">
+                    <a href="#" class="account-dropbtn">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="account-dropdown-content">
+                        <a href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'register' %}">Create account</a>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
 
         <button class="mobile-menu-btn" id="mobileMenuBtn">

@@ -31,7 +31,7 @@
             line-height: 1.6;
         }
         
-        /* ================= NAVBAR ================= */
+        /* ================= NAVBAR - EXACTLY LIKE REFERENCE ================= */
         .navbar {
             background: #fffef6;
             position: fixed;
@@ -79,9 +79,9 @@
         }
         
         .logo-img {
-            height: 120px; /* Reduced for better mobile */
+            height: 150px; /* Increased to match reference */
             width: auto;
-            max-height: 110px;
+            max-height: 135px;
             object-fit: contain;
             display: block;
         }
@@ -91,9 +91,10 @@
             transition: transform 0.3s ease;
         }
         
+        /* NAV LINKS - EXACTLY LIKE REFERENCE */
         .nav-links {
             display: flex;
-            gap: 3rem;
+            gap: 2.5rem;
             align-items: center;
             margin-right: 0;
         }
@@ -102,10 +103,11 @@
             text-decoration: none;
             font-weight: 500;
             color: #334155;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
             font-size: 1rem;
             white-space: nowrap;
-            padding: 5px 0;
+            padding: 8px 0;
         }
         
         .nav-links a:hover,
@@ -113,7 +115,38 @@
             color: #f97316;
         }
         
-        /* NO UNDERLINE - REMOVED */
+        
+        /* Special styling for Dashboard link (ONLY for logged-in users) */
+        .nav-links a.dashboard-link {
+            color: #2142B0; /* Royal blue color from your specification */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+
+        
+        /* Special styling for Logout link (ONLY for logged-in users) */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: #FDF3EB; /* Light background from your specification */
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
         
         .mobile-menu-btn {
             display: none;
@@ -123,6 +156,85 @@
             color: #0f172a;
             cursor: pointer;
             z-index: 1002;
+        }
+        
+        /* ================= ACCOUNT DROPDOWN STYLES ================= */
+        /* Account dropdown for NON-logged-in users - Normal styling */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
         }
 
         /* ================= ABOUT SECTION ================= */
@@ -563,7 +675,7 @@
             }
         }
 
-        /* MOBILE RESPONSIVE - IMPROVED */
+        /* MOBILE RESPONSIVE - EXACTLY LIKE REFERENCE ================= */
         @media (max-width: 768px) {
             .navbar {
                 height: 70px;
@@ -576,45 +688,111 @@
             
             .nav-links {
                 display: none;
-                position: fixed;
-                top: 70px;
+                position: absolute;
+                top: 100%;
                 left: 0;
                 right: 0;
                 background: #fffef6;
                 flex-direction: column;
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
                 border-top: 1px solid rgba(0, 0, 0, 0.05);
-                gap: 1.5rem;
+                gap: 0;
                 z-index: 1001;
-                height: auto;
-                max-height: calc(100vh - 70px);
-                overflow-y: auto;
             }
             
             .nav-links.active {
                 display: flex;
             }
             
-            .nav-links a {
-                font-size: 1.1rem;
-                padding: 12px 0;
-                width: 100%;
-                text-align: center;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            }
-            
-            .nav-links a:last-child {
-                border-bottom: none;
-            }
-            
             .mobile-menu-btn {
                 display: block;
             }
             
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+            }
+            
+            .nav-links a.active::after {
+                display: none;
+            }
+            
+            /* Mobile styles for dashboard and logout links (logged-in users) */
+            .nav-links a.dashboard-link {
+                color: #2142B0;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(33, 66, 176, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: #FDF3EB;
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) */
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
+            }
+            
             .logo-img {
-                height: 100px;
-                max-height: 90px;
+                height: 110px;
+                max-height: 100px;
             }
             
             .about-container {
@@ -744,8 +922,8 @@
             }
             
             .logo-img {
-                height: 90px;
-                max-height: 85px;
+                height: 100px;
+                max-height: 90px;
             }
             
             .about-container {
@@ -855,8 +1033,8 @@
 
         @media (max-width: 400px) {
             .logo-img {
-                height: 80px;
-                max-height: 75px;
+                height: 90px;
+                max-height: 85px;
             }
             
             .nav-links a {
@@ -893,8 +1071,8 @@
 
         @media (max-width: 360px) {
             .logo-img {
-                height: 70px;
-                max-height: 65px;
+                height: 80px;
+                max-height: 75px;
             }
             
             .about-title {
@@ -927,21 +1105,40 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAVBAR - EXACTLY LIKE REFERENCE ================= -->
 <nav class="navbar">
     <div class="nav-container">
+        {% load static %}
         <a href="{% url 'home' %}" class="logo">
             <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
         </a>
-
+        
         <div class="nav-links" id="navLinks">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'courses' %}">Courses</a>
             <a href="{% url 'team' %}" class="active">Team</a>
             <a href="{% url 'contact' %}">Contact</a>
-            <a href="#">T&C</a>
+            <a href="{% url 'terms' %}">T&C</a>
+            
+            <!-- Show different options based on authentication status -->
+            {% if user.is_authenticated %}
+                <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+            {% else %}
+                <!-- User is not logged in: Show Account as normal dropdown link -->
+                <div class="account-dropdown">
+                    <a href="#" class="account-dropbtn">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="account-dropdown-content">
+                        <a href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'register' %}">Create account</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        
+
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
         </button>
@@ -1182,7 +1379,7 @@
                 <a href="{% url 'courses' %}">Courses</a>
                 <a href="{% url 'team' %}">Team</a>
                 <a href="{% url 'contact' %}">Contact</a>
-                <a href="#">T&C</a>
+                <a href="{% url 'terms' %}">T&C</a>
             </div>
         </div>
         <div>
@@ -1215,38 +1412,98 @@
 </footer>
 
 <script>
-    // Mobile menu toggle
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
-    
-    mobileMenuBtn.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
-            ? '<i class="fas fa-times"></i>' 
-            : '<i class="fas fa-bars"></i>';
-    });
-    
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    // ================= DROPDOWN FUNCTIONALITY - EXACTLY LIKE REFERENCE =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
+        
+        if (accountDropbtn) {
+            // Toggle dropdown on click for all devices
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close dropdown when clicking a link
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                
+                // Also close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
         });
     });
     
+    // Mobile Menu Toggle - FIXED VERSION
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on links (except dropdown button)
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Close dropdown when clicking a link inside dropdown
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
-        if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
-            navLinks.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        if (navLinks && mobileMenuBtn) {
+            if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Also close any open dropdown
+                const accountDropdown = document.querySelector('.account-dropdown');
+                if (accountDropdown) {
+                    accountDropdown.classList.remove('active');
+                }
+            }
         }
     });
     
     // Handle window resize
     window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
+        if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
             navLinks.classList.remove('active');
             mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            
+            // Close any open dropdown on desktop
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.classList.remove('active');
+            }
         }
     });
 </script>

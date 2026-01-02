@@ -91,10 +91,10 @@
             transition: transform 0.3s ease;
         }
         
-        /* NAV LINKS - NO UNDERLINE, ONLY COLOR CHANGE */
+        /* NAV LINKS - EXACTLY LIKE REFERENCE */
         .nav-links {
             display: flex;
-            gap: 3rem;
+            gap: 2.5rem;
             align-items: center;
             margin-right: 0;
         }
@@ -103,10 +103,11 @@
             text-decoration: none;
             font-weight: 500;
             color: #334155;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
             font-size: 1rem;
             white-space: nowrap;
-            padding: 5px 0;
+            padding: 8px 0;
         }
         
         .nav-links a:hover,
@@ -114,7 +115,51 @@
             color: #f97316;
         }
         
-        /* NO UNDERLINE - REMOVED THE ::after PSEUDO-ELEMENT */
+        /* REMOVED THE UNDERLINE FROM HERE */
+        /* .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #f97316;
+            border-radius: 2px;
+        } */
+        
+        /* Special styling for Dashboard link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.dashboard-link {
+            color: #1e40af; /* Royal blue color */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+        .nav-links a.dashboard-link.active::after {
+            background-color: #1e40af;
+        }
+        
+        /* Special styling for Logout link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: rgba(220, 38, 38, 0.05);
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
         
         .mobile-menu-btn {
             display: none;
@@ -124,6 +169,83 @@
             color: #0f172a;
             cursor: pointer;
             z-index: 1002;
+        }
+        
+        /* ================= ACCOUNT DROPDOWN STYLES - EXACTLY LIKE REFERENCE ================= */
+        /* Account dropdown for NON-logged-in users - Normal styling */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
         }
         
         /* ================= HERO SECTION ================= */
@@ -259,7 +381,6 @@
         /* ================= UPDATED FEATURES SECTION ================= */
         .features-section {
             padding: 6rem 0;
-            /* Updated background to match Pricing Plans */
             background: linear-gradient(to bottom, #FEFCE9, #FFF8E6, #FFEFD8);
         }
         
@@ -276,7 +397,7 @@
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.6s ease-out;
-            padding-top: 2rem; /* Added padding for mobile spacing */
+            padding-top: 2rem;
         }
         
         .features-section.animated .section-header {
@@ -861,7 +982,7 @@
             }
         }
         
-        /* MOBILE RESPONSIVE - IMPROVED */
+        /* MOBILE RESPONSIVE - IMPROVED - EXACTLY LIKE REFERENCE */
         @media (max-width: 768px) {
             .navbar {
                 height: 70px;
@@ -874,20 +995,17 @@
             
             .nav-links {
                 display: none;
-                position: fixed;
-                top: 70px;
+                position: absolute;
+                top: 100%;
                 left: 0;
                 right: 0;
                 background: #fffef6;
                 flex-direction: column;
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
                 border-top: 1px solid rgba(0, 0, 0, 0.05);
-                gap: 1.5rem;
+                gap: 0;
                 z-index: 1001;
-                height: auto;
-                max-height: calc(100vh - 70px);
-                overflow-y: auto;
             }
             
             .nav-links.active {
@@ -895,15 +1013,86 @@
             }
             
             .nav-links a {
-                font-size: 1.1rem;
-                padding: 12px 0;
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
                 width: 100%;
+                display: block;
+                text-align: left;
+                font-size: 1.1rem;
+            }
+            
+            /* REMOVED UNDERLINE FOR MOBILE TOO */
+            /* .nav-links a.active::after {
+                display: none;
+            } */
+            
+            /* Mobile styles for dashboard and logout links (logged-in users) - EXACTLY LIKE REFERENCE */
+            .nav-links a.dashboard-link {
+                color: #1e40af;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: rgba(220, 38, 38, 0.05);
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
                 text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) - EXACTLY LIKE REFERENCE */
+            .account-dropdown {
+                width: 100%;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             }
             
-            .nav-links a:last-child {
-                border-bottom: none;
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
             }
             
             .mobile-menu-btn {
@@ -1332,21 +1521,39 @@
     </style>
 </head>
 <body>
-    <!-- NAVBAR - NO UNDERLINE, ONLY COLOR CHANGE -->
+    <!-- NAVBAR - EXACTLY LIKE REFERENCE CODE -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="{% url 'home' %}" class="logo">
                 <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
             </a>
-
+            
             <div class="nav-links" id="navLinks">
                 <a href="{% url 'home' %}">Home</a>
                 <a href="{% url 'courses' %}" class="active">Courses</a>
                 <a href="{% url 'team' %}">Team</a>
                 <a href="{% url 'contact' %}">Contact</a>
                 <a href="{% url 'terms' %}">T&C</a>
+                
+                <!-- Show different options based on authentication status - EXACTLY LIKE REFERENCE -->
+                {% if user.is_authenticated %}
+                    <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                    <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+                {% else %}
+                    <!-- User is not logged in: Show Account as normal dropdown link -->
+                    <div class="account-dropdown">
+                        <a href="#" class="account-dropbtn">
+                            Account <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="account-dropdown-content">
+                            <a href="{% url 'login' %}">Log in</a>
+                            <a href="{% url 'register' %}">Create account</a>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-            
+
             <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </button>
@@ -1373,7 +1580,6 @@
             
             <!-- IMAGE ON RIGHT SIDE -->
             <div class="poster-container">
-                <!-- ADD YOUR IMAGE HERE -->
                 <img src="{% static 'images/hero-image.png' %}" alt="NEET 2026 Mentorship Program" class="poster-image">
             </div>
         </div>
@@ -1506,18 +1712,21 @@
                     {{ course.course_name }}
                 </div>
 
-                <!-- Description -->
+                <!-- Description - FIXED ELLIPSIS -->
                 <div
                     style="
                         font-size: 0.95rem;
                         color: #6b7280;
                         line-height: 1.5;
                         margin-bottom: 22px;
-                        min-height: 60px;
+                        height: 70px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         display: -webkit-box;
                         -webkit-line-clamp: 3;
                         -webkit-box-orient: vertical;
-                        overflow: hidden;
+                        word-wrap: break-word;
+                        word-break: break-word;
                     ">
                     {{ course.course_description }}
                 </div>
@@ -1635,52 +1844,124 @@
         </div>
     </footer>
 
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.getElementById('navLinks');
+<script>
+    // ================= DROPDOWN FUNCTIONALITY - EXACTLY LIKE REFERENCE =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
         
-        mobileMenuBtn.addEventListener('click', () => {
+        if (accountDropbtn) {
+            // Toggle dropdown on click for all devices
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close dropdown when clicking a link
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                
+                // Also close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    const navLinks = document.getElementById('navLinks');
+                    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                    if (navLinks && mobileMenuBtn) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+        });
+    });
+    
+    // ================= MOBILE MENU TOGGLE - FIXED VERSION =================
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
             navLinks.classList.toggle('active');
             mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
                 ? '<i class="fas fa-times"></i>' 
                 : '<i class="fas fa-bars"></i>';
         });
         
-        // Close mobile menu when clicking on links
-        document.querySelectorAll('.nav-links a').forEach(link => {
+        // Close mobile menu when clicking on links (except dropdown button)
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
                 mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             });
         });
         
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
+        // Close dropdown when clicking a link inside dropdown
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    // ================= CLOSE MENU WHEN CLICKING OUTSIDE =================
+    document.addEventListener('click', (e) => {
+        if (navLinks && mobileMenuBtn) {
             if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
                 navLinks.classList.remove('active');
                 mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Also close any open dropdown
+                const accountDropdown = document.querySelector('.account-dropdown');
+                if (accountDropdown) {
+                    accountDropdown.classList.remove('active');
+                }
+            }
+        }
+    });
+    
+    // ================= HERO BUTTONS =================
+    const enrollBtn = document.getElementById('enrollBtn');
+    const learnBtn = document.getElementById('learnBtn');
+    
+    if (enrollBtn) {
+        enrollBtn.addEventListener('click', function() {
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+                window.scrollTo({
+                    top: pricingSection.offsetTop - 100,
+                    behavior: 'smooth'
+                });
             }
         });
-        
-        // Hero Buttons
-        document.getElementById('enrollBtn').addEventListener('click', function() {
-            window.scrollTo({
-                top: document.getElementById('pricing').offsetTop - 100,
-                behavior: 'smooth'
-            });
+    }
+    
+    if (learnBtn) {
+        learnBtn.addEventListener('click', function() {
+            const featuresSection = document.getElementById('features');
+            if (featuresSection) {
+                window.scrollTo({
+                    top: featuresSection.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
         });
-        
-        document.getElementById('learnBtn').addEventListener('click', function() {
-            window.scrollTo({
-                top: document.getElementById('features').offsetTop - 100,
-                behavior: 'smooth'
-            });
-        });
-        
-        // FAQ functionality
-        document.querySelectorAll(".faq-item").forEach(item => {
-            const question = item.querySelector(".faq-question");
+    }
+    
+    // ================= FAQ FUNCTIONALITY =================
+    document.querySelectorAll(".faq-item").forEach(item => {
+        const question = item.querySelector(".faq-question");
+        if (question) {
             question.onclick = () => {
                 // Close other FAQ items
                 document.querySelectorAll(".faq-item").forEach(otherItem => {
@@ -1692,110 +1973,117 @@
                 // Toggle current item
                 item.classList.toggle('active');
             }
+        }
+    });
+    
+    // ================= SCROLL ANIMATIONS =================
+    const sections = document.querySelectorAll('.features-section, .pricing-section, .faq-section');
+    
+    function checkScroll() {
+        const windowHeight = window.innerHeight;
+        const triggerPoint = windowHeight * 0.8;
+        
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top < triggerPoint) {
+                section.classList.add('animated');
+                
+                // Animate feature cards
+                if (section.classList.contains('features-section')) {
+                    const cards = section.querySelectorAll('.feature-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => { 
+                            card.classList.add('animated'); 
+                        }, index * 100);
+                    });
+                }
+                
+                // Animate pricing cards
+                if (section.classList.contains('pricing-section')) {
+                    const cards = section.querySelectorAll('.pricing-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => { 
+                            card.classList.add('animated'); 
+                        }, index * 100);
+                    });
+                }
+            }
         });
         
-        // Scroll animations
-        const sections = document.querySelectorAll('.features-section, .pricing-section, .faq-section');
-        
-        function checkScroll() {
-            const windowHeight = window.innerHeight;
-            const triggerPoint = windowHeight * 0.8;
-            
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                if (rect.top < triggerPoint) {
-                    section.classList.add('animated');
-                    
-                    // Animate feature cards
-                    if (section.classList.contains('features-section')) {
-                        const cards = section.querySelectorAll('.feature-card');
-                        cards.forEach((card, index) => {
-                            setTimeout(() => { 
-                                card.classList.add('animated'); 
-                            }, index * 100);
-                        });
-                    }
-                    
-                    // Animate pricing cards
-                    if (section.classList.contains('pricing-section')) {
-                        const cards = section.querySelectorAll('.pricing-card');
-                        cards.forEach((card, index) => {
-                            setTimeout(() => { 
-                                card.classList.add('animated'); 
-                            }, index * 100);
-                        });
-                    }
-                }
+        // Make sure "Courses" nav link stays active on this page
+        const coursesLink = document.querySelector('.nav-links a[href*="courses"]');
+        if (coursesLink) {
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
             });
+            coursesLink.classList.add('active');
+        }
+    }
+    
+    // ================= INITIALIZE ON LOAD =================
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const posterContainer = document.querySelector('.poster-container');
+            if (posterContainer) {
+                posterContainer.classList.add('animated');
+            }
+        }, 500);
+        checkScroll();
+    });
+    
+    window.addEventListener('scroll', checkScroll);
+    
+    // ================= BUTTON HOVER EFFECTS =================
+    const buttons = document.querySelectorAll('.btn, .pricing-button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            button.style.transform = 'translateY(-2px)';
+        });
+        button.addEventListener('mouseleave', () => {
+            if (!button.style.transform.includes('scale(0.95)')) {
+                button.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    // ================= SMOOTH SCROLL FOR ANCHOR LINKS =================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#') && href.length > 1) {
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+    
+    // ================= DISABLE CLICK ON DISABLED LINKS =================
+    document.querySelectorAll('a[style*="opacity: 0.7"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('This page is coming soon!');
+        });
+    });
+    
+    // ================= HANDLE WINDOW RESIZE =================
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             
-            // Make sure "Courses" nav link stays active on this page
-            const coursesLink = document.querySelector('.nav-links a[href*="courses"]');
-            if (coursesLink) {
-                document.querySelectorAll('.nav-links a').forEach(link => {
-                    link.classList.remove('active');
-                });
-                coursesLink.classList.add('active');
+            // Close any open dropdown on desktop
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.classList.remove('active');
             }
         }
-        
-        // Initialize on load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const posterContainer = document.querySelector('.poster-container');
-                if (posterContainer) {
-                    posterContainer.classList.add('animated');
-                }
-            }, 500);
-            checkScroll();
-        });
-        
-        window.addEventListener('scroll', checkScroll);
-        
-        // Button hover effects
-        const buttons = document.querySelectorAll('.btn, .pricing-button');
-        buttons.forEach(button => {
-            button.addEventListener('mouseenter', () => {
-                button.style.transform = 'translateY(-2px)';
-            });
-            button.addEventListener('mouseleave', () => {
-                if (!button.style.transform.includes('scale(0.95)')) {
-                    button.style.transform = 'translateY(0)';
-                }
-            });
-        });
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href.startsWith('#') && href.length > 1) {
-                    e.preventDefault();
-                    const targetElement = document.querySelector(href);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 100,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
-        });
-        
-        // Disable click on disabled links
-        document.querySelectorAll('a[style*="opacity: 0.7"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('This page is coming soon!');
-            });
-        });
-        
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
-    </script>
+    });
+</script>
 </body>
 </html>

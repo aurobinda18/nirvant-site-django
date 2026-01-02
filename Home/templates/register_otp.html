@@ -646,7 +646,7 @@
             </form>
 
             {% else %}
-            <!-- REGISTRATION FORM - EXACT SAME LOGIC AS ROOT CODE -->
+            <!-- REGISTRATION FORM - AGE FIELD REMOVED -->
             <div class="form-header">
                 <h2>Create Account</h2>
                 <p>Join Nirvant and start your growth journey</p>
@@ -681,12 +681,6 @@
                     <label class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" placeholder="Choose username" required>
                     <small class="input-hint">Choose a unique username</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Age</label>
-                    <input type="number" name="age" class="form-control" placeholder="Your age" min="10" required>
-                    <small class="input-hint">You must be at least 10 years old</small>
                 </div>
 
                 <div class="form-group">
@@ -790,15 +784,6 @@
                     e.preventDefault();
                     alert('Passwords do not match. Please check and try again.');
                     password2.focus();
-                    return false;
-                }
-                
-                // Simple age validation (like root code)
-                const ageInput = document.querySelector('input[name="age"]');
-                if (ageInput && parseInt(ageInput.value) < 10) {
-                    e.preventDefault();
-                    alert('You must be at least 10 years old.');
-                    ageInput.focus();
                     return false;
                 }
                 
