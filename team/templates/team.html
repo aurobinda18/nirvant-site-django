@@ -1,0 +1,1254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirvant | Team</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFF4D1; /* Changed to #FFF4D1 */
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.8s ease-out;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        .logo-img {
+            height: 120px; /* Reduced for better mobile */
+            width: auto;
+            max-height: 110px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: color 0.3s ease;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 5px 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+        /* NO UNDERLINE - REMOVED */
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        /* ================= ABOUT SECTION ================= */
+        .about-container {
+            max-width: 1100px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .about-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+        }
+
+        .about-text {
+            max-width: 900px;
+            margin: 25px auto 50px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #334155;
+        }
+
+        /* Mission Card */
+        .mission-card {
+            background: #ffffff;
+            margin: 60px auto 0;
+            max-width: 950px;
+            padding: 50px 60px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            text-align: left;
+        }
+
+        .mission-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 35px;
+            color: #0f172a;
+        }
+
+        .mission-text {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #334155;
+            margin-bottom: 25px;
+        }
+
+        /* ================= TEAM SECTION ================= */
+        .team-section {
+            max-width: 1400px;
+            margin: 60px auto 80px;
+            padding: 0 20px;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            color: #0f172a;
+            position: relative;
+            padding-bottom: 25px;
+            letter-spacing: -0.025em;
+        }
+
+        .main-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            border-radius: 4px;
+        }
+
+        /* ================= TEAM BLOCKS ================= */
+        .team-block {
+            margin-bottom: 80px;
+        }
+
+        .team-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            color: #1e293b;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0 30px;
+        }
+
+        .team-title::before,
+        .team-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 80px;
+            height: 3px;
+            background: #e2e8f0;
+        }
+
+        .team-title::before {
+            right: 100%;
+        }
+
+        .team-title::after {
+            left: 100%;
+        }
+
+        /* ================= HORIZONTAL RECTANGULAR CARDS ================= */
+        .team-cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .team-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 35px 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            text-align: left;
+            width: 1000px;
+            max-width: 100%;
+            height: 320px;
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(249, 115, 22, 0.25);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .member-photo {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 50px;
+            border: 8px solid #fff;
+            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.3);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .team-card:hover .member-photo {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(249, 115, 22, 0.4);
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            letter-spacing: -0.025em;
+        }
+
+        .member-role {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f97316;
+            margin-bottom: 25px;
+            padding: 10px 25px;
+            background: rgba(249, 115, 22, 0.12);
+            border-radius: 30px;
+            display: inline-block;
+            border: 2px solid rgba(249, 115, 22, 0.25);
+        }
+
+        .member-bio {
+            font-size: 1.1rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-top: 15px;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 4rem 0 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a i {
+            color: #f97316;
+            font-size: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #f97316;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #f97316;
+            color: #fff;
+        }
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 0;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
+        }
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .team-card {
+                width: 900px;
+                height: 300px;
+            }
+            
+            .member-photo {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .about-title {
+                font-size: 48px;
+            }
+            
+            .mission-card {
+                padding: 50px 45px;
+            }
+            
+            .main-title {
+                font-size: 48px;
+            }
+            
+            .team-title {
+                font-size: 36px;
+            }
+            
+            .team-card {
+                width: 800px;
+                height: 280px;
+                padding: 30px 35px;
+            }
+            
+            .member-photo {
+                width: 180px;
+                height: 180px;
+                margin-right: 40px;
+            }
+            
+            .member-name {
+                font-size: 1.9rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .team-card {
+                width: 700px;
+                height: 260px;
+                padding: 30px;
+            }
+            
+            .member-photo {
+                width: 160px;
+                height: 160px;
+                margin-right: 30px;
+            }
+            
+            .member-name {
+                font-size: 1.7rem;
+            }
+            
+            .member-role {
+                font-size: 1.1rem;
+            }
+            
+            .member-bio {
+                font-size: 1rem;
+            }
+        }
+
+        /* MOBILE RESPONSIVE - IMPROVED */
+        @media (max-width: 768px) {
+            .navbar {
+                height: 70px;
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 2rem 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 1.5rem;
+                z-index: 1001;
+                height: auto;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 12px 0;
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .nav-links a:last-child {
+                border-bottom: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .about-container {
+                margin: 100px auto 50px;
+            }
+            
+            .about-title {
+                font-size: 42px;
+                line-height: 1.2;
+            }
+            
+            .about-text {
+                font-size: 17px;
+                padding: 0 10px;
+            }
+            
+            .mission-card {
+                padding: 40px 30px;
+                margin-top: 40px;
+            }
+            
+            .mission-title {
+                font-size: 32px;
+            }
+            
+            .mission-text {
+                font-size: 16px;
+            }
+            
+            .team-section {
+                margin: 40px auto 60px;
+            }
+            
+            .main-title {
+                font-size: 42px;
+                margin-bottom: 40px;
+                line-height: 1.2;
+            }
+            
+            .team-title {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+            
+            .team-block {
+                margin-bottom: 60px;
+            }
+            
+            .team-card {
+                width: 100%;
+                height: auto;
+                min-height: 240px;
+                padding: 25px 30px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .member-photo {
+                width: 160px;
+                height: 160px;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .member-name {
+                font-size: 1.6rem;
+            }
+            
+            .member-role {
+                font-size: 1.1rem;
+                padding: 8px 20px;
+            }
+            
+            .member-bio {
+                font-size: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+                gap: 2.5rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                padding: 1.5rem 1.5rem 0;
+            }
+            
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .team-card {
+                min-height: 220px;
+                padding: 20px 25px;
+            }
+            
+            .member-photo {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .member-name {
+                font-size: 1.4rem;
+            }
+            
+            .member-role {
+                font-size: 1rem;
+                padding: 8px 18px;
+            }
+            
+            .member-bio {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                height: 65px;
+            }
+            
+            .nav-links {
+                top: 65px;
+            }
+            
+            .logo-img {
+                height: 90px;
+                max-height: 85px;
+            }
+            
+            .about-container {
+                margin: 90px auto 40px;
+            }
+            
+            .about-title {
+                font-size: 36px;
+            }
+            
+            .about-text {
+                font-size: 16px;
+                line-height: 1.7;
+            }
+            
+            .mission-card {
+                padding: 35px 25px;
+                margin-top: 30px;
+            }
+            
+            .mission-title {
+                font-size: 28px;
+            }
+            
+            .main-title {
+                font-size: 36px;
+                margin-bottom: 30px;
+            }
+            
+            .team-title {
+                font-size: 28px;
+            }
+            
+            .team-card {
+                min-height: 200px;
+                padding: 20px;
+            }
+            
+            .member-photo {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .member-name {
+                font-size: 1.3rem;
+            }
+            
+            .member-role {
+                font-size: 0.95rem;
+                padding: 6px 16px;
+            }
+            
+            .member-bio {
+                font-size: 0.9rem;
+            }
+            
+            .footer-content {
+                padding: 0 1rem;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem 1rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about-title {
+                font-size: 32px;
+            }
+            
+            .main-title {
+                font-size: 32px;
+            }
+            
+            .team-title {
+                font-size: 24px;
+            }
+            
+            .team-card {
+                min-height: 180px;
+                padding: 18px;
+            }
+            
+            .member-photo {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .member-name {
+                font-size: 1.2rem;
+            }
+            
+            .member-role {
+                font-size: 0.9rem;
+                padding: 6px 14px;
+            }
+            
+            .member-bio {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo-img {
+                height: 80px;
+                max-height: 75px;
+            }
+            
+            .nav-links a {
+                font-size: 1rem;
+                padding: 10px 0;
+            }
+            
+            .about-title {
+                font-size: 28px;
+            }
+            
+            .main-title {
+                font-size: 28px;
+            }
+            
+            .team-title {
+                font-size: 22px;
+            }
+            
+            .member-photo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .member-name {
+                font-size: 1.1rem;
+            }
+            
+            .member-role {
+                font-size: 0.85rem;
+                padding: 5px 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo-img {
+                height: 70px;
+                max-height: 65px;
+            }
+            
+            .about-title {
+                font-size: 26px;
+            }
+            
+            .main-title {
+                font-size: 26px;
+            }
+            
+            .team-title {
+                font-size: 20px;
+            }
+            
+            .member-photo {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .member-name {
+                font-size: 1rem;
+            }
+            
+            .member-role {
+                font-size: 0.8rem;
+                padding: 4px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+        </a>
+
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'courses' %}">Courses</a>
+            <a href="{% url 'team' %}" class="active">Team</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="#">T&C</a>
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- ABOUT SECTION -->
+<section class="about-container">
+    <h1 class="about-title">About Nirvant</h1>
+    
+    <p class="about-text">
+        Nirvant is a dynamic hub where visionary leaders, ambitious students, and forward-thinking investors
+        come together to drive meaningful change. We combine cutting-edge mental health solutions, advanced
+        technology, and educational excellence to deliver transformative content and personalized mentorship
+        tailored to your unique journey.
+    </p>
+    
+    <div class="mission-card">
+        <h2 class="mission-title">Our Mission & Vision</h2>
+        
+        <p class="mission-text">
+            Our mission is to empower individuals and organizations to unlock their full potential by providing
+            actionable insights, innovative strategies, and unwavering support. Through our diverse channels—
+            Nirvant Wellness, Nirvant Tech, and Nirvant Edge—we offer a wide range of resources that nurture
+            emotional clarity, mental resilience, and professional growth.
+        </p>
+        
+        <p class="mission-text">
+            Personalized mentorship ensures that every learner receives guidance aligned with their goals,
+            fostering confidence and sustained success in an ever-evolving world. At Nirvant, we believe that
+            true growth happens at the convergence of knowledge, support, and innovation.
+        </p>
+        
+        <p class="mission-text">
+            Whether you are a student seeking clarity, a professional aiming to elevate your career, or an
+            investor looking to partner with a purpose-driven enterprise, Nirvant is your trusted ally on the
+            path to a healthier, more impactful future. Join us and be part of a community committed to shaping
+            success with intention and heart.
+        </p>
+    </div>
+</section>
+
+<!-- TEAM SECTION -->
+<section class="team-section">
+    <h2 class="main-title">Meet Our Team</h2>
+    
+    <!-- Founders Section -->
+    <div class="team-block">
+        <h3 class="team-title">Founders</h3>
+        <div class="team-cards-container">
+            {% if teams.Founders %}
+                {% for member in teams.Founders %}
+                <div class="team-card">
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">{{ member.name }}</h4>
+                        <div class="member-role">{{ member.role }}</div>
+                        <p class="member-bio">{{ member.bio }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback if no data -->
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Aurobinda Nayak" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Aurobinda Nayak</h4>
+                        <div class="member-role">Chief Executive Officer</div>
+                        <p class="member-bio">As the Chief Executive Officer and visionary leader of Nirvant, Aurobinda guides the company's mission to empower individuals through wellness, education, and technology. He's deeply passionate about holistic growth and creating a meaningful impact in the community.</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Prateekshya Mohapatra" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Prateekshya Mohapatra</h4>
+                        <div class="member-role">Chief Operating Officer</div>
+                        <p class="member-bio">Serving as the Chief Operating Officer at Nirvant, Prateekshya combines strategic direction with mentorship, driving operational excellence while helping students and professionals achieve clarity, confidence, and long-term growth.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Super Mentors Section -->
+    <div class="team-block">
+        <h3 class="team-title">Super Mentors</h3>
+        <div class="team-cards-container">
+            {% if teams.Super_Mentors %}
+                {% for member in teams.Super_Mentors %}
+                <div class="team-card">
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">{{ member.name }}</h4>
+                        <div class="member-role">{{ member.role }}</div>
+                        <p class="member-bio">{{ member.bio }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback if no data -->
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Dr. Sarah Johnson" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Dr. Sarah Johnson</h4>
+                        <div class="member-role">Lead Wellness Mentor</div>
+                        <p class="member-bio">With over 15 years of experience in mental health counseling, Dr. Johnson specializes in helping students and professionals achieve emotional balance and career clarity through personalized mentorship.</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Michael Chen" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Michael Chen</h4>
+                        <div class="member-role">Career Strategy Mentor</div>
+                        <p class="member-bio">Former Fortune 500 executive turned mentor, Michael helps professionals navigate career transitions and develop leadership skills through practical, real-world strategies.</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Priya Sharma" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Priya Sharma</h4>
+                        <div class="member-role">Academic Excellence Coach</div>
+                        <p class="member-bio">Specializing in NEET and competitive exam preparation, Priya has helped over 500 students achieve top ranks through her innovative teaching methods and personalized study plans.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Tech Team Section -->
+    <div class="team-block">
+        <h3 class="team-title">Tech Team</h3>
+        <div class="team-cards-container">
+            {% if teams.Tech_Team %}
+                {% for member in teams.Tech_Team %}
+                <div class="team-card">
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">{{ member.name }}</h4>
+                        <div class="member-role">{{ member.role }}</div>
+                        <p class="member-bio">{{ member.bio }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback if no data -->
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Raj Patel" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Raj Patel</h4>
+                        <div class="member-role">Lead Software Engineer</div>
+                        <p class="member-bio">Full-stack developer with expertise in building scalable educational platforms. Raj leads the tech development at Nirvant, ensuring seamless user experiences across all platforms.</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Ananya Desai" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Ananya Desai</h4>
+                        <div class="member-role">UI/UX Designer</div>
+                        <p class="member-bio">Creating intuitive and beautiful interfaces that make learning enjoyable. Ananya focuses on user-centered design principles to enhance the Nirvant learning experience.</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="David Kim" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">David Kim</h4>
+                        <div class="member-role">Data Analyst</div>
+                        <p class="member-bio">David analyzes user data to improve learning outcomes and personalize content recommendations. His insights help tailor the Nirvant experience to each user's needs.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Design Team Section -->
+    <div class="team-block">
+        <h3 class="team-title">Design Team</h3>
+        <div class="team-cards-container">
+            {% if teams.Design_Team %}
+                {% for member in teams.Design_Team %}
+                <div class="team-card">
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">{{ member.name }}</h4>
+                        <div class="member-role">{{ member.role }}</div>
+                        <p class="member-bio">{{ member.bio }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback if no data -->
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Sofia Rodriguez" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Sofia Rodriguez</h4>
+                        <div class="member-role">Creative Director</div>
+                        <p class="member-bio">Leading the visual identity of Nirvant, Sofia ensures that all design elements communicate our mission of clarity, growth, and empowerment through clean, modern aesthetics.</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Kevin Wilson" class="member-photo">
+                    <div class="member-info">
+                        <h4 class="member-name">Kevin Wilson</h4>
+                        <div class="member-role">Graphic Designer</div>
+                        <p class="member-bio">Creating engaging visual content that makes complex concepts accessible. Kevin's designs help transform educational material into visually compelling learning experiences.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Marketing Team Section - ONLY SHOWS IF THERE ARE MEMBERS -->
+    {% if teams.Marketing_Team %}
+    <div class="team-block">
+        <h3 class="team-title">Marketing Team</h3>
+        <div class="team-cards-container">
+            {% for member in teams.Marketing_Team %}
+            <div class="team-card">
+                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                <div class="member-info">
+                    <h4 class="member-name">{{ member.name }}</h4>
+                    <div class="member-role">{{ member.role }}</div>
+                    <p class="member-bio">{{ member.bio }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-about">
+            <h3 class="footer-heading">Navigate Nirvant</h3>
+            <div class="footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="#">T&C</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Connect With Us</h3>
+            <div class="footer-links">
+                <a href="tel:+917735932023"><i class="fas fa-phone"></i>+91 77359 32023</a>
+                <a href="tel:+916371214085"><i class="fas fa-phone"></i>+91 63712 14085</a>
+                <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i>nirvant.trgyy@gmail.com</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Stay Connected</h3>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fas fa-comment-dots"></i></a>
+            </div>
+            <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">
+            <div class="footer-circle">N</div>
+            <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+        </div>
+        <div class="footer-bottom-right">
+            Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+            ? '<i class="fas fa-times"></i>' 
+            : '<i class="fas fa-bars"></i>';
+    });
+    
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+    });
+</script>
+</body>
+</html>
