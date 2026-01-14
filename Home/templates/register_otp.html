@@ -1,0 +1,823 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Nirvant</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+    
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff8d6 0%, #ffefc1 100%);
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.8s ease-out;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        .logo-img {
+            height: 120px;
+            width: auto;
+            max-height: 110px;
+            object-fit: contain;
+            display: block;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+        
+        .nav-links a:hover {
+            color: #f97316;
+        }
+        
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #f97316;
+            border-radius: 2px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+        }
+        
+        /* ================= REGISTRATION CONTAINER ================= */
+        .registration-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 50px;
+            width: 100%;
+        }
+        
+        .auth-card {
+            background: #fffef6;
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.15);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(249, 115, 22, 0.2);
+        }
+        
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            border-radius: 24px 24px 0 0;
+        }
+        
+        /* ================= FORM HEADER ================= */
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-header h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .form-header p {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* ================= FORM STYLES ================= */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: #0f172a;
+            background: #fff;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .form-control:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .form-control:hover {
+            border-color: #cbd5e1;
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .password-toggle:hover {
+            color: #f97316;
+            background: rgba(249, 115, 22, 0.05);
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -0.5rem;
+        }
+        
+        .col {
+            flex: 1;
+            padding: 0 0.5rem;
+            min-width: 0;
+        }
+        
+        /* ================= BUTTONS ================= */
+        .btn {
+            padding: 14px 24px;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: #f97316;
+            color: #fff;
+            border: 2px solid #f97316;
+        }
+        
+        .btn-primary:hover {
+            background: #ea580c;
+            border-color: #ea580c;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: #fff;
+            border: 2px solid #10b981;
+        }
+        
+        .btn-success:hover {
+            background: #0da271;
+            border-color: #0da271;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+            transform: translateY(-2px);
+        }
+        
+        .btn-link {
+            background: transparent;
+            color: #f97316;
+            border: none;
+            padding: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        
+        .btn-link:hover {
+            color: #ea580c;
+            transform: translateY(-1px);
+        }
+        
+        /* ================= ALERTS ================= */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid transparent;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-color: #a7f3d0;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fecaca;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #bfdbfe;
+        }
+        
+        /* ================= OTP INPUT ================= */
+        .otp-input {
+            letter-spacing: 8px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 14px;
+        }
+        
+        .otp-input::placeholder {
+            letter-spacing: normal;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .copyright {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #f97316;
+        }
+        
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .navbar {
+                height: 60px;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+            }
+            
+            .nav-links a.active::after {
+                display: none;
+            }
+            
+            .registration-container {
+                padding: 80px 15px 40px;
+            }
+            
+            .auth-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .row {
+                flex-direction: column;
+                margin: 0;
+            }
+            
+            .col {
+                padding: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .col:last-child {
+                margin-bottom: 0;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+            
+            .footer-links {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .auth-card {
+                padding: 1.75rem 1.25rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.6rem;
+            }
+            
+            .form-control {
+                padding: 12px 14px;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+            }
+            
+            .alert {
+                padding: 0.875rem 1rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .auth-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.4rem;
+            }
+            
+            .otp-input {
+                font-size: 1.25rem;
+                letter-spacing: 6px;
+                padding: 12px;
+            }
+        }
+        
+        /* ================= ADDITIONAL STYLES ================= */
+        .input-hint {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .register-link a {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .register-link a:hover {
+            color: #ea580c;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'terms' %}">T&C</a>
+                <a href="{% url 'login' %}">Log in</a>
+                <a href="{% url 'register' %}" class="active">Create Account</a>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- REGISTRATION CONTAINER -->
+    <div class="registration-container">
+        <div class="auth-card">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+
+            {% if show_otp %}
+            <!-- OTP FORM - EXACT SAME LOGIC AS ROOT CODE -->
+            <div class="form-header">
+                <h2>Verify OTP</h2>
+                <p>Enter the 6-digit code sent to {{ email|truncatechars:25 }}</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ email }}">
+
+                <div class="form-group">
+                    <label class="form-label">Enter OTP</label>
+                    <input type="text" name="otp" class="form-control otp-input" placeholder="6-digit OTP" required>
+                </div>
+
+                <button name="action" value="verify_otp" class="btn btn-success">
+                    Verify OTP
+                </button>
+
+                <button name="action" value="resend_otp" class="btn-link">
+                    Resend OTP
+                </button>
+            </form>
+
+            {% else %}
+            <!-- REGISTRATION FORM - AGE FIELD REMOVED -->
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p>Join Nirvant and start your growth journey</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="first_name" class="form-control" placeholder="First name" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" placeholder="Last name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="Email address" required>
+                    <small class="input-hint">We'll send OTP to this email</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Choose username" required>
+                    <small class="input-hint">Choose a unique username</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" name="password1" class="form-control" placeholder="Password" required id="password1">
+                        <button type="button" class="password-toggle" id="togglePassword1">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <small class="input-hint">Use a strong password</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" name="password2" class="form-control" placeholder="Confirm password" required id="password2">
+                        <button type="button" class="password-toggle" id="togglePassword2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button name="action" value="register" class="btn btn-primary">
+                    Register & Get OTP
+                </button>
+            </form>
+
+            <div class="register-link">
+                Already have an account? <a href="{% url 'login' %}">Log in here</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{% url 'terms' %}">Terms & Conditions</a>
+                <a href="{% url 'contact' %}">Contact Us</a>
+                <a href="{% url 'home' %}#privacy">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Close menu when clicking on links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            });
+        }
+        
+        // Password toggle functionality
+        const togglePassword1 = document.getElementById('togglePassword1');
+        const togglePassword2 = document.getElementById('togglePassword2');
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+        
+        if (togglePassword1 && password1) {
+            togglePassword1.addEventListener('click', () => {
+                const type = password1.getAttribute('type') === 'password' ? 'text' : 'password';
+                password1.setAttribute('type', type);
+                togglePassword1.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+        
+        if (togglePassword2 && password2) {
+            togglePassword2.addEventListener('click', () => {
+                const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
+                password2.setAttribute('type', type);
+                togglePassword2.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+        
+        // SIMPLE FORM VALIDATION - LIKE ROOT CODE
+        const registerForm = document.querySelector('form');
+        if (registerForm && !document.querySelector('.otp-input')) {
+            registerForm.addEventListener('submit', function(e) {
+                // Simple password match check (exactly like root code logic)
+                const password1 = document.getElementById('password1');
+                const password2 = document.getElementById('password2');
+                
+                if (password1 && password2 && password1.value !== password2.value) {
+                    e.preventDefault();
+                    alert('Passwords do not match. Please check and try again.');
+                    password2.focus();
+                    return false;
+                }
+                
+                // Everything is valid, form will submit normally
+                // Show loading state on button
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                }
+            });
+        }
+        
+        // Auto-focus on first input
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('.form-control');
+            if (firstInput) {
+                firstInput.focus();
+            }
+            
+            // For OTP page, auto-select OTP input
+            const otpInput = document.querySelector('.otp-input');
+            if (otpInput) {
+                otpInput.focus();
+            }
+        });
+        
+        // OTP input formatting - only allow numbers
+        const otpInput = document.querySelector('.otp-input');
+        if (otpInput) {
+            otpInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        }
+    </script>
+</body>
+</html>

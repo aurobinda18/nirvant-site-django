@@ -1,0 +1,2075 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET 2026 Mentorship | Nirvant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff8dc;
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ================= NAVBAR - EXACTLY LIKE REFERENCE ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.8s ease-out;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        .logo-img {
+            height: 150px;
+            width: auto;
+            max-height: 135px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        /* NAV LINKS - EXACTLY LIKE REFERENCE */
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+        /* Special styling for Dashboard link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.dashboard-link {
+            color: #1e40af; /* Royal blue color */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+        .nav-links a.dashboard-link.active::after {
+            background-color: #1e40af;
+        }
+        
+        /* Special styling for Logout link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: rgba(220, 38, 38, 0.05);
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        
+        /* ================= ACCOUNT DROPDOWN STYLES - EXACTLY LIKE REFERENCE ================= */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
+        }
+        
+        /* ================= HERO SECTION ================= */
+        .hero-section {
+            min-height: 100vh;
+            padding-top: 70px; /* Adjusted for reduced navbar height */
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #fff8dc 0%, #fff0c4 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+        
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+        }
+        
+        .title-line1 {
+            display: block;
+            font-size: 4rem;
+            line-height: 1;
+        }
+        
+        .title-line2 {
+            display: block;
+            font-size: 4rem;
+            line-height: 1;
+            margin-top: 0.2rem;
+        }
+        
+        .hero-description {
+            font-size: 1.3rem;
+            color: #1e293b;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.4s forwards;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.8s forwards;
+        }
+        
+        .btn {
+            padding: 16px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-primary {
+            background: #ff7a00;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: #ff6a00;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 122, 0, 0.35);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #ff7a00;
+            border: 2px solid #ff7a00;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 122, 0, 0.05);
+            transform: translateY(-3px);
+        }
+        
+        /* ================= IMAGE SECTION ================= */
+        .poster-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+        
+        .poster-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .poster-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* ================= UPDATED FEATURES SECTION ================= */
+        .features-section {
+            padding: 6rem 0;
+            background: linear-gradient(to bottom, #FEFCE9, #FFF8E6, #FFEFD8);
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+            padding-top: 2rem;
+        }
+        
+        .features-section.animated .section-header {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #0f172a;
+            display: inline-block;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            letter-spacing: -0.025em;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header::after {
+            content: "";
+            width: 112px;
+            height: 6px;
+            background: linear-gradient(to right, #ff7a00, #ffb224);
+            display: block;
+            margin: 0 auto;
+            border-radius: 999px;
+            opacity: 0;
+            transform: scaleX(0);
+            transition: all 0.6s ease-out 0.3s;
+        }
+        
+        .features-section.animated .section-header::after {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 18px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 122, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .feature-card.animated {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(255, 122, 0, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: #2563eb;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            color: #0f172a;
+            font-weight: 700;
+            min-height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 1rem;
+            min-height: 3rem;
+        }
+        
+        /* ================= NEW PRICING SECTION - EXACTLY LIKE REFERENCE IMAGE ================= */
+        .pricing-section {
+            padding: 80px 20px;
+            background: #fff6d8;
+            text-align: center;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .pricing-header h2 {
+            font-size: 60px;
+            font-weight: 900;
+            color: #111827;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 26px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* PRICING CARD STYLES - EXACTLY LIKE REFERENCE */
+        .pricing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            min-height: 320px;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* PLAN TYPE (Free Trial, Paid Trial, etc.) */
+        .plan-type {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #25A755; /* Green color for plan type */
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* DURATION (3 days, 45 days, etc.) */
+        .plan-duration {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1E3A8A; /* Blue color for duration */
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        /* PRICE CONTAINER */
+        .price-container {
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        /* CURRENT PRICE (₹0, ₹150, etc.) */
+        .current-price {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #374151; /* Dark gray color for current price */
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        /* ORIGINAL PRICE CONTAINER (for discounted plans) */
+        .original-price-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        /* ORIGINAL PRICE WITH STRIKETHROUGH */
+        .original-price {
+            font-size: 1.4rem;
+            color: #9CA3AF; /* Light gray color for strikethrough */
+            text-decoration: line-through;
+            font-weight: 600;
+        }
+
+        /* DISCOUNT BADGE (25% off, 30% off) */
+        .discount-badge {
+            color: #25A755; /* Green color for discount */
+            font-size: 1rem;
+            font-weight: 700;
+            background: rgba(37, 167, 85, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* ENROLL NOW BUTTON */
+        .enroll-button {
+            padding: 15px 40px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            background: #EA580C; /* Orange color for button */
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.25);
+            width: 100%;
+            max-width: 220px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .enroll-button:hover {
+            background: #ff6a00;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(234, 88, 12, 0.35);
+        }
+
+        /* FREE TRIAL BUTTON STYLE */
+        .enroll-button.free {
+            background: #f3f4f6;
+            color: #111827;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .enroll-button.free:hover {
+            background: #e5e7eb;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ================= UPDATED FAQ SECTION ================= */
+        .faq-section {
+            padding: 6rem 0;
+            background: linear-gradient(to bottom, #FEF9C9 0%, #FEF3CB 50%, #FFF1CF 100%);
+        }
+        
+        .faq-section.animated .section-header {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 1px solid rgba(255, 122, 0, 0.1);
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+        
+        .faq-question {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: #ff7a00;
+        }
+        
+        .faq-item.active .faq-question {
+            background: rgba(255, 122, 0, 0.05);
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            color: #64748b;
+            transition: all 0.4s ease;
+            opacity: 0;
+            line-height: 1.6;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            opacity: 1;
+            padding-bottom: 25px;
+        }
+        
+        /* ================= FOOTER ================= */
+        .footer {
+            background: #fff8dc;
+            color: #111827;
+            padding: 3.5rem 0 2.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff7a00;
+        }
+
+        .footer-links a i {
+            color: #ff7a00;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #ff7a00;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff7a00;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: #ff7a00;
+            color: white;
+        }
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.25rem;
+            padding-top: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+            max-width: 1200px;
+            margin: 2.25rem auto 0;
+            padding: 1.25rem 2rem 0;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
+            font-weight: 600;
+        }
+        
+        /* ================= ANIMATIONS ================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .title-line1,
+            .title-line2 {
+                font-size: 3.5rem;
+            }
+            
+            .hero-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+                padding: 0 30px;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .pricing-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                padding: 0 20px;
+            }
+            
+            .pricing-card {
+                padding: 30px 25px;
+                min-height: 300px;
+            }
+            
+            .plan-duration {
+                font-size: 1.7rem;
+            }
+            
+            .current-price {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .logo-img {
+                height: 120px;
+                max-height: 110px;
+            }
+            
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+                text-align: center;
+            }
+            
+            .title-line1,
+            .title-line2 {
+                font-size: 3rem;
+            }
+            
+            .hero-description {
+                margin: 0 auto 2rem;
+                text-align: center;
+                font-size: 1.2rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-content {
+                text-align: center;
+                padding-bottom: 2rem;
+            }
+            
+            .poster-container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .pricing-header h2 {
+                font-size: 50px;
+            }
+            
+            .pricing-card {
+                min-height: 290px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+        
+        /* MOBILE RESPONSIVE - IMPROVED - EXACTLY LIKE REFERENCE */
+        @media (max-width: 768px) {
+            .navbar {
+                height: 70px;
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+                z-index: 1001;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+                font-size: 1.1rem;
+            }
+            
+            /* Mobile styles for dashboard and logout links (logged-in users) - EXACTLY LIKE REFERENCE */
+            .nav-links a.dashboard-link {
+                color: #1e40af;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: rgba(220, 38, 38, 0.05);
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) - EXACTLY LIKE REFERENCE */
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .logo-img {
+                height: 110px;
+                max-height: 100px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .title-line1,
+            .title-line2 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-description {
+                font-size: 1.1rem;
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                padding-bottom: 3rem;
+                min-height: auto;
+                padding-top: 70px;
+            }
+            
+            .hero-container {
+                padding: 0 20px;
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .hero-content {
+                text-align: center;
+                padding-top: 2rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .poster-container {
+                max-width: 100%;
+                padding: 0 10px;
+            }
+            
+            .poster-image {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            .features-section,
+            .pricing-section,
+            .faq-section {
+                padding: 4rem 0;
+            }
+            
+            .features-section {
+                padding-top: 4rem;
+            }
+            
+            .section-container {
+                padding: 0 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .section-header {
+                margin-bottom: 3rem;
+                padding-top: 1rem;
+            }
+            
+            .section-header::after {
+                width: 80px;
+                margin: 1rem auto 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.3rem;
+                min-height: auto;
+            }
+            
+            .feature-card p {
+                min-height: auto;
+            }
+            
+            /* MOBILE PRICING GRID */
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 450px;
+                gap: 25px;
+                margin: 0 auto;
+                padding: 0 15px;
+            }
+            
+            .pricing-header h2 {
+                font-size: 40px;
+            }
+            
+            .pricing-card {
+                min-height: 280px;
+                padding: 30px 25px;
+                margin: 0;
+                width: 100%;
+            }
+            
+            .plan-duration {
+                font-size: 1.6rem;
+            }
+            
+            .current-price {
+                font-size: 2.3rem;
+            }
+            
+            .enroll-button {
+                padding: 14px 30px;
+                max-width: 220px;
+                font-size: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+                gap: 2.5rem;
+            }
+            
+            .footer-section {
+                width: 100%;
+            }
+            
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                padding: 1.25rem 1.5rem 0;
+                margin-top: 2rem;
+                gap: 1rem;
+            }
+            
+            .footer-bottom-right {
+                text-align: left;
+            }
+            
+            .faq-container {
+                padding: 0 10px;
+            }
+            
+            .faq-question {
+                padding: 20px;
+                font-size: 1rem;
+            }
+            
+            .faq-answer {
+                padding: 0 20px;
+            }
+            
+            .faq-item.active .faq-answer {
+                padding-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .navbar {
+                height: 65px;
+            }
+            
+            .nav-links {
+                top: 65px;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .hero-section {
+                padding-top: 65px;
+            }
+            
+            .hero-container {
+                padding: 0 15px;
+                gap: 2.5rem;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+                margin-top: 0.5rem;
+            }
+            
+            .title-line1,
+            .title-line2 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 0;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                padding: 14px 24px;
+            }
+            
+            .features-section,
+            .pricing-section,
+            .faq-section {
+                padding: 3.5rem 0;
+            }
+            
+            .features-section {
+                padding-top: 3.5rem;
+            }
+            
+            .section-container {
+                padding: 0 1rem;
+            }
+            
+            .hero-content {
+                padding-top: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 350px;
+                margin: 0 auto;
+                gap: 1.2rem;
+            }
+            
+            .feature-card {
+                padding: 1.8rem 1.5rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.2rem;
+                min-height: auto;
+            }
+            
+            .feature-card p {
+                min-height: auto;
+                font-size: 0.95rem;
+            }
+            
+            /* SMALL MOBILE PRICING */
+            .pricing-header h2 {
+                font-size: 36px;
+            }
+            
+            .pricing-card {
+                min-height: 270px;
+                padding: 25px 20px;
+            }
+            
+            .plan-duration {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .current-price {
+                font-size: 2.1rem;
+            }
+            
+            .original-price {
+                font-size: 1.2rem;
+            }
+            
+            .discount-badge {
+                font-size: 0.9rem;
+                padding: 4px 10px;
+            }
+            
+            .enroll-button {
+                padding: 13px 25px;
+                max-width: 200px;
+                font-size: 1rem;
+            }
+
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem 1rem 0;
+            }
+            
+            .footer-content {
+                padding: 0 1rem;
+            }
+            
+            .social-icons {
+                justify-content: center;
+            }
+        }
+        
+        /* SMALL MOBILE DEVICES */
+        @media (max-width: 380px) {
+            .hero-title {
+                font-size: 1.9rem;
+            }
+            
+            .title-line1,
+            .title-line2 {
+                font-size: 1.9rem;
+            }
+            
+            .hero-description {
+                font-size: 0.95rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .features-grid {
+                max-width: 300px;
+                gap: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem 1.2rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+                height: 50px;
+            }
+            
+            /* SMALL MOBILE PRICING */
+            .pricing-header h2 {
+                font-size: 32px;
+            }
+            
+            .pricing-card {
+                min-height: 260px;
+                padding: 22px 18px;
+            }
+            
+            .plan-duration {
+                font-size: 1.4rem;
+            }
+            
+            .current-price {
+                font-size: 1.9rem;
+            }
+            
+            .original-price {
+                font-size: 1.1rem;
+            }
+            
+            .enroll-button {
+                padding: 12px 22px;
+                max-width: 180px;
+                font-size: 0.95rem;
+            }
+            
+            .logo-img {
+                height: 90px;
+                max-height: 85px;
+            }
+            
+            .nav-links a {
+                font-size: 1rem;
+                padding: 10px 0;
+            }
+        }
+        
+        /* EXTRA SMALL DEVICES */
+        @media (max-width: 320px) {
+            .hero-title {
+                font-size: 1.7rem;
+            }
+            
+            .title-line1,
+            .title-line2 {
+                font-size: 1.7rem;
+            }
+            
+            .hero-description {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .features-grid {
+                max-width: 280px;
+            }
+            
+            /* EXTRA SMALL PRICING */
+            .pricing-header h2 {
+                font-size: 28px;
+            }
+            
+            .pricing-card {
+                min-height: 250px;
+                padding: 20px 16px;
+            }
+            
+            .plan-duration {
+                font-size: 1.3rem;
+            }
+            
+            .current-price {
+                font-size: 1.8rem;
+            }
+            
+            .enroll-button {
+                padding: 11px 20px;
+                max-width: 170px;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR - EXACTLY LIKE REFERENCE CODE -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}" class="active">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'terms' %}">T&C</a>
+                
+                <!-- Show different options based on authentication status - EXACTLY LIKE REFERENCE -->
+                {% if user.is_authenticated %}
+                    <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                    <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+                {% else %}
+                    <!-- User is not logged in: Show Account as normal dropdown link -->
+                    <div class="account-dropdown">
+                        <a href="#" class="account-dropbtn">
+                            Account <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="account-dropdown-content">
+                            <a href="{% url 'login' %}">Log in</a>
+                            <a href="{% url 'register' %}">Create account</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <!-- TITLE IN 2 LINES -->
+                <h1 class="hero-title">
+                    <span class="title-line1">NEET 2026 Complete</span>
+                    <span class="title-line2">Mentorship Program</span>
+                </h1>
+                <p class="hero-description">
+                    Personalized guidance, 1-on-1 mentorship, live doctor sessions, week-wise study plans, and complete NEET preparation — all in one course.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="enrollBtn">Enroll Now</button>
+                    <button class="btn btn-secondary" id="learnBtn">Learn More</button>
+                </div>
+            </div>
+            
+            <!-- IMAGE ON RIGHT SIDE -->
+            <div class="poster-container">
+                <img src="{% static 'images/hero-image.png' %}" alt="NEET 2026 Mentorship Program" class="poster-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">What You'll Get</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" id="card1">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3>1:1 Mentorship</h3>
+                    <p>Weekly 3 days including Sunday</p>
+                </div>
+                <div class="feature-card" id="card2">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <h3>Calling Feature</h3>
+                    <p>Daily check-ins & support</p>
+                </div>
+                <div class="feature-card" id="card3">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-calendar"></i>
+                    </div>
+                    <h3>Week-wise Study Plans</h3>
+                    <p>Structured preparation</p>
+                </div>
+                <div class="feature-card" id="card4">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <h3>Subject-wise Resource Guidance</h3>
+                    <p>Physics, Chemistry, Biology</p>
+                </div>
+                <div class="feature-card" id="card5">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3>Past Year Questions</h3>
+                    <p>Past year questions for practice</p>
+                </div>
+                <div class="feature-card" id="card6">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Error Analysis</h3>
+                    <p>Fix weak areas</p>
+                </div>
+                <div class="feature-card" id="card7">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h3>Personal Mentorship</h3>
+                    <p>Tailored growth sessions</p>
+                </div>
+                <div class="feature-card" id="card8">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-stethoscope"></i>
+                    </div>
+                    <h3>Live Doctors Meet</h3>
+                    <p>Direct expert interaction</p>
+                </div>
+                <div class="feature-card" id="card9">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-clipboard"></i>
+                    </div>
+                    <h3>Weekly Reports</h3>
+                    <p>Performance tracking</p>
+                </div>
+                <div class="feature-card" id="card10">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <h3>Post-NEET Guidance</h3>
+                    <p>Counselling & admissions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION - EXACTLY LIKE REFERENCE IMAGE -->
+    <!-- PRICING SECTION - EXACTLY LIKE REFERENCE IMAGE -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-header">
+            <h2>Pricing Plans</h2>
+        </div>
+        
+        <div class="pricing-grid">
+            {% for course in courses %}
+            <div class="pricing-card">
+                <!-- PLAN TYPE -->
+                <div class="plan-type">
+                    {% if course.plan_type == "free_trial" %}
+                        Free Trial
+                    {% elif course.plan_type == "paid_trial" %}
+                        Paid Trial
+                    {% elif course.plan_type == "neet_complete" %}
+                        NEET 2026
+                    {% else %}
+                        {{ course.course_name }}
+                    {% endif %}
+                </div>
+                
+                <!-- DURATION -->
+                <div class="plan-duration">{{ course.duration_text }}</div>
+                
+                <!-- PRICE CONTAINER -->
+                <div class="price-container">
+                    <div class="current-price">₹{{ course.course_price }}</div>
+                    
+                    {% if course.original_price %}
+                    <div class="original-price-container">
+                        <span class="original-price">₹{{ course.original_price }}</span>
+                        {% if course.discount_percentage > 0 %}
+                        <span class="discount-badge">{{ course.discount_percentage }}% off</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- ENROLL BUTTON -->
+                <button class="enroll-button {% if course.plan_type == 'free_trial' %}free{% endif %}" 
+                        data-course-id="{{ course.id }}">
+                    {{ course.button_text }}
+                </button>
+            </div>
+            {% empty %}
+            <!-- If no courses are available -->
+            <div class="pricing-card" style="grid-column: 1 / -1; padding: 50px;">
+                <div class="plan-type">No Plans Available</div>
+                <div class="plan-duration">Coming Soon</div>
+                <div class="price-container">
+                    <div class="current-price">₹0</div>
+                </div>
+                <button class="enroll-button free">Check Back Soon</button>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- FAQ SECTION WITH UPDATED BACKGROUND -->
+    <section class="faq-section" id="faq">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">How do I schedule my 1:1 sessions? <i class="fa fa-chevron-down"></i></div>
+                    <div class="faq-answer">After enrollment, mentors will contact you and schedule sessions according to your convenience. You can choose time slots that work best for you.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Can I upgrade my plan later? <i class="fa fa-chevron-down"></i></div>
+                    <div class="faq-answer">Yes, you can upgrade seamlessly anytime. The remaining amount from your current plan will be adjusted in the new plan's payment.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Are live doctor sessions recorded? <i class="fa fa-chevron-down"></i></div>
+                    <div class="faq-answer">Yes, all live doctor sessions are recorded and made available in your dashboard for future reference. You can access them anytime.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What if I'm not satisfied with the program? <i class="fa fa-chevron-down"></i></div>
+                    <div class="faq-answer">We offer a 7-day money-back guarantee for all paid plans. If you're not satisfied within the first week, we'll provide a full refund.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-heading">Navigate Nirvant</h3>
+                <div class="footer-links">
+                    <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+                    <a href="{% url 'courses' %}"><i class="fas fa-book"></i> Courses</a>
+                    <a href="#" style="opacity: 0.7; cursor: not-allowed;"><i class="fas fa-info-circle"></i> About</a>
+                    <a href="#" style="opacity: 0.7; cursor: not-allowed;"><i class="fas fa-phone"></i> Contact</a>
+                    <a href="#" style="opacity: 0.7; cursor: not-allowed;"><i class="fas fa-file-contract"></i> T&C</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-heading">Connect With Us</h3>
+                <div class="footer-links">
+                    <a href="tel:+917735932023"><i class="fas fa-phone"></i> +91 77359 32023</a>
+                    <a href="tel:+916371214085"><i class="fas fa-phone"></i> +91 63712 14085</a>
+                    <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i> nirvant.trgyy@gmail.com</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-heading">Stay Connected</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fas fa-comment-dots"></i></a>
+                </div>
+                <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <div class="footer-circle">N</div>
+                <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+            </div>
+            <div class="footer-bottom-right">
+                Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    // ================= DROPDOWN FUNCTIONALITY - EXACTLY LIKE REFERENCE =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
+        
+        if (accountDropbtn) {
+            // Toggle dropdown on click for all devices
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close dropdown when clicking a link
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                
+                // Also close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    const navLinks = document.getElementById('navLinks');
+                    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                    if (navLinks && mobileMenuBtn) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+        });
+    });
+    
+    // ================= MOBILE MENU TOGGLE - FIXED VERSION =================
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on links (except dropdown button)
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Close dropdown when clicking a link inside dropdown
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    // ================= CLOSE MENU WHEN CLICKING OUTSIDE =================
+    document.addEventListener('click', (e) => {
+        if (navLinks && mobileMenuBtn) {
+            if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Also close any open dropdown
+                const accountDropdown = document.querySelector('.account-dropdown');
+                if (accountDropdown) {
+                    accountDropdown.classList.remove('active');
+                }
+            }
+        }
+    });
+    
+    // ================= HERO BUTTONS =================
+    const enrollBtn = document.getElementById('enrollBtn');
+    const learnBtn = document.getElementById('learnBtn');
+    
+    if (enrollBtn) {
+        enrollBtn.addEventListener('click', function() {
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+                window.scrollTo({
+                    top: pricingSection.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
+    
+    if (learnBtn) {
+        learnBtn.addEventListener('click', function() {
+            const featuresSection = document.getElementById('features');
+            if (featuresSection) {
+                window.scrollTo({
+                    top: featuresSection.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
+    
+    // ================= FAQ FUNCTIONALITY =================
+    document.querySelectorAll(".faq-item").forEach(item => {
+        const question = item.querySelector(".faq-question");
+        if (question) {
+            question.onclick = () => {
+                // Close other FAQ items
+                document.querySelectorAll(".faq-item").forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+            }
+        }
+    });
+    
+    // ================= SCROLL ANIMATIONS =================
+    const sections = document.querySelectorAll('.features-section, .pricing-section, .faq-section');
+    
+    function checkScroll() {
+        const windowHeight = window.innerHeight;
+        const triggerPoint = windowHeight * 0.8;
+        
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top < triggerPoint) {
+                section.classList.add('animated');
+                
+                // Animate feature cards
+                if (section.classList.contains('features-section')) {
+                    const cards = section.querySelectorAll('.feature-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => { 
+                            card.classList.add('animated'); 
+                        }, index * 100);
+                    });
+                }
+                
+                // Animate pricing cards
+                if (section.classList.contains('pricing-section')) {
+                    const cards = section.querySelectorAll('.pricing-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => { 
+                            card.classList.add('animated'); 
+                        }, index * 100);
+                    });
+                }
+            }
+        });
+        
+        // Make sure "Courses" nav link stays active on this page
+        const coursesLink = document.querySelector('.nav-links a[href*="courses"]');
+        if (coursesLink) {
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            coursesLink.classList.add('active');
+        }
+    }
+    
+    // ================= INITIALIZE ON LOAD =================
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const posterContainer = document.querySelector('.poster-container');
+            if (posterContainer) {
+                posterContainer.classList.add('animated');
+            }
+        }, 500);
+        checkScroll();
+    });
+    
+    window.addEventListener('scroll', checkScroll);
+    
+    // ================= BUTTON HOVER EFFECTS =================
+    const buttons = document.querySelectorAll('.btn, .enroll-button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            button.style.transform = 'translateY(-2px)';
+        });
+        button.addEventListener('mouseleave', () => {
+            if (!button.style.transform.includes('scale(0.95)')) {
+                button.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    // ================= SMOOTH SCROLL FOR ANCHOR LINKS =================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#') && href.length > 1) {
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+    
+    // ================= DISABLE CLICK ON DISABLED LINKS =================
+    document.querySelectorAll('a[style*="opacity: 0.7"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('This page is coming soon!');
+        });
+    });
+    
+    // ================= HANDLE WINDOW RESIZE =================
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            
+            // Close any open dropdown on desktop
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.classList.remove('active');
+            }
+        }
+    });
+    
+    // ================= PRICING BUTTON CLICK HANDLERS =================
+    document.querySelectorAll('.enroll-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const planDuration = this.closest('.pricing-card').querySelector('.plan-duration').textContent;
+            const currentPrice = this.closest('.pricing-card').querySelector('.current-price').textContent;
+            
+            alert(`You have selected the ${planDuration} plan for ${currentPrice}. Our team will contact you shortly!`);
+        });
+    });
+</script>
+</body>
+</html>

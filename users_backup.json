@@ -1,0 +1,74 @@
+[
+{
+  "model": "auth.user",
+  "pk": 11,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$GeKWLUY7h43vlVIVbjLk2H$Enq933TE6YcQs/zpPkJ1kE6LjXsip+3QY7FhdvuCGmw=",
+    "last_login": "2026-01-12T15:21:32.262Z",
+    "is_superuser": true,
+    "username": "nirvant",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-01-02T10:10:00.009Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 12,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$rih1euY7r4oOfj2QVzPKpj$8W3KmN9dof+N5MMYXD9bJvYQ6FZgtb8aE/DiZ60vVAg=",
+    "last_login": "2026-01-02T13:08:35.171Z",
+    "is_superuser": false,
+    "username": "Prahallad",
+    "first_name": "Prahallad",
+    "last_name": "Nayak",
+    "email": "prahalladnayak873@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-01-02T10:12:12.178Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 13,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$nguRd1rC5vWWwHGBvPbJV4$/IypAg1GydtbS6PCe7fJMK5/mF1gcg06jv4nTjd2G9Y=",
+    "last_login": "2026-01-03T13:29:40.897Z",
+    "is_superuser": false,
+    "username": "Sonu",
+    "first_name": "Sonu",
+    "last_name": "Nayak",
+    "email": "prahalladnayak400@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-01-03T13:11:55.456Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 15,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$yVqifkcDOOtRdpCjqTDyKp$GHkWt3CJwVpUwhTvyetkbJqzvecUDQbGQ+3R6SmPlmI=",
+    "last_login": "2026-01-03T15:39:00.712Z",
+    "is_superuser": false,
+    "username": "Chandan",
+    "first_name": "Chandan",
+    "last_name": "Sutar",
+    "email": "skprahalladnayak@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-01-03T15:35:48.293Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

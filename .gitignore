@@ -1,0 +1,41 @@
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Static and media files (generated, not source)
+staticfiles/
+media/
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-delete-this-directory.txt
+pip-log.txt
+
+# Virtual environment
+venv/
+env/
+ENV/
+VIRTUAL_ENV/
+
+# Django migrations (keep the migrations folder, ignore cache)
+*/migrations/*.pyc

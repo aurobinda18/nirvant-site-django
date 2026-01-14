@@ -1,0 +1,2198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirvant | Team</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFF4D1;
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.8s ease-out;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        .logo-img {
+            height: 150px;
+            width: auto;
+            max-height: 135px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+        .nav-links a.dashboard-link {
+            color: #2142B0;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8;
+        }
+        
+        .nav-links a.logout-link {
+            color: #dc2626;
+            font-weight: 600;
+            background: #FDF3EB;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
+        }
+
+        /* ================= COMBINED MENTORS & SUPER MENTORS SECTION ================= */
+        .mentors-section {
+            max-width: 1400px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            color: #0f172a;
+            position: relative;
+            padding-bottom: 25px;
+            letter-spacing: -0.025em;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            border-radius: 4px;
+        }
+
+        .mentors-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0 80px;
+        }
+
+        .mentors-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            padding: 10px 5px;
+        }
+
+        .mentor-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+            margin: 0 20px;
+            width: 400px;
+            height: 500px;
+        }
+
+        .mentor-card.super-mentor {
+            border: 3px solid #f97316;
+            box-shadow: 0 15px 40px rgba(249, 115, 22, 0.2);
+            position: relative;
+        }
+
+        .super-mentor-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            line-height: 1;
+        }
+
+        .super-mentor-badge i {
+            font-size: 0.85rem;
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(249, 115, 22, 0.15);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .mentor-card.super-mentor:hover {
+            box-shadow: 0 25px 50px rgba(249, 115, 22, 0.25);
+        }
+
+        .quote-container {
+            position: relative;
+            margin-bottom: 30px;
+            flex: 1;
+            padding-top: 15px;
+        }
+
+        .testimonial-quote {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-size: 100px;
+            color: rgba(249, 115, 22, 0.2);
+            font-family: Georgia, serif;
+            font-weight: bold;
+            line-height: 0.6;
+            z-index: 1;
+        }
+
+        .mentor-content {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #475569;
+            position: relative;
+            z-index: 2;
+            display: -webkit-box;
+            -webkit-line-clamp: 7;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            padding-top: 15px;
+        }
+
+        .mentor-info {
+            display: flex;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 2px solid rgba(249, 115, 22, 0.1);
+        }
+
+        .mentor-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 4px solid #f97316;
+            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+            flex-shrink: 0;
+        }
+
+        .mentor-card.super-mentor .mentor-avatar {
+            border-width: 5px;
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        .mentor-details {
+            flex: 1;
+        }
+
+        .mentor-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .mentor-role {
+            font-size: 1rem;
+            color: #f97316;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .mentor-institution {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        /* Carousel Controls */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 30px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .carousel-btn {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 2px solid #f97316;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-btn:hover {
+            background: #f97316;
+            transform: scale(1.1);
+        }
+
+        .carousel-btn:hover i {
+            color: white;
+        }
+
+        .carousel-btn i {
+            font-size: 1.3rem;
+            color: #f97316;
+            transition: color 0.3s ease;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #f97316;
+            transform: scale(1.3);
+        }
+
+        /* ================= FOUNDERS SECTION ================= */
+        .founders-section {
+            max-width: 1100px;
+            margin: 80px auto 60px;
+            padding: 0 20px;
+        }
+
+        .founders-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 50px;
+            color: #0f172a;
+            position: relative;
+            padding-bottom: 20px;
+            letter-spacing: -0.025em;
+        }
+
+        .founders-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            border-radius: 4px;
+        }
+
+        .founders-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .founder-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 35px 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            text-align: left;
+            width: 1000px;
+            max-width: 100%;
+            min-height: 320px;
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founder-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+        }
+
+        .founder-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(249, 115, 22, 0.25);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .founder-photo {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 20%;
+            margin-right: 50px;
+            border: 8px solid #fff;
+            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.3);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .founder-card:hover .founder-photo {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(249, 115, 22, 0.4);
+        }
+
+        .founder-info {
+            flex: 1;
+        }
+
+        .founder-name {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            letter-spacing: -0.025em;
+        }
+
+        .founder-role {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f97316;
+            margin-bottom: 25px;
+            padding: 10px 25px;
+            background: rgba(249, 115, 22, 0.12);
+            border-radius: 30px;
+            display: inline-block;
+            border: 2px solid rgba(249, 115, 22, 0.25);
+        }
+
+        .founder-bio {
+            font-size: 1.1rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-top: 15px;
+        }
+
+        /* ================= ABOUT SECTION ================= */
+        .about-container {
+            max-width: 1100px;
+            margin: 60px auto 80px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .about-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+        }
+
+        .about-text {
+            max-width: 900px;
+            margin: 25px auto 50px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #334155;
+        }
+
+        /* Mission Card */
+        .mission-card {
+            background: #ffffff;
+            margin: 60px auto 0;
+            max-width: 950px;
+            padding: 50px 60px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            text-align: left;
+        }
+
+        .mission-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 35px;
+            color: #0f172a;
+        }
+
+        .mission-text {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #334155;
+            margin-bottom: 25px;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 4rem 0 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a i {
+            color: #f97316;
+            font-size: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #f97316;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #f97316;
+            color: #fff;
+        }
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 0;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
+        }
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .mentor-card {
+                width: 380px;
+                height: 480px;
+            }
+            
+            .founder-card {
+                width: 900px;
+            }
+            
+            .founder-photo {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .mentors-section {
+                margin: 100px auto 40px;
+            }
+            
+            .section-title {
+                font-size: 42px;
+            }
+            
+            .mentor-card {
+                width: 350px;
+                height: 450px;
+                padding: 35px;
+            }
+            
+            .super-mentor-badge {
+                top: 15px;
+                right: 15px;
+                padding: 8px 14px;
+                font-size: 0.7rem;
+            }
+            
+            .testimonial-quote {
+                font-size: 90px;
+                top: -20px;
+            }
+            
+            .mentor-avatar {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .founders-section {
+                margin: 60px auto 40px;
+            }
+            
+            .founders-title {
+                font-size: 36px;
+            }
+            
+            .founder-card {
+                width: 800px;
+                padding: 30px 35px;
+            }
+            
+            .founder-photo {
+                width: 180px;
+                height: 180px;
+                margin-right: 40px;
+            }
+            
+            .founder-name {
+                font-size: 1.9rem;
+            }
+            
+            .about-title {
+                font-size: 48px;
+            }
+            
+            .mission-card {
+                padding: 50px 45px;
+            }
+            
+            .carousel-controls {
+                gap: 25px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .founder-card {
+                width: 700px;
+                padding: 30px;
+            }
+            
+            .founder-photo {
+                width: 160px;
+                height: 160px;
+                margin-right: 30px;
+            }
+            
+            .founder-name {
+                font-size: 1.7rem;
+            }
+            
+            .founder-role {
+                font-size: 1.1rem;
+            }
+            
+            .founder-bio {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* MOBILE NAVBAR */
+            .navbar {
+                height: 70px;
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+                z-index: 1001;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+            }
+            
+            .nav-links a.active::after {
+                display: none;
+            }
+            
+            .nav-links a.dashboard-link {
+                color: #2142B0;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(33, 66, 176, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: #FDF3EB;
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
+            }
+            
+            .logo-img {
+                height: 110px;
+                max-height: 100px;
+            }
+            
+            /* MOBILE VIEW - 1 CARD VISIBLE - FIXED NO EDGE CUTTING */
+            .mentors-section {
+                margin: 90px auto 30px;
+                padding: 0 10px; /* Reduced padding for mobile */
+            }
+            
+            .section-title {
+                font-size: 36px;
+                margin-bottom: 40px;
+            }
+            
+            .mentors-container {
+                padding: 20px 0 70px;
+                overflow: hidden;
+                width: 100%;
+            }
+            
+            .mentors-track {
+                padding: 10px 0;
+                gap: 0;
+            }
+            
+            /* FIXED: Reduced width and margin to prevent edge cutting */
+            .mentor-card {
+                width: calc(100vw - 40px) !important; /* Enough space for full display */
+                height: 430px;
+                padding: 25px; /* Slightly reduced padding */
+                margin: 0 20px; /* Centered with proper margin */
+                box-sizing: border-box;
+                max-width: 100%;
+            }
+            
+            .super-mentor-badge {
+                top: 15px;
+                right: 15px;
+                padding: 7px 12px;
+                font-size: 0.65rem;
+            }
+            
+            .testimonial-quote {
+                font-size: 70px; /* Slightly smaller for mobile */
+                top: -15px;
+            }
+            
+            .mentor-content {
+                font-size: 0.95rem; /* Slightly smaller text */
+                -webkit-line-clamp: 6;
+            }
+            
+            .mentor-avatar {
+                width: 70px;
+                height: 70px;
+                margin-right: 15px;
+            }
+            
+            .mentor-name {
+                font-size: 1.2rem; /* Slightly smaller */
+            }
+            
+            .mentor-role {
+                font-size: 0.9rem; /* Slightly smaller */
+            }
+            
+            .mentor-institution {
+                font-size: 0.85rem; /* Slightly smaller */
+            }
+            
+            .carousel-controls {
+                position: relative;
+                margin-top: 40px;
+                padding-bottom: 20px;
+            }
+            
+            .carousel-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            /* MOBILE FOUNDERS */
+            .founders-section {
+                margin: 50px auto 40px;
+                padding: 0 15px;
+            }
+            
+            .founders-title {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+            
+            .founder-card {
+                width: 100%;
+                height: auto;
+                min-height: auto;
+                padding: 25px 30px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .founder-photo {
+                width: 180px;
+                height: 180px;
+                margin-right: 0;
+                margin-bottom: 20px;
+                object-position: center 25%;
+            }
+            
+            .founder-name {
+                font-size: 1.8rem;
+            }
+            
+            .founder-role {
+                font-size: 1.1rem;
+                padding: 8px 20px;
+            }
+            
+            .founder-bio {
+                font-size: 1rem;
+            }
+            
+            /* MOBILE ABOUT */
+            .about-container {
+                margin: 40px auto 50px;
+                padding: 0 15px;
+            }
+            
+            .about-title {
+                font-size: 42px;
+                line-height: 1.2;
+            }
+            
+            .about-text {
+                font-size: 17px;
+                padding: 0;
+            }
+            
+            .mission-card {
+                padding: 40px 30px;
+                margin-top: 40px;
+            }
+            
+            .mission-title {
+                font-size: 32px;
+            }
+            
+            .mission-text {
+                font-size: 16px;
+            }
+            
+            /* MOBILE FOOTER */
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+                gap: 2.5rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                padding: 1.5rem 1.5rem 0;
+            }
+            
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .mentor-card {
+                height: 420px;
+                padding: 22px;
+                width: calc(100vw - 35px) !important; /* Slightly smaller */
+                margin: 0 17.5px; /* Proportional margin */
+            }
+            
+            .testimonial-quote {
+                font-size: 65px;
+                top: -12px;
+            }
+            
+            .mentor-content {
+                font-size: 0.92rem;
+                -webkit-line-clamp: 6;
+            }
+            
+            .mentor-avatar {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .founder-card {
+                min-height: auto;
+                padding: 20px 25px;
+            }
+            
+            .founder-photo {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .founder-name {
+                font-size: 1.6rem;
+            }
+            
+            .founder-role {
+                font-size: 1rem;
+                padding: 8px 18px;
+            }
+            
+            .founder-bio {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                height: 65px;
+            }
+            
+            .nav-links {
+                top: 65px;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .mentors-section {
+                margin: 80px auto 20px;
+                padding: 0 8px; /* Even smaller padding */
+            }
+            
+            .section-title {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+            
+            .mentor-card {
+                height: 410px;
+                padding: 20px;
+                width: calc(100vw - 30px) !important; /* Fits perfectly */
+                margin: 0 15px; /* Centered */
+            }
+            
+            .super-mentor-badge {
+                top: 12px;
+                right: 12px;
+                padding: 6px 10px;
+                font-size: 0.6rem;
+            }
+            
+            .super-mentor-badge i {
+                font-size: 0.65rem;
+            }
+            
+            .mentor-content {
+                font-size: 0.9rem;
+                -webkit-line-clamp: 5;
+            }
+            
+            .testimonial-quote {
+                font-size: 60px;
+                top: -10px;
+            }
+            
+            .mentor-avatar {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .mentor-name {
+                font-size: 1.15rem;
+            }
+            
+            .mentor-role {
+                font-size: 0.85rem;
+            }
+            
+            .carousel-controls {
+                gap: 20px;
+            }
+            
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .carousel-btn i {
+                font-size: 1.1rem;
+            }
+            
+            .founders-section {
+                margin: 40px auto 30px;
+            }
+            
+            .founders-title {
+                font-size: 28px;
+            }
+            
+            .founder-card {
+                min-height: auto;
+                padding: 20px;
+            }
+            
+            .founder-photo {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .founder-name {
+                font-size: 1.4rem;
+            }
+            
+            .founder-role {
+                font-size: 0.95rem;
+                padding: 6px 16px;
+            }
+            
+            .founder-bio {
+                font-size: 0.9rem;
+            }
+            
+            .about-container {
+                margin: 30px auto 40px;
+            }
+            
+            .about-title {
+                font-size: 36px;
+            }
+            
+            .about-text {
+                font-size: 16px;
+                line-height: 1.7;
+            }
+            
+            .mission-card {
+                padding: 35px 25px;
+                margin-top: 30px;
+            }
+            
+            .mission-title {
+                font-size: 28px;
+            }
+            
+            .footer-content {
+                padding: 0 1rem;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem 1rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mentors-section {
+                padding: 0 5px; /* Minimal padding */
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+            
+            .mentor-card {
+                height: 400px;
+                padding: 18px;
+                width: calc(100vw - 25px) !important; /* Perfect fit */
+                margin: 0 12.5px; /* Centered */
+            }
+            
+            .mentor-content {
+                font-size: 0.88rem;
+                -webkit-line-clamp: 4;
+            }
+            
+            .testimonial-quote {
+                font-size: 55px;
+                top: -8px;
+            }
+            
+            .mentor-avatar {
+                width: 55px;
+                height: 55px;
+                margin-right: 12px;
+            }
+            
+            .mentor-name {
+                font-size: 1.1rem;
+            }
+            
+            .mentor-role {
+                font-size: 0.82rem;
+            }
+            
+            .mentor-institution {
+                font-size: 0.8rem;
+            }
+            
+            .carousel-controls {
+                gap: 15px;
+            }
+            
+            .carousel-btn {
+                width: 38px;
+                height: 38px;
+            }
+            
+            .carousel-btn i {
+                font-size: 1rem;
+            }
+            
+            .dot {
+                width: 10px;
+                height: 10px;
+            }
+            
+            .founders-title {
+                font-size: 24px;
+            }
+            
+            .founder-card {
+                min-height: auto;
+                padding: 18px;
+            }
+            
+            .founder-photo {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .founder-name {
+                font-size: 1.2rem;
+            }
+            
+            .founder-role {
+                font-size: 0.9rem;
+                padding: 6px 14px;
+            }
+            
+            .founder-bio {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+            
+            .about-title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo-img {
+                height: 90px;
+                max-height: 85px;
+            }
+            
+            .nav-links a {
+                font-size: 1rem;
+                padding: 10px 0;
+            }
+            
+            .section-title {
+                font-size: 26px;
+            }
+            
+            .mentor-card {
+                height: 390px;
+                padding: 16px;
+                width: calc(100vw - 20px) !important; /* Perfect for small screens */
+                margin: 0 10px; /* Centered */
+            }
+            
+            .mentor-content {
+                font-size: 0.85rem;
+                -webkit-line-clamp: 4;
+            }
+            
+            .testimonial-quote {
+                font-size: 50px;
+                top: -6px;
+            }
+            
+            .mentor-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .founders-title {
+                font-size: 22px;
+            }
+            
+            .founder-photo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .founder-name {
+                font-size: 1.1rem;
+            }
+            
+            .founder-role {
+                font-size: 0.85rem;
+                padding: 5px 12px;
+            }
+            
+            .about-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo-img {
+                height: 80px;
+                max-height: 75px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .mentor-card {
+                height: 380px;
+                padding: 15px;
+                width: calc(100vw - 15px) !important; /* Perfect for very small screens */
+                margin: 0 7.5px; /* Centered */
+            }
+            
+            .mentor-content {
+                font-size: 0.82rem;
+                -webkit-line-clamp: 4;
+            }
+            
+            .mentor-avatar {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .founders-title {
+                font-size: 20px;
+            }
+            
+            .founder-photo {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .founder-name {
+                font-size: 1rem;
+            }
+            
+            .founder-role {
+                font-size: 0.8rem;
+                padding: 4px 10px;
+            }
+            
+            .about-title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-container">
+        {% load static %}
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+        </a>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'courses' %}">Courses</a>
+            <a href="{% url 'team' %}" class="active">Team</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'terms' %}">T&C</a>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+            {% else %}
+                <div class="account-dropdown">
+                    <a href="#" class="account-dropbtn">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="account-dropdown-content">
+                        <a href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'register' %}">Create account</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- COMBINED MENTORS & SUPER MENTORS SECTION -->
+<section class="mentors-section">
+    <h2 class="section-title">Our Mentors & Super Mentors</h2>
+    
+    <div class="mentors-container">
+        <div class="mentors-track" id="mentorsTrack">
+            {% if teams.SUPER_MENTORS %}
+                {% for mentor in teams.SUPER_MENTORS %}
+                <div class="mentor-card super-mentor">
+                    <div class="super-mentor-badge">
+                        <i class="fas fa-star"></i> SUPER MENTOR
+                    </div>
+                    <div class="quote-container">
+                        <div class="testimonial-quote">"</div>
+                        <p class="mentor-content">{{ mentor.bio }}</p>
+                    </div>
+                    <div class="mentor-info">
+                        {% if mentor.photo %}
+                        <img src="{{ mentor.photo.url }}" alt="{{ mentor.name }}" class="mentor-avatar">
+                        {% else %}
+                        <img src="{% static 'images/default-avatar.jpg' %}" alt="{{ mentor.name }}" class="mentor-avatar">
+                        {% endif %}
+                        <div class="mentor-details">
+                            <h4 class="mentor-name">{{ mentor.name }}</h4>
+                            <p class="mentor-role">{{ mentor.role }}</p>
+                            <p class="mentor-institution">Super Mentor at Nirvant</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% if mentors %}
+                {% for mentor in mentors %}
+                <div class="mentor-card">
+                    <div class="quote-container">
+                        <div class="testimonial-quote">"</div>
+                        <p class="mentor-content">{{ mentor.bio }}</p>
+                    </div>
+                    <div class="mentor-info">
+                        {% if mentor.photo %}
+                        <img src="{{ mentor.photo.url }}" alt="{{ mentor.name }}" class="mentor-avatar">
+                        {% else %}
+                        <img src="{% static 'images/default-avatar.jpg' %}" alt="{{ mentor.name }}" class="mentor-avatar">
+                        {% endif %}
+                        <div class="mentor-details">
+                            <h4 class="mentor-name">{{ mentor.name }}</h4>
+                            <p class="mentor-role">{{ mentor.role }}</p>
+                            <p class="mentor-institution">Mentor at Nirvant</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Fallback content if no mentors in database -->
+                {% if not teams.SUPER_MENTORS %}
+                <div class="mentor-card super-mentor">
+                    <div class="super-mentor-badge">
+                        <i class="fas fa-star"></i> SUPER MENTOR
+                    </div>
+                    <div class="quote-container">
+                        <div class="testimonial-quote">"</div>
+                        <p class="mentor-content">
+                            I am an Intern Doctor at VIMSAR, Burla, with four years of academic and mentoring experience. My journey through medical education has emphasized strong fundamentals, clinical reasoning, and disciplined preparation. I focus on guiding students with clarity, structure, and a personalized approach.
+                        </p>
+                    </div>
+                    <div class="mentor-info">
+                        <img src="{% static 'images/testimonial1.jpg' %}" alt="Dr. KiranKumar Sahoo" class="mentor-avatar">
+                        <div class="mentor-details">
+                            <h4 class="mentor-name">Dr. KiranKumar Sahoo</h4>
+                            <p class="mentor-role">Super Mentor</p>
+                            <p class="mentor-institution">Super Mentor at Nirvant</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="mentor-card">
+                    <div class="quote-container">
+                        <div class="testimonial-quote">"</div>
+                        <p class="mentor-content">
+                            Academic growth is built on clarity, discipline, and consistent guidance. Our approach emphasizes strong fundamentals, structured learning, and academic integrity. Each mentor brings firsthand experience of competitive preparation, enabling realistic and effective mentorship.
+                        </p>
+                    </div>
+                    <div class="mentor-info">
+                        <img src="{% static 'images/testimonial2.jpg' %}" alt="Satyabrata Mahakud" class="mentor-avatar">
+                        <div class="mentor-details">
+                            <h4 class="mentor-name">Satyabrata Mahakud</h4>
+                            <p class="mentor-role">Academic Director</p>
+                            <p class="mentor-institution">Mentor at Nirvant</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mentor-card">
+                    <div class="quote-container">
+                        <div class="testimonial-quote">"</div>
+                        <p class="mentor-content">
+                            NEET Score: 664 I am a 2nd-year MBBS student at VIMSAR, Burla. My preparation journey emphasized strong fundamentals, self-discipline, and consistency. Having experienced the academic demands of medical education firsthand, I focus on guiding students with clarity, structure, and practical strategies.
+                        </p>
+                    </div>
+                    <div class="mentor-info">
+                        <img src="{% static 'images/testimonial3.jpg' %}" alt="Sandipta Sahoo" class="mentor-avatar">
+                        <div class="mentor-details">
+                            <h4 class="mentor-name">Sandipta Sahoo</h4>
+                            <p class="mentor-role">NEET Mentor</p>
+                            <p class="mentor-institution">Mentor at Nirvant</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="carousel-controls">
+            <button class="carousel-btn" id="prevBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="carousel-dots" id="carouselDots">
+                <!-- Dots will be generated by JavaScript -->
+            </div>
+            
+            <button class="carousel-btn" id="nextBtn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- FOUNDERS SECTION -->
+<section class="founders-section">
+    <h2 class="founders-title">Our Founders</h2>
+    
+    <div class="founders-container">
+        {% if teams.FOUNDERS %}
+            {% for member in teams.FOUNDERS %}
+            <div class="founder-card">
+                {% if member.photo %}
+                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="founder-photo">
+                {% else %}
+                <img src="{% static 'images/placeholder.jpg' %}" alt="{{ member.name }}" class="founder-photo">
+                {% endif %}
+                <div class="founder-info">
+                    <h4 class="founder-name">{{ member.name }}</h4>
+                    <div class="founder-role">{{ member.role }}</div>
+                    <p class="founder-bio">{{ member.bio }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Fallback if no founders in database -->
+            <div class="founder-card">
+                <img src="{% static 'images/placeholder.jpg' %}" alt="Aurobinda Nayak" class="founder-photo">
+                <div class="founder-info">
+                    <h4 class="founder-name">Aurobinda Nayak</h4>
+                    <div class="founder-role">Chief Executive Officer</div>
+                    <p class="founder-bio">As the Chief Executive Officer and visionary leader of Nirvant, Aurobinda guides the company's mission to empower individuals through wellness, education, and technology. He's deeply passionate about holistic growth and creating a meaningful impact in the community.</p>
+                </div>
+            </div>
+            <div class="founder-card">
+                <img src="{% static 'images/placeholder.jpg' %}" alt="Prateekshya Mohapatra" class="founder-photo">
+                <div class="founder-info">
+                    <h4 class="founder-name">Prateekshya Mohapatra</h4>
+                    <div class="founder-role">Chief Operating Officer</div>
+                    <p class="founder-bio">Serving as the Chief Operating Officer at Nirvant, Prateekshya combines strategic direction with mentorship, driving operational excellence while helping students and professionals achieve clarity, confidence, and long-term growth.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="about-container">
+    <h1 class="about-title">About Nirvant</h1>
+    
+    <p class="about-text">
+        Nirvant is a dynamic hub where visionary leaders, ambitious students, and forward-thinking investors
+        come together to drive meaningful change. We combine cutting-edge mental health solutions, advanced
+        technology, and educational excellence to deliver transformative content and personalized mentorship
+        tailored to your unique journey.
+    </p>
+    
+    <div class="mission-card">
+        <h2 class="mission-title">Our Mission & Vision</h2>
+        
+        <p class="mission-text">
+            Our mission is to empower individuals and organizations to unlock their full potential by providing
+            actionable insights, innovative strategies, and unwavering support. Through our diverse channels—
+            Nirvant Wellness, Nirvant Tech, and Nirvant Edge—we offer a wide range of resources that nurture
+            emotional clarity, mental resilience, and professional growth.
+        </p>
+        
+        <p class="mission-text">
+            Personalized mentorship ensures that every learner receives guidance aligned with their goals,
+            fostering confidence and sustained success in an ever-evolving world. At Nirvant, we believe that
+            true growth happens at the convergence of knowledge, support, and innovation.
+        </p>
+        
+        <p class="mission-text">
+            Whether you are a student seeking clarity, a professional aiming to elevate your career, or an
+            investor looking to partner with a purpose-driven enterprise, Nirvant is your trusted ally on the
+            path to a healthier, more impactful future. Join us and be part of a community committed to shaping
+            success with intention and heart.
+        </p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-about">
+            <h3 class="footer-heading">Navigate Nirvant</h3>
+            <div class="footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'terms' %}">T&C</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Connect With Us</h3>
+            <div class="footer-links">
+                <a href="tel:+917735932023"><i class="fas fa-phone"></i>+91 77359 32023</a>
+                <a href="tel:+916371214085"><i class="fas fa-phone"></i>+91 63712 14085</a>
+                <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i>nirvant.trgyy@gmail.com</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Stay Connected</h3>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fas fa-comment-dots"></i></a>
+            </div>
+            <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">
+            <div class="footer-circle">N</div>
+            <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+        </div>
+        <div class="footer-bottom-right">
+            Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ================= DROPDOWN & MOBILE MENU FUNCTIONALITY =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
+        
+        if (accountDropbtn) {
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+    });
+    
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    document.addEventListener('click', (e) => {
+        if (navLinks && mobileMenuBtn) {
+            if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                const accountDropdown = document.querySelector('.account-dropdown');
+                if (accountDropdown) {
+                    accountDropdown.classList.remove('active');
+                }
+            }
+        }
+    });
+    
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.classList.remove('active');
+            }
+        }
+    });
+    
+    // ================= SIMPLE AND CORRECT CAROUSEL FUNCTIONALITY =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const track = document.getElementById('mentorsTrack');
+        const cards = document.querySelectorAll('.mentor-card');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('carouselDots');
+        
+        if (!track || cards.length === 0) return;
+        
+        let currentIndex = 0;
+        let isAnimating = false;
+        let autoSlideInterval;
+        
+        // Calculate how many cards to show based on screen size
+        function getCardsPerView() {
+            if (window.innerWidth <= 768) {
+                return 1; // 1 card on mobile
+            } else if (window.innerWidth <= 992) {
+                return 2; // 2 cards on tablet
+            } else {
+                return 3; // 3 cards on desktop
+            }
+        }
+        
+        // Calculate card width based on screen size
+        function getCardWidth() {
+            const cardsPerView = getCardsPerView();
+            const containerWidth = track.parentElement.offsetWidth;
+            
+            if (window.innerWidth <= 768) {
+                // On mobile, use the actual card width including margins
+                const firstCard = cards[0];
+                if (firstCard) {
+                    const style = window.getComputedStyle(firstCard);
+                    const width = firstCard.offsetWidth;
+                    const marginLeft = parseFloat(style.marginLeft) || 0;
+                    const marginRight = parseFloat(style.marginRight) || 0;
+                    return width + marginLeft + marginRight;
+                }
+                return containerWidth; // Fallback
+            } else {
+                // On desktop/tablet, cards are centered with margins
+                const firstCard = cards[0];
+                if (firstCard) {
+                    const style = window.getComputedStyle(firstCard);
+                    const width = firstCard.offsetWidth;
+                    const marginLeft = parseFloat(style.marginLeft) || 0;
+                    const marginRight = parseFloat(style.marginRight) || 0;
+                    return width + marginLeft + marginRight;
+                }
+                return containerWidth / cardsPerView; // Fallback
+            }
+        }
+        
+        // Create dots based on number of slides
+        function createDots() {
+            const cardsPerView = getCardsPerView();
+            const totalSlides = Math.ceil(cards.length / cardsPerView);
+            
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === currentIndex) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    if (!isAnimating) {
+                        goToSlide(i);
+                    }
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        // Update active dot
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+        
+        // Go to specific slide - ONE CARD AT A TIME
+        function goToSlide(index) {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            const cardsPerView = getCardsPerView();
+            const cardWidth = getCardWidth();
+            const totalSlides = Math.ceil(cards.length / cardsPerView);
+            
+            // Ensure index is within bounds
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            
+            currentIndex = index;
+            
+            // Calculate translateX - ONE CARD WIDTH AT A TIME
+            // On mobile: move one full card width
+            // On desktop/tablet: move one full card width
+            const translateX = -(currentIndex * cardWidth * cardsPerView);
+            
+            track.style.transform = `translateX(${translateX}px)`;
+            
+            setTimeout(() => {
+                isAnimating = false;
+            }, 500);
+            
+            updateDots();
+        }
+        
+        // Go to next slide - ONE CARD AT A TIME
+        function nextSlide() {
+            if (isAnimating) return;
+            
+            const cardsPerView = getCardsPerView();
+            const totalSlides = Math.ceil(cards.length / cardsPerView);
+            
+            if (currentIndex >= totalSlides - 1) {
+                currentIndex = 0; // Loop back to first slide
+            } else {
+                currentIndex++;
+            }
+            
+            goToSlide(currentIndex);
+        }
+        
+        // Go to previous slide - ONE CARD AT A TIME
+        function prevSlide() {
+            if (isAnimating) return;
+            
+            const cardsPerView = getCardsPerView();
+            const totalSlides = Math.ceil(cards.length / cardsPerView);
+            
+            if (currentIndex <= 0) {
+                currentIndex = totalSlides - 1; // Loop to last slide
+            } else {
+                currentIndex--;
+            }
+            
+            goToSlide(currentIndex);
+        }
+        
+        // Initialize carousel
+        function initCarousel() {
+            createDots();
+            goToSlide(currentIndex);
+        }
+        
+        // Event listeners for buttons
+        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+        
+        // Auto slide functionality
+        function startAutoSlide() {
+            stopAutoSlide();
+            autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+        
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+            }
+        }
+        
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        
+        track.addEventListener('touchstart', (e) => {
+            stopAutoSlide();
+            startX = e.touches[0].clientX;
+            currentX = startX;
+            isDragging = true;
+            track.style.transition = 'none';
+        });
+        
+        track.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            const diff = currentX - startX;
+            const cardsPerView = getCardsPerView();
+            const cardWidth = getCardWidth();
+            const currentTranslate = -(currentIndex * cardWidth * cardsPerView);
+            const translateX = currentTranslate + diff;
+            track.style.transform = `translateX(${translateX}px)`;
+        });
+        
+        track.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = currentX - startX;
+            const cardWidth = getCardWidth();
+            const swipeThreshold = cardWidth * 0.2; // 20% of card width
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe right - previous slide
+                    prevSlide();
+                } else {
+                    // Swipe left - next slide
+                    nextSlide();
+                }
+            } else {
+                // Return to current position
+                goToSlide(currentIndex);
+            }
+            
+            track.style.transition = 'transform 0.5s ease-in-out';
+            startAutoSlide();
+        });
+        
+        // Pause auto-slide on hover
+        track.addEventListener('mouseenter', stopAutoSlide);
+        track.addEventListener('mouseleave', startAutoSlide);
+        
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                initCarousel();
+            }, 250);
+        });
+        
+        // Initialize everything
+        initCarousel();
+        startAutoSlide();
+    });
+</script>
+</body>
+</html>

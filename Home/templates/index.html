@@ -1,0 +1,2930 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirvant | Empowering Mind, Career and Identity</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ================= NAVBAR ================= */
+.navbar {
+    background: #fffef6;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    animation: slideDown 0.8s ease-out;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+.logo-img {
+    height: 150px;
+    width: auto;
+    max-height: 135px;
+    object-fit: contain;
+    display: block;
+}
+
+        .logo-img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    margin-right: 0;
+}
+        
+.nav-links a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #334155;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 1rem;
+    white-space: nowrap;
+    padding: 8px 0;
+}
+        
+.nav-links a:hover,
+.nav-links a.active {
+            color: #f97316;
+}
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #f97316;
+    border-radius: 2px;
+}
+        
+        /* Special styling for Dashboard link (ONLY for logged-in users) */
+        .nav-links a.dashboard-link {
+            color: #1e40af; /* Royal blue color */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+        .nav-links a.dashboard-link.active::after {
+            background-color: #1e40af;
+        }
+        
+        /* Special styling for Logout link (ONLY for logged-in users) */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: rgba(220, 38, 38, 0.05);
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+        }
+        
+        /* ================= ACCOUNT DROPDOWN STYLES ================= */
+        /* Account dropdown for NON-logged-in users - Normal styling */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
+        }
+        
+        /* ================= HERO SECTION ================= */
+        .hero {
+            min-height: 100vh;
+            padding-top: 70px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+        
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+        }
+        
+        .hero-tagline {
+            font-size: 1.5rem;
+            color: #1e293b;
+            max-width: 550px;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.4s forwards;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+        }
+        
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.8s forwards;
+        }
+        
+        .hero-img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: #f97316;
+            color: #fff;
+            border: 2px solid #f97316;
+        }
+        
+        .btn-primary:hover {
+            background: #ea580c;
+            border-color: #ea580c;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            border: 2px solid #f97316;
+            color: #f97316;
+            background: transparent;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(249, 115, 22, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        /* ================= MENTOR SECTION ================= */
+        .mentor-section {
+            background: #fffef6;
+            padding: 5rem 0;
+            border-radius: 30px;
+            margin: 0 2rem 5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .mentor-section.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mentor-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+        
+        .mentor-subtitle {
+            color: #f97316;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.2s;
+        }
+        
+        .mentor-section.animated .mentor-subtitle {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mentor-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.4s;
+        }
+        
+        .mentor-section.animated .mentor-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mentor-tagline {
+            font-size: 1.3rem;
+            color: #475569;
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.6s;
+        }
+        
+        .mentor-section.animated .mentor-tagline {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ================= ANIMATIONS ================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        
+        /* ================= GENERIC SECTIONS ================= */
+        section {
+            padding: 6rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        section.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        
+        section.animated .section-header {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-header h2 {
+            font-size: 4rem; /* Increased from 3.5rem */
+            font-weight: 900; /* Increased font weight */
+            color: #0f172a;
+            display: inline-block;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            letter-spacing: -0.025em;
+        }
+        
+        .section-header::after {
+            content: "";
+            width: 112px;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fbbf24);
+            display: block;
+            margin: 1.5rem auto 2.5rem;
+            border-radius: 999px;
+            opacity: 0;
+            transform: scaleX(0);
+            transition: all 0.6s ease-out 0.3s;
+        }
+        
+        section.animated .section-header::after {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+        
+        .mission-content {
+            text-align: center;
+            max-width: 48rem;
+            margin: 0 auto;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.5s;
+        }
+        
+        section.animated .mission-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mission-content p {
+            font-size: 1.5rem;
+            line-height: 1.7;
+            color: #1e293b;
+            font-weight: 500;
+        }
+        
+        /* ================= OFFERS ================= */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        
+        .offer-card {
+            background: #fffef6;
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .offer-card.animated {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .offer-card:nth-child(1).animated { animation-delay: 0.2s; }
+        .offer-card:nth-child(2).animated { animation-delay: 0.4s; }
+        .offer-card:nth-child(3).animated { animation-delay: 0.6s; }
+        
+        .offer-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        
+        .offer-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .offer-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #0f172a;
+        }
+        
+        .offer-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        /* ================= WHY CHOOSE NIRVANT SECTION ================= */
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        
+        .why-choose-card {
+            background: #fffef6;
+            border-radius: 18px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .why-choose-card.animated {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .why-choose-card:nth-child(1).animated { animation-delay: 0.2s; }
+        .why-choose-card:nth-child(2).animated { animation-delay: 0.4s; }
+        .why-choose-card:nth-child(3).animated { animation-delay: 0.6s; }
+        
+        .why-choose-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        
+        .why-choose-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .why-choose-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #0f172a;
+        }
+        
+        .why-choose-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        /* ================= RESPONSIVE 3D TEAM CAROUSEL - WORKS ON ALL DEVICES ================= */
+        .team-section {
+            background: #fff7d6;
+            padding: 80px 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .team-header h2 {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 15px;
+        }
+
+        .team-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 1px;
+        }
+
+        /* RESPONSIVE 3D Carousel Container - Works on all devices */
+        .slider-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 450px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .team-section.animated .slider-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            left: 50%;
+        }
+
+        /* Responsive Team Card */
+        .team-card-carousel {
+            position: absolute;
+            width: 280px;
+            height: 380px;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform-style: preserve-3d;
+            border: none;
+            cursor: pointer;
+            top: 50%;
+            left: 50%;
+            margin-left: -140px;
+            margin-top: -190px;
+            transition: opacity 0.6s, filter 0.6s, z-index 0.2s, box-shadow 0.2s;
+            background: #fffef6;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            backdrop-filter: blur(6px);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .team-card-carousel.animated {
+            opacity: 1;
+        }
+
+        .team-card-carousel:hover {
+            box-shadow: 0 25px 50px rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .team-card-content { 
+            position: relative; 
+            width: 100%; 
+            height: 100%;
+            background: transparent;
+            border-radius: 18px;
+            overflow: hidden;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .team-card-image {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+            background: #fff7e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.1);
+        }
+
+        .team-card-image img {
+            width: auto;
+            height: 140px;
+            max-width: 160px;
+            object-fit: contain;
+            transition: transform 0.5s;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            padding: 5px;
+        }
+
+        .team-card-carousel:hover .team-card-image img {
+            transform: scale(1.05);
+        }
+
+        .expertise-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            color: #fff;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            z-index: 10;
+            max-width: 85%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            border: 2px solid white;
+            letter-spacing: 0.5px;
+        }
+
+        .team-card-body {
+            padding: 1.5rem;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .team-card-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .team-card-role {
+            color: #f97316;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+
+        .team-card-desc {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Responsive Carousel Navigation Buttons */
+        .carousel-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 20;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+
+        .carousel-btn {
+            background: #f97316;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            transition: all 0.25s;
+            font-size: 1.1rem;
+            pointer-events: all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn:hover {
+            background: #ea580c;
+            transform: scale(1.1);
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 2.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.5s;
+        }
+
+        .team-section.animated .carousel-indicators {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .carousel-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #f9731633;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .carousel-indicator.active {
+            background: #f97316;
+            transform: scale(1.4);
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+        }
+
+        .no-mentors-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #64748b;
+        }
+        
+        /* ================= BACKGROUND FOR NEET & NIRVANT CIRCLE ================= */
+        .background-section {
+            background: radial-gradient(circle at top, #ffe7c2 0%, #ffffff 40%, #fff7e6 100%);
+            padding: 4rem 0;
+            margin: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .background-section::before {
+            content: "";
+            position: absolute;
+            inset: 8%;
+            max-width: 1200px;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 244, 225, 0.9));
+            box-shadow: 0 18px 45px rgba(249, 115, 22, 0.18);
+            border-radius: 32px;
+            z-index: 0;
+        }
+
+        /* ================= NEET SECTION (NEW DESIGN - LIKE NIRVANT CIRCLE) ================= */
+        .neet-section {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            max-width: 1100px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            opacity: 1;
+            transform: none;
+            transition: all 0.8s ease-out;
+            overflow: hidden;
+        }
+        
+        .neet-container {
+            padding: 3rem 2.5rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .neet-content {
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .neet-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 1.2rem;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .neet-tagline {
+            font-size: 1.2rem;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .neet-highlights {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .neet-highlights li {
+            padding: 0.6rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            position: relative;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .neet-highlights li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.6rem;
+            line-height: 1;
+        }
+        
+        .neet-price-container {
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .neet-price-text {
+            font-size: 1.8rem;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .neet-price {
+            font-size: 1.8rem;
+            color: #0f172a;
+            font-weight: 900;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .neet-price-currency {
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 1.8rem;
+        }
+
+        .neet-price-number {
+            color: #0f172a;
+            font-weight: 900;
+        }
+        
+        .neet-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .neet-benefits {
+            background: #ffffff;
+            padding: 2.3rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .neet-benefits-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+        }
+        
+        .neet-benefits-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .neet-benefits-list li {
+            padding: 0.8rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            position: relative;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .neet-benefits-list li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.8rem;
+            line-height: 1;
+        }
+        
+        .neet-benefits-desc {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* ================= NIRVANT CIRCLE SECTION ================= */
+        .nirvant-circle-section {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            max-width: 1100px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            opacity: 1;
+            transform: none;
+            transition: all 0.8s ease-out;
+        }
+        
+        .nirvant-circle-container {
+            padding: 3rem 2.5rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nirvant-circle-content {
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nirvant-circle-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 1.2rem;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+        }
+        
+        .nirvant-circle-tagline {
+            font-size: 1.2rem;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .nirvant-circle-form {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .circle-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .circle-email-input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 999px;
+            border: 2px solid #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .circle-email-input:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+        }
+        
+        .circle-subscribe-btn {
+            background: #f97316;
+            color: #fff;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .circle-subscribe-btn:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+        }
+        
+        .circle-privacy-note {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .circle-benefits {
+            background: #ffffff;
+            padding: 2.3rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .benefits-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefits-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .benefits-list li {
+            padding: 0.8rem 0;
+            font-size: 1.05rem;
+            color: #475569;
+            position: relative;
+            padding-left: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .benefits-list li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.8rem;
+            line-height: 1;
+        }
+        
+        .benefits-link {
+            display: inline-block;
+            color: #f97316;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .benefits-link:hover {
+            color: #ea580c;
+            transform: translateX(5px);
+        }
+        
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 3.5rem 0 2.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .footer.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a i {
+            color: #f97316;
+            font-size: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #f97316;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #f97316;
+            color: #fff;
+        }
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.25rem;
+            padding-top: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
+        }
+        
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1200px) {
+            .neet-title {
+                font-size: 2.5rem;
+            }
+            
+            .neet-container,
+            .nirvant-circle-container {
+                gap: 2.5rem;
+            }
+            
+            /* Responsive adjustments for 3D carousel on tablet */
+            .slider-container {
+                max-width: 900px;
+                height: 420px;
+                perspective: 1000px;
+            }
+            
+            .team-card-carousel {
+                width: 240px;
+                height: 350px;
+                margin-left: -120px;
+                margin-top: -175px;
+            }
+            
+            .team-card-image {
+                height: 160px;
+            }
+            
+            .team-card-image img {
+                height: 120px;
+                max-width: 140px;
+            }
+            
+            .team-card-body {
+                padding: 1.2rem;
+                height: 190px;
+            }
+            
+            .team-card-name {
+                font-size: 1.3rem;
+            }
+            
+            .team-card-role {
+                font-size: 0.9rem;
+            }
+            
+            .team-card-desc {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .logo-img {
+                height: 120px;
+                max-height: 110px;
+            }
+            
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 3.4rem;
+                text-align: center;
+            }
+            
+            .hero-tagline {
+                margin: 0 auto 2rem;
+                text-align: center;
+                font-size: 1.25rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+
+            .neet-container,
+            .nirvant-circle-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .neet-content,
+            .nirvant-circle-content {
+                text-align: center;
+            }
+            
+            .neet-title {
+                font-size: 2.3rem;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.6rem;
+            }
+            
+            .circle-input-group {
+                justify-content: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+            }
+            
+            .nav-links a.active::after {
+                display: none;
+            }
+            
+            /* Mobile styles for dashboard and logout links (logged-in users) */
+            .nav-links a.dashboard-link {
+                color: #1e40af;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: rgba(220, 38, 38, 0.05);
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) */
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-tagline {
+                font-size: 1.125rem;
+            }
+            
+            .mentor-section {
+                margin: 0 1rem 3rem;
+                padding: 3rem 1rem;
+            }
+            
+            .mentor-title {
+                font-size: 2rem;
+            }
+            
+            .mentor-tagline {
+                font-size: 1.1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 3rem; /* Responsive adjustment */
+            }
+            
+            .team-header h2 {
+                font-size: 3rem;
+            }
+            
+            .team-header h3 {
+                font-size: 1.5rem;
+            }
+            
+            .section-header::after {
+                width: 80px;
+                margin: 1rem auto 2rem;
+            }
+            
+            /* MOBILE RESPONSIVE 3D CAROUSEL */
+            .slider-container {
+                max-width: 100%;
+                height: 380px;
+                perspective: 800px;
+            }
+            
+            .team-card-carousel {
+                width: 220px;
+                height: 320px;
+                margin-left: -110px;
+                margin-top: -160px;
+            }
+            
+            .team-card-image {
+                height: 140px;
+                padding: 15px;
+            }
+            
+            .team-card-image img {
+                height: 100px;
+                max-width: 120px;
+            }
+            
+            .team-card-body {
+                padding: 1rem;
+                height: 180px;
+            }
+            
+            .team-card-name {
+                font-size: 1.2rem;
+            }
+            
+            .team-card-role {
+                font-size: 0.85rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .team-card-desc {
+                font-size: 0.85rem;
+                -webkit-line-clamp: 3;
+            }
+            
+            .expertise-badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.7rem;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .carousel-buttons {
+                padding: 0 0.5rem;
+            }
+            
+            .carousel-indicators {
+                margin-top: 2rem;
+            }
+            
+            .carousel-indicator {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .background-section {
+                padding: 3rem 1rem;
+            }
+
+            .background-section::before {
+                inset: 4%;
+                border-radius: 28px;
+            }
+
+            .neet-container,
+            .nirvant-circle-container {
+                padding: 2.5rem 1.5rem;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            .neet-title {
+                font-size: 1.9rem;
+                line-height: 1.3;
+                word-break: break-word;
+                hyphens: auto;
+            }
+            
+            .nirvant-circle-title {
+                font-size: 2.2rem;
+            }
+            
+            .neet-tagline,
+            .nirvant-circle-tagline {
+                font-size: 1.05rem;
+                line-height: 1.5;
+            }
+            
+            .nirvant-circle-tagline br {
+                display: block;
+            }
+            
+            .circle-input-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .circle-email-input,
+            .circle-subscribe-btn {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.4rem;
+            }
+            
+            .neet-highlights li,
+            .neet-benefits-list li,
+            .benefits-list li {
+                font-size: 0.98rem;
+                padding-left: 1.5rem;
+                align-items: flex-start;
+                padding-top: 0.5rem;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                font-size: 1rem;
+                left: 0;
+                top: 0.5rem;
+                position: absolute;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero {
+                padding-top: 60px;
+                min-height: calc(100vh - 10px);
+            }
+            
+            .hero-container {
+                padding: 0 1.5rem;
+                gap: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+                margin-top: 0.5rem;
+            }
+            
+            .hero-tagline {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                padding: 12px 24px;
+            }
+            
+            .hero-img {
+                max-width: 350px;
+            }
+            
+            section {
+                padding: 4rem 0;
+            }
+            
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .logo-img {
+                height: 98px;
+                max-height: 90px;
+            }
+            
+            .navbar {
+                height: 60px;
+                min-height: 50px;
+            }
+            
+            .hero-content {
+                padding-top: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .team-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .team-header h3 {
+                font-size: 1.3rem;
+            }
+            
+            .mission-content p {
+                font-size: 1.125rem;
+            }
+            
+            /* SMALL MOBILE RESPONSIVE 3D CAROUSEL */
+            .slider-container {
+                height: 350px;
+                perspective: 600px;
+            }
+            
+            .team-card-carousel {
+                width: 200px;
+                height: 300px;
+                margin-left: -100px;
+                margin-top: -150px;
+            }
+            
+            .team-card-image {
+                height: 130px;
+                padding: 12px;
+            }
+            
+            .team-card-image img {
+                height: 90px;
+                max-width: 110px;
+            }
+            
+            .team-card-body {
+                padding: 0.9rem;
+                height: 170px;
+            }
+            
+            .team-card-name {
+                font-size: 1.1rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .team-card-role {
+                font-size: 0.8rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .team-card-desc {
+                font-size: 0.8rem;
+                -webkit-line-clamp: 3;
+            }
+            
+            .expertise-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+                top: 8px;
+                right: 8px;
+            }
+            
+            .carousel-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            
+            .carousel-indicator {
+                width: 10px;
+                height: 10px;
+            }
+            
+            .background-section {
+                padding: 2.5rem 0.8rem;
+            }
+
+            .background-section::before {
+                inset: 6%;
+                border-radius: 24px;
+            }
+
+            .neet-container,
+            .nirvant-circle-container {
+                padding: 2rem 1.2rem;
+                max-width: 100%;
+            }
+
+            .neet-title {
+                font-size: 1.7rem;
+                line-height: 1.35;
+                margin-bottom: 0.8rem;
+                hyphens: auto;
+                word-break: break-word;
+            }
+            
+            .nirvant-circle-title {
+                font-size: 1.9rem;
+            }
+            
+            .neet-tagline,
+            .nirvant-circle-tagline {
+                font-size: 0.98rem;
+                line-height: 1.5;
+            }
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.2rem;
+                animation: float 2.5s ease-in-out infinite;
+            }
+            
+            .circle-input-group {
+                gap: 0.6rem;
+            }
+
+            .circle-email-input,
+            .circle-subscribe-btn {
+                max-width: 100%;
+                padding: 12px 18px;
+            }
+            
+            .circle-subscribe-btn {
+                padding: 12px 24px;
+            }
+
+            .circle-benefits,
+            .neet-benefits {
+                margin-top: 1.8rem;
+                padding: 1.5rem 1.2rem;
+            }
+
+            .benefits-title,
+            .neet-benefits-title {
+                font-size: 1.25rem;
+            }
+            
+            .neet-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+            
+            .neet-buttons .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .neet-highlights li,
+            .neet-benefits-list li,
+            .benefits-list li {
+                font-size: 0.92rem;
+                padding: 0.5rem 0;
+                padding-left: 1.5rem;
+                align-items: flex-start;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                font-size: 0.95rem;
+                top: 0.5rem;
+                left: 0;
+                position: absolute;
+            }
+
+            .nirvant-circle-tagline {
+                display: block;
+            }
+            
+            .nirvant-circle-tagline br {
+                display: block;
+                content: "";
+                margin-bottom: 0.3rem;
+            }
+
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            /* EXTRA SMALL MOBILE 3D CAROUSEL */
+            .slider-container {
+                height: 320px;
+                perspective: 500px;
+            }
+            
+            .team-card-carousel {
+                width: 180px;
+                height: 280px;
+                margin-left: -90px;
+                margin-top: -140px;
+            }
+            
+            .team-card-image {
+                height: 120px;
+                padding: 10px;
+            }
+            
+            .team-card-image img {
+                height: 80px;
+                max-width: 100px;
+            }
+            
+            .team-card-body {
+                padding: 0.8rem;
+                height: 160px;
+            }
+            
+            .team-card-name {
+                font-size: 1rem;
+            }
+            
+            .team-card-role {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .team-card-desc {
+                font-size: 0.75rem;
+                -webkit-line-clamp: 3;
+            }
+            
+            .expertise-badge {
+                font-size: 0.65rem;
+                padding: 0.15rem 0.5rem;
+                top: 5px;
+                right: 5px;
+            }
+            
+            .carousel-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            
+            .neet-title {
+                font-size: 1.55rem;
+                line-height: 1.4;
+                word-break: break-word;
+                hyphens: auto;
+            }
+            
+            .neet-price-text,
+            .neet-price,
+            .neet-price-currency {
+                font-size: 1.1rem;
+            }
+            
+            .neet-buttons .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .neet-tagline {
+                font-size: 0.9rem;
+            }
+            
+            .neet-highlights li,
+            .neet-benefits-list li {
+                font-size: 0.85rem;
+                padding-left: 1.3rem;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before {
+                font-size: 0.9rem;
+                top: 0.45rem;
+            }
+            
+            .nirvant-circle-tagline {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .team-header h2 {
+                font-size: 2rem;
+            }
+            
+            .team-header h3 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            /* MINIMUM SCREEN 3D CAROUSEL */
+            .slider-container {
+                height: 300px;
+                perspective: 400px;
+            }
+            
+            .team-card-carousel {
+                width: 170px;
+                height: 260px;
+                margin-left: -85px;
+                margin-top: -130px;
+            }
+            
+            .team-card-image {
+                height: 110px;
+            }
+            
+            .team-card-image img {
+                height: 70px;
+                max-width: 90px;
+            }
+            
+            .team-card-body {
+                padding: 0.7rem;
+                height: 150px;
+            }
+            
+            .team-card-desc {
+                -webkit-line-clamp: 2;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .team-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .team-header h3 {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Fix for tick symbol alignment on all devices */
+        .neet-highlights li,
+        .neet-benefits-list li,
+        .benefits-list li {
+            position: relative;
+            padding-left: 1.8rem;
+        }
+        
+        .neet-highlights li::before,
+        .neet-benefits-list li::before,
+        .benefits-list li::before {
+            content: "✓";
+            color: #f97316;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+            top: 0.6rem;
+            line-height: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                top: 0.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .neet-highlights li,
+            .neet-benefits-list li,
+            .benefits-list li {
+                padding-left: 1.5rem;
+            }
+            
+            .neet-highlights li::before,
+            .neet-benefits-list li::before,
+            .benefits-list li::before {
+                top: 0.45rem;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-container">
+        {% load static %}
+        <a href="#home" class="logo">
+            <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+        </a>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'courses' %}" class="active">Courses</a>
+            <a href="{% url 'team' %}">Team</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'terms' %}">T&C</a>
+            
+            <!-- Show different options based on authentication status -->
+            {% if user.is_authenticated %}
+                <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+            {% else %}
+                <!-- User is not logged in: Show Account as normal dropdown link -->
+                <div class="account-dropdown">
+                    <a href="#" class="account-dropbtn">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="account-dropdown-content">
+                        <a href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'register' %}">Create account</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 class="hero-title">Empowering Mind, Career and Identity.</h1>
+            <p class="hero-tagline">
+                Nirvant is where clarity meets growth. We help students, professionals,
+                and leaders find balance between mind, purpose, and performance.
+            </p>
+            <div class="hero-buttons">
+                <a class="btn btn-primary" href="#neet">Enroll Now</a>
+                <a class="btn btn-secondary" href="#offers">Explore Nirvant</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'images/hero-image.png' %}" alt="Nirvant Hero Image" class="hero-img">
+        </div>
+    </div>
+</section>
+
+<!-- MISSION -->
+<section id="mission">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Mission</h2>
+        </div>
+        <div class="mission-content">
+            <p>At Nirvant, we believe personal and professional growth begins from within. Our mission is to bring mental wellness, education, and technology together—helping individuals build emotional strength, career clarity, and inner confidence through content, mentorship, and meaningful connections.</p>
+        </div>
+    </div>
+</section>
+
+<!-- OFFERS -->
+<section id="offers">
+    <div class="container">
+        <div class="section-header">
+            <h2>What We Offer</h2>
+        </div>
+        <div class="offers-grid">
+            <div class="offer-card" id="offer1">
+                <div class="offer-icon">👥</div>
+                <h3>Mentorship</h3>
+                <p>One-on-one guidance from experienced mentors to help you navigate your career and personal growth journey.</p>
+            </div>
+            <div class="offer-card" id="offer2">
+                <div class="offer-icon">📚</div>
+                <h3>Courses</h3>
+                <p>Structured learning programs designed to build skills, knowledge, and confidence in your chosen field.</p>
+            </div>
+            <div class="offer-card" id="offer3">
+                <div class="offer-icon">💻</div>
+                <h3>Tech Tools</h3>
+                <p>Innovative digital tools and resources to enhance learning, productivity, and personal development.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY CHOOSE NIRVANT -->
+<section id="why-choose">
+    <div class="container">
+        <div class="section-header">
+            <h2>Why Choose Nirvant?</h2>
+        </div>
+        <div class="why-choose-grid">
+            <div class="why-choose-card" id="why1">
+                <div class="why-choose-icon">🧠</div>
+                <h3>Expert Team</h3>
+                <p>Highly qualified mentors, wellness coaches, and tech specialists dedicated to your success.</p>
+            </div>
+            <div class="why-choose-card" id="why2">
+                <div class="why-choose-icon">🌐</div>
+                <h3>Holistic Approach</h3>
+                <p>We combine wellness, education, and career growth seamlessly for balanced development.</p>
+            </div>
+            <div class="why-choose-card" id="why3">
+                <div class="why-choose-icon">⚡</div>
+                <h3>Innovative Tools</h3>
+                <p>Tech-driven solutions to track your progress and enhance learning with modern methodologies.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RESPONSIVE 3D TEAM CAROUSEL - WORKS ON ALL DEVICES -->
+<section class="team-section" id="team">
+    <div class="container">
+        <div class="team-header">
+            <h2>Meet Our Team</h2>
+            <h3>Mentors & Super Mentors</h3>
+        </div>
+
+        <!-- 3D Carousel Container - Works on ALL devices including mobile -->
+        <div class="slider-container">
+            <div class="carousel" id="teamCarousel">
+                {% for mentor in super_mentors %}
+                <div class="team-card-carousel" data-index="{{ forloop.counter0 }}">
+                    <div class="team-card-content">
+                        <div class="team-card-image">
+                            {% if mentor.photo %}
+                                <img src="{{ mentor.photo.url }}" alt="{{ mentor.name }}" 
+                                     style="width: auto; height: 140px; max-width: 160px; object-fit: contain;">
+                            {% else %}
+                                <img src="{% static 'images/default-avatar.jpg' %}" alt="{{ mentor.name }}"
+                                     style="width: auto; height: 140px; max-width: 160px; object-fit: contain;">
+                            {% endif %}
+                            <div class="expertise-badge">{{ mentor.expertise }}</div>
+                        </div>
+                        <div class="team-card-body">
+                            <div class="team-card-name">{{ mentor.name }}</div>
+                            <div class="team-card-role">
+    {% if mentor.designation == 'super_mentor' %}
+        Super Mentor
+    {% else %}
+        Mentor
+    {% endif %}
+</div>
+                            <p class="team-card-desc">{{ mentor.bio|truncatechars:150 }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Fallback if no mentors -->
+                <div class="no-mentors-message">
+                    <p style="font-size: 18px; color: #64748b;">No mentors available yet. Check back soon!</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Carousel Navigation Buttons - Works on ALL devices -->
+            <div class="carousel-buttons">
+                <button class="carousel-btn" id="prevTeam">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn" id="nextTeam">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators" id="teamIndicators">
+            {% for mentor in super_mentors %}
+            <div class="carousel-indicator" data-index="{{ forloop.counter0 }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- NEET - NEW DESIGN LIKE NIRVANT CIRCLE -->
+<div class="background-section">
+    <div class="neet-section" id="neet">
+        <div class="neet-container">
+            <div class="neet-content">
+                <h2 class="neet-title">NEET 2026 Complete Mentorship Program</h2>
+                <p class="neet-tagline">Personalized guidance, 1-on-1 mentorship, live doctor sessions, week-wise study plans, and complete NEET preparation — all in one course.</p>
+                
+                <ul class="neet-highlights">
+                    <li>1-on-1 mentorship</li>
+                    <li>Live doctor sessions</li>
+                    <li>Week-wise study plans</li>
+                    <li>Mock tests & reports</li>
+                </ul>
+                
+                <div class="neet-buttons">
+                    <a class="btn btn-primary" href="#nirvant-circle">Email Now</a>
+                    <a class="btn btn-secondary" href="#offers">Learn More</a>
+                </div>
+                
+                <div class="neet-price-container">
+                    <span class="neet-price-text">from</span>
+                    <span class="neet-price">
+                        <span class="neet-price-currency">₹</span>
+                        <span class="neet-price-number">3500</span>
+                    </span>
+                </div>
+            </div>
+            <div class="neet-benefits">
+                <h3 class="neet-benefits-title">What this includes</h3>
+                <ul class="neet-benefits-list">
+                    <li>Personal mentorship & weekly plans</li>
+                    <li>Live expert sessions</li>
+                    <li>Timed mock tests & analytics</li>
+                    <li>Post-NEET counselling</li>
+                </ul>
+                <p class="neet-benefits-desc">Quick overview — view the course page for full details.</p>
+                <a href="#nirvant-circle" class="benefits-link">Enroll Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WHITE–ORANGE BACKGROUND + CENTERED NIRVANT CIRCLE -->
+<div class="background-section">
+    <div class="nirvant-circle-section" id="nirvant-circle">
+        <div class="nirvant-circle-container">
+            <div class="nirvant-circle-content">
+                <h2 class="nirvant-circle-title">Join the Nirvant Circle</h2>
+                <p class="nirvant-circle-tagline">Weekly reflections, clarity prompts,<br>and growth insights — straight to your inbox.</p>
+                <div class="nirvant-circle-form">
+                    <div class="circle-input-group">
+                        <input type="email" class="circle-email-input" placeholder="Enter your email" required>
+                        <button type="submit" class="circle-subscribe-btn">Subscribe</button>
+                    </div>
+                    <p class="circle-privacy-note">We respect your privacy. Unsubscribe anytime.</p>
+                </div>
+            </div>
+            <div class="circle-benefits">
+                <h3 class="benefits-title">What you'll get</h3>
+                <ul class="benefits-list">
+                    <li>Short clarity prompts</li>
+                    <li>Weekly practice & reflection</li>
+                    <li>Tools for focus & growth</li>
+                </ul>
+                <a href="#offers" class="benefits-link">See course benefits</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3 class="footer-heading">Navigate Nirvant</h3>
+<div class="footer-links">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'courses' %}">Courses</a>
+    <a href="{% url 'team' %}">Team</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'terms' %}">T&C</a>
+</div>
+            </div>
+            <div>
+                <h3 class="footer-heading">Connect With Us</h3>
+                <div class="footer-links">
+                    <a href="tel:+917735932023"><i class="fas fa-phone"></i>+91 77359 32023</a>
+                    <a href="tel:+916371214085"><i class="fas fa-phone"></i>+91 63712 14085</a>
+                    <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i>nirvant.trgyy@gmail.com</a>
+                </div>
+            </div>
+            <div>
+                <h3 class="footer-heading">Stay Connected</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fas fa-comment-dots"></i></a>
+                </div>
+                <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <div class="footer-circle">N</div>
+                <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+            </div>
+            <div class="footer-bottom-right">
+                Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ================= DROPDOWN FUNCTIONALITY =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
+        
+        if (accountDropbtn) {
+            // Toggle dropdown on click for all devices
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close dropdown when clicking a link
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                
+                // Also close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+    });
+    
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    // Form: Nirvant Circle
+    const circleSubscribeBtn = document.querySelector('.circle-subscribe-btn');
+    const circleEmailInput = document.querySelector('.circle-email-input');
+    
+    circleSubscribeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = circleEmailInput.value;
+        if (email) {
+            alert(`Thank you for joining the Nirvant Circle with ${email}! You'll receive weekly insights and prompts.`);
+            circleEmailInput.value = '';
+        } else {
+            alert('Please enter your email address.');
+        }
+    });
+    
+    // ================= RESPONSIVE 3D CAROUSEL FOR TEAM SECTION =================
+    const teamCarousel = document.getElementById('teamCarousel');
+    const teamIndicatorsContainer = document.getElementById('teamIndicators');
+    const prevTeamBtn = document.getElementById('prevTeam');
+    const nextTeamBtn = document.getElementById('nextTeam');
+    
+    // Get mentor data from Django template
+    const mentorCards = document.querySelectorAll('.team-card-carousel');
+    const totalMentors = mentorCards.length;
+    
+    if (totalMentors > 0) {
+        let currentTeamIndex = 0;
+        let radius = 350; // Default radius
+        let cardWidth = 280; // Default card width
+        let cardHeight = 380; // Default card height
+        
+        // Function to get responsive values based on screen size
+        function getResponsiveValues() {
+            const screenWidth = window.innerWidth;
+            
+            if (screenWidth <= 400) {
+                radius = 220;
+                cardWidth = 180;
+                cardHeight = 280;
+            } else if (screenWidth <= 576) {
+                radius = 250;
+                cardWidth = 200;
+                cardHeight = 300;
+            } else if (screenWidth <= 768) {
+                radius = 280;
+                cardWidth = 220;
+                cardHeight = 320;
+            } else if (screenWidth <= 992) {
+                radius = 300;
+                cardWidth = 240;
+                cardHeight = 350;
+            } else if (screenWidth <= 1200) {
+                radius = 320;
+                cardWidth = 240;
+                cardHeight = 350;
+            } else {
+                radius = 350;
+                cardWidth = 280;
+                cardHeight = 380;
+            }
+        }
+        
+        const angleStep = 360 / totalMentors;
+        let carouselAngle = 0;
+        
+        // Initialize carousel
+        function initTeamCarousel() {
+            getResponsiveValues();
+            
+            // Position each card in 3D space with responsive adjustments
+            mentorCards.forEach((card, index) => {
+                const angle = index * angleStep;
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                card.style.width = `${cardWidth}px`;
+                card.style.height = `${cardHeight}px`;
+                card.style.marginLeft = `-${cardWidth/2}px`;
+                card.style.marginTop = `-${cardHeight/2}px`;
+                
+                // Add animation delay
+                setTimeout(() => {
+                    card.classList.add('animated');
+                }, index * 150);
+            });
+            
+            updateTeamCarousel();
+            
+            // Initialize indicators
+            teamIndicatorsContainer.innerHTML = '';
+            for (let i = 0; i < totalMentors; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'carousel-indicator';
+                if (i === currentTeamIndex) indicator.classList.add('active');
+                indicator.addEventListener('click', () => {
+                    rotateTeamToIndex(i);
+                    resetTeamAutoRotate();
+                });
+                teamIndicatorsContainer.appendChild(indicator);
+            }
+        }
+        
+        function updateTeamCarousel() {
+            teamCarousel.style.transform = `translateX(-50%) rotateY(${carouselAngle}deg)`;
+            
+            // Update indicators
+            document.querySelectorAll('.carousel-indicator').forEach((el, idx) => {
+                el.classList.toggle('active', idx === currentTeamIndex);
+            });
+            
+            // Improve visibility for current card
+            mentorCards.forEach((card, index) => {
+                if (index === currentTeamIndex) {
+                    card.style.zIndex = '10';
+                    card.style.filter = 'brightness(1)';
+                } else {
+                    card.style.zIndex = '1';
+                    card.style.filter = 'brightness(0.8)';
+                }
+            });
+        }
+        
+        function rotateTeamToIndex(targetIndex) {
+            let diff = targetIndex - currentTeamIndex;
+            if (Math.abs(diff) > totalMentors/2) {
+                diff = -Math.sign(diff) * (totalMentors - Math.abs(diff));
+            }
+            carouselAngle -= diff * angleStep;
+            currentTeamIndex = targetIndex;
+            updateTeamCarousel();
+        }
+        
+        function rotateTeam(direction) {
+            if (direction === 'next') {
+                currentTeamIndex = (currentTeamIndex + 1) % totalMentors;
+                carouselAngle -= angleStep;
+            } else {
+                currentTeamIndex = (currentTeamIndex - 1 + totalMentors) % totalMentors;
+                carouselAngle += angleStep;
+            }
+            updateTeamCarousel();
+        }
+        
+        // Auto-rotate functionality
+        let teamAutoRotate;
+        
+        function startAutoRotate() {
+            teamAutoRotate = setInterval(() => rotateTeam('next'), 5000);
+        }
+        
+        function resetTeamAutoRotate() {
+            clearInterval(teamAutoRotate);
+            startAutoRotate();
+        }
+        
+        // Event listeners for buttons
+        if (nextTeamBtn && prevTeamBtn) {
+            nextTeamBtn.addEventListener('click', () => {
+                rotateTeam('next');
+                resetTeamAutoRotate();
+            });
+            
+            prevTeamBtn.addEventListener('click', () => {
+                rotateTeam('prev');
+                resetTeamAutoRotate();
+            });
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                initTeamCarousel();
+                startAutoRotate();
+            }, 1000);
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            initTeamCarousel();
+        });
+        
+        // Touch swipe functionality for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        teamCarousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+        
+        teamCarousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next
+                    rotateTeam('next');
+                } else {
+                    // Swipe right - previous
+                    rotateTeam('prev');
+                }
+                resetTeamAutoRotate();
+            }
+        }
+    } else {
+        // Hide carousel controls if no mentors
+        if (document.querySelector('.carousel-buttons')) {
+            document.querySelector('.carousel-buttons').style.display = 'none';
+        }
+        if (teamIndicatorsContainer) {
+            teamIndicatorsContainer.style.display = 'none';
+        }
+    }
+    
+    // ================= SCROLL ANIMATIONS =================
+    const sections = document.querySelectorAll('section, .mentor-section, .background-section, .footer, .team-section');
+    const navItems = document.querySelectorAll('.nav-links a');
+    
+    function checkScroll() {
+        const windowHeight = window.innerHeight;
+        const triggerPoint = windowHeight * 0.8;
+        
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top < triggerPoint) {
+                section.classList.add('animated');
+                
+                if (section.id === 'offers' || section.id === 'why-choose') {
+                    const cards = section.querySelectorAll('.offer-card, .why-choose-card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => { card.classList.add('animated'); }, index * 200);
+                    });
+                }
+                
+                // Animate team carousel when in view
+                if (section.id === 'team') {
+                    const sliderContainer = section.querySelector('.slider-container');
+                    const indicators = section.querySelector('.carousel-indicators');
+                    
+                    if (sliderContainer) {
+                        setTimeout(() => {
+                            sliderContainer.classList.add('animated');
+                        }, 300);
+                    }
+                }
+            }
+        });
+        
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href').substring(1) === current) {
+                item.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const mentorSection = document.querySelector('.mentor-section');
+            if (mentorSection) {
+                mentorSection.style.animationDelay = '0.5s';
+                mentorSection.classList.add('animated');
+            }
+        }, 1000);
+        checkScroll();
+    });
+    
+    window.addEventListener('scroll', checkScroll);
+    
+    // Button hover effects
+    const buttons = document.querySelectorAll('.btn, .circle-subscribe-btn, .carousel-btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            button.style.transform = 'translateY(-2px)';
+        });
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+</body>
+</html>

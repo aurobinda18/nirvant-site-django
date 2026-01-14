@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terms & Policies | Nirvant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Font Awesome & Google Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFF4D1;
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ================= NAVBAR - EXACTLY LIKE REFERENCE ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.8s ease-out;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        /* LOGO SIZE INCREASED TO MATCH REFERENCE */
+        .logo-img {
+            height: 150px;
+            width: auto;
+            max-height: 135px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        /* NAV LINKS - EXACTLY LIKE REFERENCE */
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+        /* REMOVED THE UNDERLINE - AS YOU REQUESTED */
+        /* .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #f97316;
+            border-radius: 2px;
+        } */
+        
+        /* Special styling for Dashboard link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.dashboard-link {
+            color: #2142B0; /* Royal blue color from your specification */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+        /* REMOVED THE UNDERLINE FOR DASHBOARD LINK TOO */
+        /* .nav-links a.dashboard-link.active::after {
+            background-color: #2142B0;
+        } */
+        
+        /* Special styling for Logout link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: #FDF3EB; /* Light background from your specification */
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        
+        /* ================= ACCOUNT DROPDOWN STYLES - EXACTLY LIKE REFERENCE ================= */
+        /* Account dropdown for NON-logged-in users - Normal styling */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
+        }
+
+        /* ================= MAIN CONTENT ================= */
+        main {
+            flex: 1;
+            padding-top: 70px; /* For fixed navbar */
+        }
+
+        /* ================= TERMS SECTION ================= */
+        .terms-section {
+            max-width: 1200px;
+            margin: 50px auto 60px;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Main Header */
+        .terms-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+
+        .terms-main-title {
+            font-size: 58px;
+            font-weight: 900;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .terms-subtitle {
+            font-size: 20px;
+            color: #475569;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* ================= TERMS CARDS CONTAINER ================= */
+        .terms-container {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* TERMS CARD STYLES */
+        .terms-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terms-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .terms-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            border-color: rgba(30, 60, 114, 0.3);
+        }
+
+        .terms-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Card Header - CENTERED */
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: white;
+            font-size: 28px;
+            flex-shrink: 0;
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.2);
+        }
+
+        .card-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1e3c72;
+            line-height: 1.2;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Card Content */
+        .card-content {
+            color: #334155;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            color: white;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-content {
+            color: #475569;
+            line-height: 1.8;
+            padding-left: 30px;
+            border-left: 3px solid #e2e8f0;
+            margin-left: 15px;
+        }
+
+        .section-content p {
+            margin-bottom: 18px;
+        }
+
+        .section-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Highlight Text */
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%);
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        /* List Styles */
+        .rules-list {
+            list-style-type: none;
+            margin: 20px 0 20px 30px;
+        }
+
+        .rules-list li {
+            margin-bottom: 14px;
+            padding-left: 35px;
+            position: relative;
+            color: #475569;
+            line-height: 1.7;
+        }
+
+        .rules-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 18px;
+            top: 0;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border: 1px solid #fca5a5;
+            border-left: 5px solid #dc2626;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .warning-title {
+            color: #991b1b;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .warning-content {
+            color: #7f1d1d;
+            line-height: 1.7;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 1px solid #93c5fd;
+            border-left: 5px solid #3b82f6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .info-title {
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-content {
+            color: #1e3a8a;
+            line-height: 1.7;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 3.5rem 0 2.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a i {
+            color: #f97316;
+            font-size: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #f97316;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #f97316;
+            color: #fff;
+        }
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.25rem;
+            padding-top: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem 0;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
+        }
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .terms-section,
+            .footer-content,
+            .footer-bottom {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .terms-main-title {
+                font-size: 48px;
+            }
+            
+            .terms-subtitle {
+                font-size: 18px;
+                margin-bottom: 30px;
+            }
+            
+            .terms-card {
+                padding: 40px 35px;
+            }
+            
+            .card-title {
+                font-size: 32px;
+            }
+            
+            .card-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .section-title .number {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+
+        /* MOBILE RESPONSIVE - EXACTLY LIKE REFERENCE ================= */
+        @media (max-width: 768px) {
+            .navbar {
+                height: 70px;
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+                z-index: 1001;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+            }
+            
+            /* REMOVED THE UNDERLINE FOR MOBILE TOO */
+            /* .nav-links a.active::after {
+                display: none;
+            } */
+            
+            /* Mobile styles for dashboard and logout links (logged-in users) - EXACTLY LIKE REFERENCE */
+            .nav-links a.dashboard-link {
+                color: #2142B0;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(33, 66, 176, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: #FDF3EB;
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) - EXACTLY LIKE REFERENCE */
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
+            }
+            
+            .logo-img {
+                height: 110px;
+                max-height: 100px;
+            }
+            
+            .terms-section {
+                margin-top: 40px;
+                padding: 0 15px;
+            }
+            
+            .terms-main-title {
+                font-size: 40px;
+                line-height: 1.2;
+                margin-bottom: 15px;
+            }
+            
+            .terms-subtitle {
+                font-size: 16px;
+                margin: 20px auto 30px;
+                padding: 0;
+            }
+            
+            .terms-card {
+                padding: 30px 25px;
+                margin: 0 auto;
+                width: 100%;
+                border-radius: 18px;
+            }
+            
+            .card-title {
+                font-size: 28px;
+            }
+            
+            .card-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+                margin-bottom: 18px;
+            }
+            
+            .card-header {
+                margin-bottom: 30px;
+                padding-bottom: 25px;
+            }
+            
+            .section {
+                margin-bottom: 30px;
+            }
+            
+            .section-title {
+                font-size: 19px;
+                margin-bottom: 15px;
+            }
+            
+            .section-title .number {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+            
+            .section-content {
+                font-size: 15px;
+                padding-left: 25px;
+                margin-left: 10px;
+            }
+            
+            .rules-list {
+                margin-left: 25px;
+            }
+            
+            .rules-list li {
+                padding-left: 30px;
+                font-size: 15px;
+            }
+            
+            .warning-box,
+            .info-box {
+                padding: 20px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                padding: 1.25rem 1.5rem 0;
+                gap: 1rem;
+            }
+            
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                height: 65px;
+            }
+            
+            .nav-links {
+                top: 65px;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .terms-section {
+                margin-top: 30px;
+            }
+            
+            .terms-main-title {
+                font-size: 36px;
+            }
+            
+            .terms-subtitle {
+                font-size: 15px;
+                line-height: 1.6;
+                margin: 15px auto 25px;
+            }
+            
+            .terms-card {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+            
+            .card-title {
+                font-size: 26px;
+            }
+            
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .card-header {
+                margin-bottom: 25px;
+                padding-bottom: 20px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .section-title .number {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .section-content {
+                font-size: 14px;
+                padding-left: 22px;
+                margin-left: 8px;
+                line-height: 1.7;
+            }
+            
+            .rules-list {
+                margin-left: 22px;
+            }
+            
+            .rules-list li {
+                padding-left: 28px;
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+            
+            .highlight {
+                font-size: 14px;
+                padding: 3px 8px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+                gap: 2rem;
+            }
+            
+            .footer {
+                padding: 2.5rem 0 2rem;
+            }
+            
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem 1.5rem 0;
+            }
+
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .terms-main-title {
+                font-size: 32px;
+            }
+            
+            .terms-subtitle {
+                font-size: 14px;
+            }
+            
+            .terms-card {
+                padding: 22px 18px;
+            }
+            
+            .card-title {
+                font-size: 24px;
+            }
+            
+            .card-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .logo-img {
+                height: 90px;
+                max-height: 85px;
+            }
+            
+            .nav-links a {
+                font-size: 1rem;
+                padding: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                font-size: 1.3rem;
+            }
+            
+            .section-title {
+                font-size: 17px;
+                flex-wrap: wrap;
+            }
+            
+            .section-content {
+                font-size: 13.5px;
+                padding-left: 20px;
+                border-left-width: 2px;
+            }
+            
+            .rules-list li:before {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .terms-main-title {
+                font-size: 28px;
+            }
+            
+            .terms-subtitle {
+                font-size: 13px;
+            }
+            
+            .terms-card {
+                padding: 20px 16px;
+            }
+            
+            .card-title {
+                font-size: 22px;
+            }
+            
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .logo-img {
+                height: 80px;
+                max-height: 75px;
+            }
+            
+            .nav-container {
+                padding: 0 0.75rem;
+            }
+            
+            .section-title {
+                font-size: 16px;
+            }
+            
+            .section-title .number {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+            
+            .section-content {
+                font-size: 13px;
+                padding-left: 18px;
+            }
+            
+            .rules-list li {
+                padding-left: 25px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .terms-main-title {
+                font-size: 26px;
+            }
+            
+            .logo-img {
+                height: 70px;
+                max-height: 65px;
+            }
+            
+            .terms-card {
+                padding: 18px 14px;
+                border-radius: 14px;
+            }
+            
+            .card-title {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                padding: 1.5rem 1rem;
+            }
+            
+            .section-title {
+                font-size: 15.5px;
+            }
+            
+            .section-content {
+                font-size: 12.5px;
+                padding-left: 16px;
+            }
+            
+            .rules-list {
+                margin-left: 16px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .terms-main-title {
+                font-size: 24px;
+            }
+            
+            .terms-subtitle {
+                font-size: 12px;
+            }
+            
+            .logo-img {
+                height: 65px;
+            }
+            
+            .terms-card {
+                padding: 16px 12px;
+            }
+            
+            .card-title {
+                font-size: 19px;
+            }
+            
+            .card-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            
+            .section-title {
+                font-size: 15px;
+            }
+            
+            .section-content {
+                font-size: 12px;
+            }
+        }
+
+        /* Fix for iPhone SE and very small screens */
+        @media (max-width: 280px) {
+            .terms-main-title {
+                font-size: 22px;
+            }
+            
+            .terms-card {
+                padding: 14px 10px;
+            }
+            
+            .logo-img {
+                height: 60px;
+            }
+            
+            .mobile-menu-btn {
+                font-size: 1.1rem;
+            }
+            
+            .card-title {
+                font-size: 18px;
+            }
+            
+            .card-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+        }
+
+        /* Prevent zoom on iOS */
+        @media screen and (max-width: 768px) {
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Prevent horizontal scroll */
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Improve touch targets on mobile */
+        @media (max-width: 768px) {
+            .nav-links a {
+                min-height: 44px;
+            }
+            
+            .social-icons a {
+                width: 44px;
+                height: 44px;
+            }
+            
+            .card-icon {
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR - EXACTLY LIKE REFERENCE ================= -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+        </a>
+
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'courses' %}">Courses</a>
+            <a href="{% url 'team' %}">Team</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'terms' %}" class="active">T&C</a>
+            
+            <!-- Show different options based on authentication status - EXACTLY LIKE REFERENCE -->
+            {% if user.is_authenticated %}
+                <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+            {% else %}
+                <!-- User is not logged in: Show Account as normal dropdown link -->
+                <div class="account-dropdown">
+                    <a href="#" class="account-dropbtn">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="account-dropdown-content">
+                        <a href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'register' %}">Create account</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<main>
+    <!-- TERMS & CONDITIONS SECTION -->
+    <section class="terms-section">
+        <div class="terms-header">
+            <h1 class="terms-main-title">Terms & Policies</h1>
+            <p class="terms-subtitle">
+                Please read these carefully before using Nirvant. By continuing, you agree to the  
+                Terms & Conditions and Terms of Use outlined below.
+            </p>
+        </div>
+
+        <div class="terms-container">
+            <!-- TERMS AND CONDITIONS CARD -->
+            <div class="terms-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h2 class="card-title">Terms and Conditions</h2>
+                </div>
+                
+                <div class="card-content">
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">1</span> Introduction
+                        </h3>
+                        <div class="section-content">
+                            <p>Welcome to the online learning platform <span class="highlight">"Nirvant"</span>. This document outlines the rights, responsibilities, and obligations that govern your access to and utilization of all products, services, applications, tools, and digital content provided by Nirvant.</p>
+                            
+                            <p>By accessing, browsing, registering for, or making any use of Nirvant's platform whether via the website, mobile applications, or any related channels you acknowledge that you have read, understood, and accepted these Terms of Use, as well as our Privacy Policy, forming a binding legal agreement between you and Nirvant Company.</p>
+                            
+                            <p>These Terms apply to all individuals and entities engaging with Nirvant, including but not limited to students, educators, parents, and institutions. The purpose is to ensure Nirvant is used lawfully, ethically, and responsibly fostering a safe and supportive learning environment for all.</p>
+                            
+                            <div class="warning-box">
+                                <div class="warning-title">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Important Notice
+                                </div>
+                                <p class="warning-content">
+                                    If you do not accept these Terms or our Privacy Policy, you must not use Nirvant's services. Nirvant may update these Terms periodically, and continued use indicates acceptance of any changes. If you are accepting these Terms on behalf of a minor or organization, you confirm you have the necessary authority.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">2</span> User Obligations and Conduct
+                        </h3>
+                        <div class="section-content">
+                            <p>Users are expected to act responsibly, ethically, and lawfully. This includes providing accurate registration details and protecting login credentials. Users must not disrupt the platform, post harmful or unlawful content, attempt unauthorized access, or engage in commercial misuse.</p>
+                            <p>All users agree to follow applicable laws and respect others' rights and privacy, maintaining a safe and supportive environment.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">3</span> Changes to Terms and Platform
+                        </h3>
+                        <div class="section-content">
+                            <p>Nirvant reserves the right to modify, update, or discontinue any part of its services including features, content, and Terms of Use at any time. Updates take effect upon posting unless stated otherwise.</p>
+                            <p>Users are encouraged to review the Terms regularly. Continued use signifies acceptance of any revisions. If you disagree with the changes, discontinue using the platform. In cases where updates significantly affect user rights, Nirvant may provide notice via email or platform notifications.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">4</span> Eligibility and Registration
+                        </h3>
+                        <div class="section-content">
+                            <p>Access to Nirvant requires users to meet eligibility criteria, including being of legal age or having guardian consent. Registration must include accurate and updated information. Nirvant may suspend or terminate accounts violating these Terms.</p>
+                            <p>Users must keep login credentials confidential and report unauthorized use immediately to ensure security and trust.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">5</span> Intellectual Property Rights
+                        </h3>
+                        <div class="section-content">
+                            <p>All materials on Nirvant including courses, graphics, software, and logos are owned or licensed by Nirvant and protected by intellectual property laws. Users receive a limited, non-transferable license for personal educational use only.</p>
+                            <p>Unauthorized use, reproduction, or distribution is strictly prohibited. Users must not upload or share infringing content and should report any IP violations promptly.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">6</span> Payment, Subscription, and Refund Policies
+                        </h3>
+                        <div class="section-content">
+                            <p>Users agree to pay all applicable fees for subscriptions or purchases using accepted payment methods. Pricing and plans may change without notice. Refunds are only provided as required by law or explicitly stated in offers.</p>
+                            <p>Failure to complete payment may lead to suspension or termination of services. Users must follow cancellation procedures to prevent recurring charges.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">7</span> Governing Law and Jurisdiction
+                        </h3>
+                        <div class="section-content">
+                            <p>These Terms are governed by the laws of India. All disputes will be handled under the exclusive jurisdiction of courts in New Delhi, India. Users consent to this jurisdiction and waive any objections to venue.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">8</span> Limitations of Liability and Disclaimers
+                        </h3>
+                        <div class="section-content">
+                            <p>Nirvant provides its platform on an "as is" and "as available" basis without any warranties, express or implied. Nirvant is not liable for direct, indirect, incidental, or consequential damages arising from use or inability to use the platform.</p>
+                            <p>Users access Nirvant at their own risk, and Nirvant is not responsible for loss of data or damages resulting from participation or technical issues.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <span class="number">9</span> Entire Agreement and Severability
+                        </h3>
+                        <div class="section-content">
+                            <p>These Terms, along with the Privacy Policy, form the complete agreement between Nirvant and its users. They replace all prior agreements, written or oral.</p>
+                            <p>If any provision is found invalid or unenforceable, the remaining terms will continue in full force, maintaining the integrity of this agreement.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TERMS OF USE CARD -->
+            <div class="terms-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h2 class="card-title">Terms of Use</h2>
+                </div>
+                
+                <div class="card-content">
+                    <div class="section">
+                        <h3 class="section-title">
+                            <i class="fas fa-user-circle"></i> Account Rules
+                        </h3>
+                        <div class="section-content">
+                            <p>Users must create an account to access Nirvant's full services, providing accurate, complete, and current information during registration.</p>
+                            <p>Each user is allowed only one active account. Users are responsible for maintaining the confidentiality of their login credentials and activities under their accounts.</p>
+                            <p>Sharing accounts or credentials is prohibited. Users must promptly notify Nirvant of any unauthorized access or security breaches.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <i class="fas fa-certificate"></i> License
+                        </h3>
+                        <div class="section-content">
+                            <p>Nirvant grants users a limited, non-exclusive, non-transferable license to access and use the platform strictly for personal, educational purposes.</p>
+                            <p>This license does not permit commercial exploitation, modification, distribution, or resale of the platform's content or services without explicit written consent from Nirvant.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <i class="fas fa-check-circle"></i> Permitted Uses
+                        </h3>
+                        <div class="section-content">
+                            <p>Users may use Nirvant to access, study, and engage with the educational content and community features as intended.</p>
+                            <p>Acceptable uses include enrolling in courses, participating in discussions, and sharing user-generated content that complies with platform rules and applicable laws.</p>
+                            <p>Users must respect intellectual property rights and not misuse the platform or disrupt others' learning experiences.</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <i class="fas fa-ban"></i> Violations
+                        </h3>
+                        <div class="section-content">
+                            <p>Prohibited conduct includes but is not limited to:</p>
+                            <ul class="rules-list">
+                                <li>Impersonation or false identity representation</li>
+                                <li>Uploading harmful, illegal, or inappropriate content</li>
+                                <li>Unauthorized access attempts to system infrastructure</li>
+                                <li>Distributing malware, viruses, or spam content</li>
+                                <li>Harassment, bullying, or hate speech</li>
+                                <li>Violating intellectual property rights</li>
+                                <li>Commercial exploitation without authorization</li>
+                                <li>Disrupting others' learning experiences</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">
+                            <i class="fas fa-gavel"></i> Enforcement
+                        </h3>
+                        <div class="section-content">
+                            <p>Nirvant reserves the right to monitor user activity to enforce compliance with these terms.</p>
+                            <p>Violations may lead to immediate suspension or termination of user accounts without prior notice.</p>
+                            <p>Nirvant may also pursue legal remedies when applicable.</p>
+                            <div class="info-box">
+                                <div class="info-title">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    Reporting Mechanism
+                                </div>
+                                <p class="info-content">
+                                    Users are encouraged to report misconduct or suspicious behavior through designated channels. All reports are taken seriously and investigated promptly to maintain a safe learning environment.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-about">
+            <h3 class="footer-heading">Navigate Nirvant</h3>
+            <div class="footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'terms' %}" class="active">T&C</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Connect With Us</h3>
+            <div class="footer-links">
+                <a href="tel:+917735932023"><i class="fas fa-phone"></i>+91 77359 32023</a>
+                <a href="tel:+916371214085"><i class="fas fa-phone"></i>+91 63712 14085</a>
+                <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i>nirvant.trgyy@gmail.com</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Stay Connected</h3>
+            <div class="social-icons">
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Chat"><i class="fas fa-comment-dots"></i></a>
+            </div>
+            <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">
+            <div class="footer-circle">N</div>
+            <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+        </div>
+        <div class="footer-bottom-right">
+            Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ================= DROPDOWN FUNCTIONALITY - EXACTLY LIKE REFERENCE =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
+        
+        if (accountDropbtn) {
+            // Toggle dropdown on click for all devices
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close dropdown when clicking a link
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                
+                // Also close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+    });
+    
+    // Mobile Menu Toggle - FIXED VERSION
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on links (except dropdown button)
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Close dropdown when clicking a link inside dropdown
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navLinks && mobileMenuBtn) {
+            if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Also close any open dropdown
+                const accountDropdown = document.querySelector('.account-dropdown');
+                if (accountDropdown) {
+                    accountDropdown.classList.remove('active');
+                }
+            }
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            
+            // Close any open dropdown on desktop
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.classList.remove('active');
+            }
+        }
+    });
+
+    // Add active class to current page in nav
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath || 
+                (link.getAttribute('href') === '{% url 'terms' %}' && currentPath.includes('/terms/'))) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    });
+
+    // Smooth scroll to top
+    window.addEventListener('beforeunload', function() {
+        window.scrollTo(0, 0);
+    });
+
+    // Card hover enhancement
+    document.querySelectorAll('.terms-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-12px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Add scroll animation for sections
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards for animation
+    document.querySelectorAll('.terms-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+</script>
+</body>
+</html>

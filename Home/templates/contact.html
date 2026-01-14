@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get in Touch | Nirvant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Font Awesome & Google Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFF4D1;
+            color: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ================= NAVBAR - EXACTLY LIKE REFERENCE ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.8s ease-out;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        /* LOGO SIZE INCREASED TO MATCH REFERENCE */
+        .logo-img {
+            height: 150px;
+            width: auto;
+            max-height: 135px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        /* NAV LINKS - EXACTLY LIKE REFERENCE */
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+/* .nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #f97316;
+    border-radius: 2px;
+} */
+        /* Special styling for Dashboard link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.dashboard-link {
+            color: #2142B0; /* Royal blue color from your specification */
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-links a.dashboard-link:hover {
+            color: #1d4ed8; /* Darker blue on hover */
+        }
+        
+/* .nav-links a.dashboard-link.active::after {
+    background-color: #2142B0;
+} */
+        
+        /* Special styling for Logout link (ONLY for logged-in users) - EXACTLY LIKE REFERENCE */
+        .nav-links a.logout-link {
+            color: #dc2626; /* Red color for logout */
+            font-weight: 600;
+            background: #FDF3EB; /* Light background from your specification */
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        
+        /* ================= ACCOUNT DROPDOWN STYLES - EXACTLY LIKE REFERENCE ================= */
+        /* Account dropdown for NON-logged-in users - Normal styling */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
+        }
+
+        /* ================= MAIN CONTENT ================= */
+        main {
+            flex: 1;
+            padding-top: 70px; /* For fixed navbar */
+        }
+
+        /* ================= CONTACT SECTION ================= */
+        .contact-section {
+            max-width: 1200px;
+            margin: 50px auto 60px;
+            padding: 0 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* LARGER HEADING - Get in Touch */
+        .contact-title {
+            font-size: 54px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #0f172a;
+            position: relative;
+            display: inline-block;
+            line-height: 1.2;
+        }
+
+        .contact-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            border-radius: 4px;
+        }
+
+        .contact-subtitle {
+            font-size: 18px;
+            color: #475569;
+            max-width: 600px;
+            margin: 30px auto 40px;
+            line-height: 1.7;
+        }
+
+        /* ================= SUCCESS MESSAGE - RESPONSIVE ================= */
+        .success-message-container {
+            margin: 30px auto;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border: 2px solid #10b981;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #10b981;
+            margin-bottom: 25px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .success-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .success-subtitle {
+            font-size: 18px;
+            color: #047857;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .success-email {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .confirmation-note {
+            font-size: 16px;
+            color: #059669;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(16, 185, 129, 0.3);
+        }
+
+        /* ================= MODERN FORM CARD ================= */
+        .form-container {
+            max-width: 900px;
+            margin: 30px auto;
+            width: 100%;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 60px 70px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+            border: 1px solid rgba(249, 115, 22, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(to right, #f97316, #fb923c);
+        }
+
+        .form-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 35px 70px rgba(249, 115, 22, 0.15);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            position: relative;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 16px;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 20px;
+            border-radius: 14px;
+            border: 2px solid #e2e8f0;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-input:focus {
+            border-color: #f97316;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover {
+            border-color: #cbd5e1;
+        }
+
+        textarea.form-input {
+            min-height: 160px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        /* Form Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #ea580c, #f97316);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(249, 115, 22, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .submit-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        /* Optional text */
+        .optional-text {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 6px;
+            display: block;
+            text-align: left;
+            font-style: italic;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            background: linear-gradient(90deg, #fff8d6, #ffefc1);
+            color: #111827;
+            padding: 3.5rem 0 2.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1.2fr 1.4fr;
+            gap: 3rem;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-about {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #374151;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f97316;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-content > div:nth-child(2) .footer-links a i {
+            color: #f97316;
+            font-size: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.35rem 0 0.75rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            border: 1.8px solid #f97316;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f97316;
+            background: transparent;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #f97316;
+            color: #fff;
+        }
+
+        .footer-tagline {
+            font-size: 0.95rem;
+            color: #374151;
+            max-width: 260px;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 2.25rem;
+            padding-top: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem 0;
+        }
+
+        .footer-bottom-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .copyright {
+            margin: 0;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+            color: inherit;
+            text-align: left;
+        }
+
+        .footer-bottom-right {
+            text-align: right;
+            color: #6b7280;
+        }
+
+        .footer-bottom-right span {
+            color: #111827;
+        }
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .contact-section,
+            .footer-content,
+            .footer-bottom {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .contact-title {
+                font-size: 46px;
+            }
+            
+            .form-card {
+                padding: 50px 45px;
+                max-width: 90%;
+            }
+            
+            .success-message {
+                padding: 35px 25px;
+            }
+            
+            .success-icon {
+                font-size: 50px;
+            }
+            
+            .success-title {
+                font-size: 28px;
+            }
+            
+            .success-subtitle {
+                font-size: 17px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                row-gap: 2.5rem;
+            }
+
+            .footer-content > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+        }
+
+        /* MOBILE RESPONSIVE - EXACTLY LIKE REFERENCE ================= */
+        @media (max-width: 768px) {
+            .navbar {
+                height: 70px;
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+                z-index: 1001;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+            }
+/* .nav-links a.active::after {
+    display: none;
+} */
+            /* Mobile styles for dashboard and logout links (logged-in users) - EXACTLY LIKE REFERENCE */
+            .nav-links a.dashboard-link {
+                color: #2142B0;
+                font-weight: 600;
+                border-bottom: 1px solid rgba(33, 66, 176, 0.1);
+            }
+            
+            .nav-links a.logout-link {
+                color: #dc2626;
+                background: #FDF3EB;
+                border: 1px solid rgba(220, 38, 38, 0.2);
+                border-radius: 8px;
+                margin-top: 0.5rem;
+                padding: 1rem;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .nav-links a.logout-link:hover {
+                background: #dc2626;
+                color: white;
+            }
+            
+            /* Mobile styles for account dropdown (non-logged-in users) - EXACTLY LIKE REFERENCE */
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            .account-dropdown-content a:hover {
+                padding-left: 2.25rem;
+                border-left: none;
+            }
+            
+            .logo-img {
+                height: 110px;
+                max-height: 100px;
+            }
+            
+            .contact-section {
+                margin-top: 40px;
+                padding: 0 15px;
+            }
+            
+            .contact-title {
+                font-size: 40px;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
+            
+            .contact-title::after {
+                width: 120px;
+                height: 5px;
+                bottom: -8px;
+            }
+            
+            .contact-subtitle {
+                font-size: 16px;
+                margin: 25px auto 40px;
+                padding: 0;
+            }
+            
+            .form-container {
+                margin: 20px auto;
+            }
+            
+            .form-card {
+                padding: 40px 35px;
+                margin: 0 auto;
+                width: 95%;
+            }
+            
+            .form-input {
+                padding: 16px 18px;
+                font-size: 15px;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+            
+            .success-message {
+                padding: 30px 20px;
+                margin: 20px auto;
+                border-radius: 18px;
+            }
+            
+            .success-icon {
+                font-size: 45px;
+                margin-bottom: 20px;
+            }
+            
+            .success-title {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+            
+            .success-subtitle {
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+            
+            .success-email {
+                padding: 10px 20px;
+                font-size: 15px;
+                margin: 10px 0;
+            }
+            
+            .confirmation-note {
+                font-size: 14px;
+                margin-top: 15px;
+                padding-top: 15px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                padding: 1.25rem 1.5rem 0;
+                gap: 1rem;
+            }
+            
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                height: 65px;
+            }
+            
+            .nav-links {
+                top: 65px;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .contact-section {
+                margin-top: 30px;
+            }
+            
+            .contact-title {
+                font-size: 36px;
+            }
+            
+            .contact-subtitle {
+                font-size: 15px;
+                line-height: 1.6;
+                margin: 20px auto 30px;
+            }
+            
+            .form-card {
+                padding: 35px 25px;
+                border-radius: 20px;
+            }
+            
+            .form-label {
+                font-size: 15px;
+            }
+            
+            .form-input {
+                padding: 15px 16px;
+                font-size: 15px;
+                border-radius: 12px;
+            }
+            
+            textarea.form-input {
+                min-height: 140px;
+            }
+            
+            .success-message {
+                padding: 25px 15px;
+                border-radius: 16px;
+            }
+            
+            .success-icon {
+                font-size: 40px;
+                margin-bottom: 15px;
+            }
+            
+            .success-title {
+                font-size: 22px;
+            }
+            
+            .success-subtitle {
+                font-size: 15px;
+            }
+            
+            .success-email {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            
+            .confirmation-note {
+                font-size: 13px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+                gap: 2rem;
+            }
+            
+            .footer {
+                padding: 2.5rem 0 2rem;
+            }
+            
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem 1.5rem 0;
+            }
+
+            .footer-bottom-right {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-title {
+                font-size: 32px;
+            }
+            
+            .contact-subtitle {
+                font-size: 14px;
+            }
+            
+            .form-card {
+                padding: 30px 20px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            
+            .form-input {
+                padding: 14px 15px;
+                font-size: 14px;
+            }
+            
+            .submit-btn {
+                padding: 15px;
+                font-size: 15px;
+            }
+            
+            .logo-img {
+                height: 90px;
+                max-height: 85px;
+            }
+            
+            .nav-links a {
+                font-size: 1rem;
+                padding: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                font-size: 1.3rem;
+            }
+            
+            .success-message {
+                padding: 20px 15px;
+            }
+            
+            .success-icon {
+                font-size: 35px;
+            }
+            
+            .success-title {
+                font-size: 20px;
+            }
+            
+            .success-subtitle {
+                font-size: 14px;
+            }
+            
+            .success-email {
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .contact-title {
+                font-size: 28px;
+            }
+            
+            .contact-subtitle {
+                font-size: 13px;
+            }
+            
+            .form-card {
+                padding: 25px 18px;
+            }
+            
+            .logo-img {
+                height: 80px;
+                max-height: 75px;
+            }
+            
+            .nav-container {
+                padding: 0 0.75rem;
+            }
+            
+            .success-title {
+                font-size: 18px;
+            }
+            
+            .success-subtitle {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .contact-title {
+                font-size: 26px;
+            }
+            
+            .contact-title::after {
+                width: 100px;
+                height: 4px;
+                bottom: -6px;
+            }
+            
+            .logo-img {
+                height: 70px;
+                max-height: 65px;
+            }
+            
+            .form-card {
+                padding: 20px 15px;
+                border-radius: 18px;
+            }
+            
+            .form-input {
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+            
+            .submit-btn {
+                padding: 14px;
+                font-size: 14px;
+            }
+            
+            .nav-links {
+                padding: 1.5rem 1rem;
+            }
+            
+            .success-message {
+                padding: 18px 12px;
+            }
+            
+            .success-title {
+                font-size: 17px;
+            }
+            
+            .success-email {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .contact-title {
+                font-size: 24px;
+            }
+            
+            .contact-subtitle {
+                font-size: 12px;
+            }
+            
+            .logo-img {
+                height: 65px;
+            }
+            
+            .form-card {
+                padding: 18px 12px;
+            }
+            
+            .form-input {
+                padding: 10px 12px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+            }
+        }
+
+        /* Fix for iPhone SE and very small screens */
+        @media (max-width: 280px) {
+            .contact-title {
+                font-size: 22px;
+            }
+            
+            .form-card {
+                padding: 15px 10px;
+            }
+            
+            .logo-img {
+                height: 60px;
+            }
+            
+            .mobile-menu-btn {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Prevent zoom on iOS */
+        @media screen and (max-width: 768px) {
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Prevent horizontal scroll */
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Improve touch targets on mobile */
+        @media (max-width: 768px) {
+            .form-input,
+            .submit-btn,
+            .nav-links a {
+                min-height: 44px;
+            }
+            
+            .social-icons a {
+                width: 44px;
+                height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR - EXACTLY LIKE REFERENCE ================= -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+        </a>
+
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'courses' %}">Courses</a>
+            <a href="{% url 'team' %}">Team</a>
+            <a href="{% url 'contact' %}" class="active">Contact</a>
+            <a href="{% url 'terms' %}">T&C</a>
+            
+            <!-- Show different options based on authentication status - EXACTLY LIKE REFERENCE -->
+            {% if user.is_authenticated %}
+                <!-- User is logged in: Show Dashboard and Logout as separate links -->
+                <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+            {% else %}
+                <!-- User is not logged in: Show Account as normal dropdown link -->
+                <div class="account-dropdown">
+                    <a href="#" class="account-dropbtn">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="account-dropdown-content">
+                        <a href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'register' %}">Create account</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<main>
+    <!-- CONTACT SECTION -->
+    <section class="contact-section">
+        <h1 class="contact-title">Get in Touch</h1>
+        <p class="contact-subtitle">
+            Have questions or want to collaborate? Fill out the form below and we'll get back to you promptly.
+        </p>
+
+        <!-- Success Message Container -->
+        {% if messages %}
+            <div class="success-message-container">
+                {% for message in messages %}
+                    {% if 'Thank you' in message|safe %}
+                        <div class="success-message">
+                            <div class="success-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h2 class="success-title">{{ message|safe }}</h2>
+                            <p class="confirmation-note">
+                                <i class="fas fa-envelope" style="margin-right: 8px;"></i>
+                                We've sent a confirmation email to your inbox.
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-container">
+            <div class="form-card">
+                <form method="post" id="contactForm" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" placeholder="Enter your full name" required name="name" value="{{ form.name.value|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="Enter your email address" required name="email" value="{{ form.email.value|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" placeholder="Enter your phone number" name="phone" value="{{ form.phone.value|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Message <span class="optional-text">(Optional)</span></label>
+                        <textarea class="form-input" placeholder="Type your message here..." name="message">{{ form.message.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send Message</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-about">
+            <h3 class="footer-heading">Navigate Nirvant</h3>
+            <div class="footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'terms' %}">T&C</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Connect With Us</h3>
+            <div class="footer-links">
+                <a href="tel:+917735932023"><i class="fas fa-phone"></i>+91 77359 32023</a>
+                <a href="tel:+916371214085"><i class="fas fa-phone"></i>+91 63712 14085</a>
+                <a href="mailto:nirvant.trgyy@gmail.com"><i class="fas fa-envelope"></i>nirvant.trgyy@gmail.com</a>
+            </div>
+        </div>
+        <div>
+            <h3 class="footer-heading">Stay Connected</h3>
+            <div class="social-icons">
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Chat"><i class="fas fa-comment-dots"></i></a>
+            </div>
+            <p class="footer-tagline">Modern, calm, and confident guidance for students and professionals.</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-left">
+            <div class="footer-circle">N</div>
+            <p class="copyright">© 2025 Nirvant. All rights reserved.</p>
+        </div>
+        <div class="footer-bottom-right">
+            Built with care — <span>education</span> · <span>wellness</span> · <span>tech</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ================= DROPDOWN FUNCTIONALITY - EXACTLY LIKE REFERENCE =================
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountDropdown = document.querySelector('.account-dropdown');
+        const accountDropbtn = document.querySelector('.account-dropbtn');
+        
+        if (accountDropbtn) {
+            // Toggle dropdown on click for all devices
+            accountDropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                accountDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close dropdown when clicking a link
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                accountDropdown.classList.remove('active');
+                
+                // Also close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+    });
+    
+    // Mobile Menu Toggle - FIXED VERSION
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling up
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on links (except dropdown button)
+        document.querySelectorAll('.nav-links a:not(.account-dropbtn)').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Close dropdown when clicking a link inside dropdown
+        document.querySelectorAll('.account-dropdown-content a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navLinks && mobileMenuBtn) {
+            if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Also close any open dropdown
+                const accountDropdown = document.querySelector('.account-dropdown');
+                if (accountDropdown) {
+                    accountDropdown.classList.remove('active');
+                }
+            }
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            
+            // Close any open dropdown on desktop
+            const accountDropdown = document.querySelector('.account-dropdown');
+            if (accountDropdown) {
+                accountDropdown.classList.remove('active');
+            }
+        }
+    });
+
+    // Form submission with loading animation
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (contactForm && submitBtn) {
+        contactForm.addEventListener('submit', function(e) {
+            // Allow the form to submit normally first
+            // Then show loading animation after a short delay
+            setTimeout(() => {
+                const icon = submitBtn.querySelector('i');
+                const text = submitBtn.querySelector('span');
+                if (icon && text) {
+                    icon.className = 'fas fa-spinner fa-spin';
+                    text.textContent = 'Sending...';
+                }
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.8';
+            }, 100);
+        });
+    }
+
+    // Input focus effects
+    const inputs = document.querySelectorAll('.form-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            const label = this.parentElement.querySelector('.form-label');
+            if (label) {
+                label.style.color = '#f97316';
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            const label = this.parentElement.querySelector('.form-label');
+            if (label && !this.value) {
+                label.style.color = '#0f172a';
+            }
+        });
+    });
+
+    // Prevent form resubmission on page refresh
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+
+    // Add active class to current page in nav
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    });
+
+    // Smooth scroll to top
+    window.addEventListener('beforeunload', function() {
+        window.scrollTo(0, 0);
+    });
+</script>
+</body>
+</html>
