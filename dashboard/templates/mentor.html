@@ -1,0 +1,1051 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mentor | Nirvant NEET</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --primary-orange: #ff7a00;
+            --light-orange: #fff8dc;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
+            --success: #10b981;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --white: #ffffff;
+            --light-bg: #fffef6;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background: var(--light-orange);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile First Approach */
+        .mobile-header {
+            display: none;
+            background: var(--white);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 0;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--light-bg);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            border-right: 1px solid rgba(0, 0, 0, 0.04);
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            text-align: center;
+            background: linear-gradient(135deg, var(--light-orange) 0%, #fff0c4 100%);
+        }
+        
+        .sidebar-logo {
+            height: 35px;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            background: var(--white);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            background: rgba(255, 122, 0, 0.08);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu {
+            padding: 15px 0;
+            background: var(--white);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 2px 0;
+        }
+        
+        .sidebar-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 122, 0, 0.05);
+            color: var(--primary-orange);
+            border-left-color: var(--primary-orange);
+        }
+        
+        .sidebar-menu i {
+            width: 22px;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.1);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .page-title p {
+            margin: 5px 0 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        /* Custom Components */
+        .text-orange {
+            color: var(--primary-orange) !important;
+        }
+        
+        .bg-orange {
+            background-color: var(--primary-orange) !important;
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-orange:hover {
+            background: #e56b00;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-orange {
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline-orange:hover {
+            background: var(--primary-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Cards */
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 18px 20px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Status Indicators */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-active {
+            background-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        
+        .status-inactive {
+            background-color: var(--danger);
+        }
+        
+        .status-pending {
+            background-color: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Mentor Profile */
+        .mentor-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        /* Feedback Card */
+        .feedback-card {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-orange);
+            margin-bottom: 15px;
+        }
+        
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        /* Session List */
+        .session-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background 0.3s;
+        }
+        
+        .session-item:hover {
+            background: rgba(255, 122, 0, 0.03);
+        }
+        
+        .session-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Live Session Link */
+        .live-session-link {
+            display: block;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid var(--success);
+            text-align: center;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .live-session-link.inactive {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-color: var(--danger);
+        }
+        
+        .live-session-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Stats Cards */
+        .stat-card {
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+            border-top: 4px solid var(--primary-orange);
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--light-text);
+            font-size: 0.85rem;
+        }
+        
+        /* Message Button */
+        .message-mentor-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .message-mentor-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                padding-top: 80px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .top-bar {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 15px;
+            }
+            
+            .mentor-avatar {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .btn-orange, .btn-outline-orange {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 10px;
+                padding-top: 70px;
+            }
+            
+            .top-bar {
+                border-radius: 8px;
+            }
+            
+            .row {
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+            
+            .col, .col-md, .col-lg {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card-header h5 {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Utility Classes */
+        .rounded-lg {
+            border-radius: 12px;
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" height="30">
+        <div class="user-dropdown-mobile">
+            <i class="fas fa-user-circle" style="font-size: 1.5rem; color: var(--primary-orange);"></i>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="sidebar-logo">
+                <h3>NEET Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Aspirant</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="/dashboard/profile/"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+                    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                    <li><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="/dashboard/mentor/" class="active"><i class="fas fa-chalkboard-teacher"></i> <span>Mentor</span></a></li>
+                    <li><a href="/dashboard/progress/"><i class="fas fa-chart-line"></i> <span>Progress</span></a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a></li>
+                    <li><a href="{% url 'studypack' %}"><i class="fas fa-book"></i> <span>Studypack</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>My Mentor</h1>
+                    <p>Your personalized mentorship dashboard</p>
+                </div>
+                <div>
+                    <a href="/dashboard/" class="btn btn-outline-orange">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mentor Information Section -->
+            <div class="row">
+                <!-- Left Column: Main Content -->
+                <div class="col-lg-8">
+                    <!-- Mentor Profile Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-user-tie me-2"></i>Mentor Profile
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if user.studentprofile.mentor %}
+                            <div class="row align-items-center">
+                                <!-- Mentor Photo -->
+                                <div class="col-md-4 text-center mb-4 mb-md-0">
+                                    {% if user.studentprofile.mentor.photo %}
+                                        <img src="{{ user.studentprofile.mentor.photo.url }}" 
+                                             alt="{{ user.studentprofile.mentor.name }}"
+                                             class="mentor-avatar">
+                                    {% else %}
+                                        <div class="mentor-avatar d-flex align-items-center justify-content-center text-white" 
+                                             style="background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%); font-size: 2.5rem;">
+                                            {{ user.studentprofile.mentor.name|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Mentor Details -->
+                                <div class="col-md-8">
+                                    <h3 class="text-orange">{{ user.studentprofile.mentor.name }}</h3>
+                                    
+                                    <div class="mb-3">
+                                        <span class="badge bg-orange me-2">
+                                            <i class="fas fa-graduation-cap me-1"></i>{{ user.studentprofile.mentor.qualification }}
+                                        </span>
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-star me-1"></i>4.8/5.0
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="mb-3">
+                                        <strong>Specialization:</strong> {{ user.studentprofile.mentor.specialization }}
+                                    </p>
+                                    
+                                    <p class="mb-3">
+                                        <strong>Experience:</strong> 5+ years mentoring NEET students
+                                    </p>
+                                    
+                                    <p class="mb-4">
+                                        <strong>Availability:</strong> Mon-Fri, 10 AM - 6 PM
+                                    </p>
+                                    
+                                    <!-- Active Status -->
+                                    <div class="d-flex align-items-center mb-4">
+                                        <span class="status-dot status-active me-2"></span>
+                                        <span class="fw-bold text-success">Active Now</span>
+                                        <span class="text-muted ms-3">
+                                            <i class="fas fa-clock me-1"></i>Online for next 3 hours
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-user-tie fa-4x text-muted mb-3"></i>
+                                <h4 class="text-muted">No Mentor Assigned</h4>
+                                <p class="text-muted mb-4">Please contact admin to get a mentor assigned</p>
+                                <a href="mailto:admin@nirvant.com" class="btn btn-orange">
+                                    <i class="fas fa-envelope me-2"></i>Contact Admin
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Live Session Link -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-video me-2"></i>Live Session Link
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="liveSessionStatus">
+                                <!-- This will be updated by JavaScript -->
+                                <div class="live-session-link" id="sessionLink">
+                                    <div class="live-indicator">
+                                        <span class="status-dot status-pending"></span>
+                                        <span>Session will activate at scheduled time</span>
+                                    </div>
+                                    <p class="text-sm text-muted mt-2 mb-0" id="sessionTime">
+                                        Next session: Monday, 3:00 PM - 4:30 PM
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                The session link automatically activates 15 minutes before the scheduled time and shows green indicator.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Last Session Feedback -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-clipboard-check me-2"></i>Last Session Feedback
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="feedback-card">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h6 class="mb-1">Physics - Electrostatics</h6>
+                                        <p class="text-sm text-muted mb-0">
+                                            <i class="fas fa-calendar me-1"></i>January 20, 2025 | 3:00 PM - 4:30 PM
+                                        </p>
+                                    </div>
+                                    <span class="badge bg-success">Completed</span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Overall Progress</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <strong class="d-block mb-2">Mentor's Comments:</strong>
+                                    <p class="mb-0">"Excellent work on numerical problems. You've shown great improvement in solving complex electrostatic problems. Need to focus more on theory concepts, especially Gauss's Law applications."</p>
+                                </div>
+                                
+                                <div>
+                                    <strong class="d-block mb-2">Areas for Improvement:</strong>
+                                    <ul class="mb-0">
+                                        <li>Electrostatic potential calculations</li>
+                                        <li>Capacitor combinations and networks</li>
+                                        <li>Application of Gauss's Law in symmetric systems</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <a href="#" class="btn btn-outline-orange w-100">
+                                <i class="fas fa-download me-2"></i>Download Detailed Feedback
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sidebar Content -->
+                <div class="col-lg-4">
+                    <!-- Upcoming Sessions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-calendar-alt me-2"></i>Upcoming Sessions
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="session-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">Chemistry - Organic</h6>
+                                        <p class="text-sm text-muted mb-1">
+                                            <i class="fas fa-clock me-1"></i>Tomorrow, 4:00 PM
+                                        </p>
+                                        <small class="text-warning">
+                                            <i class="fas fa-hourglass-half me-1"></i>Starts in 24 hours
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-warning">Tomorrow</span>
+                                </div>
+                            </div>
+                            
+                            <div class="session-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">Biology - Genetics</h6>
+                                        <p class="text-sm text-muted mb-1">
+                                            <i class="fas fa-clock me-1"></i>Jan 28, 3:00 PM
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>In 3 days
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-info">Upcoming</span>
+                                </div>
+                            </div>
+                            
+                            <div class="session-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">Physics - Optics</h6>
+                                        <p class="text-sm text-muted mb-1">
+                                            <i class="fas fa-clock me-1"></i>Feb 1, 11:00 AM
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>In 7 days
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-secondary">Scheduled</span>
+                                </div>
+                            </div>
+                            
+                            <div class="p-3">
+                                <button class="btn btn-orange w-100" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+                                    <i class="fas fa-plus me-2"></i>Request New Session
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-chart-line me-2"></i>Mentorship Stats
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="stat-card">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Sessions Completed</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value">4.7/5.0</div>
+                                <div class="stat-label">Average Rating</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value text-success">< 2 hrs</div>
+                                <div class="stat-label">Average Response Time</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value">92%</div>
+                                <div class="stat-label">Attendance Rate</div>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <a href="#" class="text-orange text-decoration-none">
+                                    <i class="fas fa-chart-bar me-2"></i>View Detailed Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-bolt me-2"></i>Quick Actions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-orange">
+                                    <i class="fas fa-comment-dots me-2"></i>Send Message
+                                </button>
+                                <button class="btn btn-outline-orange">
+                                    <i class="fas fa-share-alt me-2"></i>Share Resources
+                                </button>
+                                <button class="btn btn-outline-orange">
+                                    <i class="fas fa-file-alt me-2"></i>Request Feedback
+                                </button>
+                                <button class="btn btn-outline-orange">
+                                    <i class="fas fa-video me-2"></i>Emergency Call
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Message Button (Mobile) -->
+    {% if user.studentprofile.mentor %}
+    <button class="message-mentor-btn" data-bs-toggle="modal" data-bs-target="#messageModal">
+        <i class="fas fa-comment"></i>
+    </button>
+    {% endif %}
+
+    <!-- Schedule Modal -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule New Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <select class="form-select">
+                                <option>Physics</option>
+                                <option>Chemistry</option>
+                                <option>Biology</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Topic</label>
+                            <input type="text" class="form-control" placeholder="Enter specific topic">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Date & Time</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Duration</label>
+                            <select class="form-select">
+                                <option>30 minutes</option>
+                                <option>45 minutes</option>
+                                <option>1 hour</option>
+                                <option>1.5 hours</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Additional Notes</label>
+                            <textarea class="form-control" rows="3" placeholder="Any specific areas you want to cover..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange">Send Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div class="modal fade" id="messageModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Message Your Mentor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <input type="text" class="form-control" placeholder="Enter message subject">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" rows="5" placeholder="Type your message here..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="urgentCheck">
+                                <label class="form-check-label" for="urgentCheck">
+                                    Mark as urgent
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-orange">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Live Session Link Simulation
+        function updateSessionStatus() {
+            const sessionLink = document.getElementById('sessionLink');
+            const sessionTime = document.getElementById('sessionTime');
+            const now = new Date();
+            const day = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            
+            // Simulate session schedule: Monday (1) at 3 PM
+            if (day === 1 && hour >= 14 && hour < 16) { // 2 PM to 4 PM (3 PM session)
+                sessionLink.innerHTML = `
+                    <div class="live-indicator">
+                        <span class="status-dot status-active"></span>
+                        <span>Session Active Now!</span>
+                    </div>
+                    <p class="text-sm text-success mt-2 mb-0">
+                        <i class="fas fa-video me-1"></i>Click to join live session
+                    </p>
+                `;
+                sessionLink.classList.remove('inactive');
+                sessionLink.href = "https://meet.google.com/your-session-link";
+                sessionLink.onclick = null;
+                sessionTime.textContent = "Session ends at 4:30 PM";
+            } else {
+                // Calculate next Monday 3 PM
+                const nextMonday = new Date();
+                const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+                nextMonday.setDate(now.getDate() + daysUntilMonday);
+                nextMonday.setHours(15, 0, 0, 0);
+                
+                const options = { weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                const nextSessionStr = nextMonday.toLocaleDateString('en-US', options);
+                
+                sessionLink.innerHTML = `
+                    <div class="live-indicator">
+                        <span class="status-dot status-inactive"></span>
+                        <span>Session Inactive</span>
+                    </div>
+                    <p class="text-sm text-muted mt-2 mb-0">
+                        Next session: ${nextSessionStr}
+                    </p>
+                `;
+                sessionLink.classList.add('inactive');
+                sessionLink.href = "#";
+                sessionLink.onclick = function(e) {
+                    e.preventDefault();
+                    alert('Session link will activate 15 minutes before scheduled time.');
+                };
+            }
+        }
+
+        // Update every minute
+        updateSessionStatus();
+        setInterval(updateSessionStatus, 60000);
+
+        // Set active menu item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.sidebar-menu a');
+            
+            menuLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth <= 992 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

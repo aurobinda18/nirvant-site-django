@@ -1,0 +1,952 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Notices | Nirvant Mentor</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+            min-height: 100vh;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+        }
+        
+        .sidebar-header img {
+            height: 35px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 3px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 14px 25px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%);
+            color: white;
+            border-left-color: #ec4899;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(236, 72, 153, 0.12);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            background: linear-gradient(90deg, #ec4899 0%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            margin: 8px 0 0;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        /* Notice Form Card */
+        .notice-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(236, 72, 153, 0.12);
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+        
+        .card-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+        
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+            outline: none;
+        }
+        
+        /* Recipient Selection */
+        .recipient-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .recipient-option {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .recipient-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .recipient-card:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+        
+        .recipient-card.selected {
+            border-color: #ec4899;
+            background: rgba(236, 72, 153, 0.05);
+        }
+        
+        .recipient-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(236, 72, 153, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #ec4899;
+            font-size: 1.2rem;
+        }
+        
+        .recipient-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+        
+        .recipient-desc {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        /* Recipient Details */
+        .recipient-details {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        
+        .recipient-details.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Students/Batches Selection */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .selection-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .selection-item:hover {
+            border-color: #cbd5e1;
+        }
+        
+        .selection-item.selected {
+            border-color: #ec4899;
+            background: rgba(236, 72, 153, 0.05);
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+        
+        .item-details {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        /* Message Editor */
+        .message-editor {
+            margin-top: 25px;
+        }
+        
+        .message-editor textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        /* Priority Badges */
+        .priority-badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .priority-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .priority-badge:hover {
+            transform: translateY(-2px);
+        }
+        
+        .priority-badge.selected {
+            border-color: currentColor;
+        }
+        
+        .priority-low {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+        }
+        
+        .priority-medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        
+        .priority-high {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+        
+        .priority-urgent {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+        
+        /* Preview Card */
+        .preview-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(236, 72, 153, 0.12);
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .preview-card.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .preview-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .preview-content {
+            line-height: 1.6;
+            color: #334155;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border: 1px solid transparent;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipient-options {
+                flex-direction: column;
+            }
+            
+            .recipient-option {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo">
+                <h3>Mentor Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Mentor</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="{% url 'mentor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="{% url 'assign_batch' %}"><i class="fas fa-graduation-cap"></i> <span>Assign Batch</span></a></li>
+                    <li><a href="{% url 'manage_test_series' %}"><i class="fas fa-clipboard-list"></i> <span>Test Series</span></a></li>
+                    <li><a href="{% url 'upload_pyqs' %}"><i class="fas fa-file-pdf"></i> <span>Upload PYQs</span></a></li>
+                    <li><a href="#" class="active"><i class="fas fa-bell"></i> <span>Send Notices</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Send Notices to Students</h1>
+                    <p>Send announcements, reminders, and important messages to your students</p>
+                </div>
+            </div>
+
+            <!-- Alert Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %} me-2"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Notice Form Card -->
+            <div class="notice-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Create New Notice</h2>
+                        <p class="card-subtitle">Compose and send important messages to your students</p>
+                    </div>
+                </div>
+
+                <form id="noticeForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="send_notice">
+                    
+                    <!-- Step 1: Notice Details -->
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="noticeTitle">Notice Title *</label>
+                            <input type="text" id="noticeTitle" name="title" class="form-control" 
+                                   placeholder="e.g., Important: Weekly Test Schedule" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Priority Level</label>
+                            <div class="priority-badges">
+                                <span class="priority-badge priority-medium selected" data-priority="medium">
+                                    <i class="fas fa-exclamation-circle"></i> Medium
+                                </span>
+                                <span class="priority-badge priority-low" data-priority="low">
+                                    <i class="fas fa-info-circle"></i> Low
+                                </span>
+                                <span class="priority-badge priority-high" data-priority="high">
+                                    <i class="fas fa-exclamation-triangle"></i> High
+                                </span>
+                                <span class="priority-badge priority-urgent" data-priority="urgent">
+                                    <i class="fas fa-skull-crossbones"></i> Urgent
+                                </span>
+                            </div>
+                            <input type="hidden" id="priority" name="priority" value="medium">
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Select Recipients -->
+                    <div class="mt-4">
+                        <label class="form-label fw-bold mb-3">Select Recipients *</label>
+                        
+                        <div class="recipient-options">
+                            <div class="recipient-option">
+                                <div class="recipient-card" data-recipient="all" onclick="selectRecipient('all')">
+                                    <div class="recipient-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="recipient-name">All Students</div>
+                                    <div class="recipient-desc">Send to all your students</div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">{{ total_students }} students</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recipient-option">
+                                <div class="recipient-card" data-recipient="batch" onclick="selectRecipient('batch')">
+                                    <div class="recipient-icon">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="recipient-name">Specific Batch</div>
+                                    <div class="recipient-desc">Send to students in a particular batch</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recipient-option">
+                                <div class="recipient-card" data-recipient="student" onclick="selectRecipient('student')">
+                                    <div class="recipient-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="recipient-name">Specific Student</div>
+                                    <div class="recipient-desc">Send to individual student</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" id="recipientType" name="recipient_type" value="all" required>
+                    </div>
+                    
+                    <!-- Batch Selection -->
+                    <div id="batchSelection" class="recipient-details">
+                        <label class="form-label fw-bold mb-3">Select Batch</label>
+                        <div class="selection-grid">
+                            {% for batch in mentor_batches %}
+                            <div class="selection-item" onclick="selectBatch({{ batch.id }}, '{{ batch.batch_name }}')">
+                                <div class="item-name">{{ batch.batch_name }}</div>
+                                <div class="item-details">
+                                    {{ batch.current_students }} students • {{ batch.batch_code }}
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-4 text-muted">
+                                <i class="fas fa-graduation-cap fa-2x mb-3"></i>
+                                <p>No batches created yet.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" id="selectedBatch" name="specific_batch">
+                    </div>
+                    
+                    <!-- Student Selection -->
+                    <div id="studentSelection" class="recipient-details">
+                        <label class="form-label fw-bold mb-3">Select Student</label>
+                        <div class="selection-grid">
+                            {% for student in students %}
+                            <div class="selection-item" onclick="selectStudent({{ student.user.id }}, '{{ student.user.get_full_name }}')">
+                                <div class="item-name">{{ student.user.get_full_name }}</div>
+                                <div class="item-details">
+                                    {{ student.user.email }}
+                                    {% if student.batch_enrolled %}
+                                    • {{ student.batch_enrolled }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-4 text-muted">
+                                <i class="fas fa-users fa-2x mb-3"></i>
+                                <p>No students assigned yet.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" id="selectedStudent" name="specific_student">
+                    </div>
+                    
+                    <!-- Step 3: Compose Message -->
+                    <div class="message-editor">
+                        <label for="noticeMessage" class="form-label fw-bold">Message Content *</label>
+                        <textarea id="noticeMessage" name="message" class="form-control" 
+                                  placeholder="Type your message here... Include important details, dates, instructions, etc." 
+                                  rows="8" required></textarea>
+                        
+                        <div class="mt-3 text-muted">
+                            <small>
+                                <i class="fas fa-lightbulb"></i> 
+                                Tip: Be clear and concise. Include dates, times, and specific instructions.
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Button -->
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-secondary" onclick="previewNotice()">
+                            <i class="fas fa-eye"></i> Preview Notice
+                        </button>
+                    </div>
+                    
+                    <!-- Preview Card -->
+                    <div id="previewCard" class="preview-card">
+                        <div class="preview-header">
+                            <div class="preview-title" id="previewTitle">Notice Preview</div>
+                            <span class="badge" id="previewPriority">Medium</span>
+                        </div>
+                        <div class="preview-content" id="previewContent">
+                            Your notice preview will appear here...
+                        </div>
+                        <div class="mt-3 text-muted">
+                            <small>
+                                <i class="fas fa-users"></i> 
+                                Recipients: <span id="previewRecipients">All Students</span>
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Clear Form
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Notice
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Recipient Selection
+        let selectedRecipient = 'all';
+        let selectedBatchId = null;
+        let selectedStudentId = null;
+        
+        function selectRecipient(recipient) {
+            selectedRecipient = recipient;
+            
+            // Update UI
+            document.querySelectorAll('.recipient-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`.recipient-card[data-recipient="${recipient}"]`).classList.add('selected');
+            
+            // Update hidden field
+            document.getElementById('recipientType').value = recipient;
+            
+            // Show/hide details sections
+            document.getElementById('batchSelection').classList.remove('active');
+            document.getElementById('studentSelection').classList.remove('active');
+            
+            if (recipient === 'batch') {
+                document.getElementById('batchSelection').classList.add('active');
+            } else if (recipient === 'student') {
+                document.getElementById('studentSelection').classList.add('active');
+            }
+            
+            updatePreview();
+        }
+        
+        // Batch Selection
+        function selectBatch(batchId, batchName) {
+            selectedBatchId = batchId;
+            selectedStudentId = null;
+            
+            // Update UI
+            document.querySelectorAll('#batchSelection .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Update hidden field
+            document.getElementById('selectedBatch').value = batchId;
+            
+            updatePreview();
+        }
+        
+        // Student Selection
+        function selectStudent(studentId, studentName) {
+            selectedStudentId = studentId;
+            selectedBatchId = null;
+            
+            // Update UI
+            document.querySelectorAll('#studentSelection .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Update hidden field
+            document.getElementById('selectedStudent').value = studentId;
+            
+            updatePreview();
+        }
+        
+        // Priority Selection
+        document.querySelectorAll('.priority-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                const priority = this.getAttribute('data-priority');
+                
+                // Update UI
+                document.querySelectorAll('.priority-badge').forEach(b => {
+                    b.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                // Update hidden field
+                document.getElementById('priority').value = priority;
+                
+                updatePreview();
+            });
+        });
+        
+        // Preview Notice
+        function previewNotice() {
+            const title = document.getElementById('noticeTitle').value;
+            const message = document.getElementById('noticeMessage').value;
+            const priority = document.getElementById('priority').value;
+            
+            if (!title || !message) {
+                alert('Please fill in the title and message before previewing.');
+                return;
+            }
+            
+            // Update preview
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewContent').textContent = message;
+            
+            // Update priority badge
+            const priorityBadge = document.getElementById('previewPriority');
+            priorityBadge.className = 'badge';
+            
+            switch(priority) {
+                case 'low':
+                    priorityBadge.classList.add('bg-success');
+                    priorityBadge.textContent = 'Low Priority';
+                    break;
+                case 'medium':
+                    priorityBadge.classList.add('bg-warning');
+                    priorityBadge.textContent = 'Medium Priority';
+                    break;
+                case 'high':
+                    priorityBadge.classList.add('bg-danger');
+                    priorityBadge.textContent = 'High Priority';
+                    break;
+                case 'urgent':
+                    priorityBadge.classList.add('bg-purple');
+                    priorityBadge.textContent = 'Urgent';
+                    break;
+            }
+            
+            // Update recipients preview
+            let recipientsText = 'All Students';
+            if (selectedRecipient === 'batch' && selectedBatchId) {
+                const batchElement = document.querySelector('#batchSelection .selection-item.selected .item-name');
+                recipientsText = batchElement ? `Batch: ${batchElement.textContent}` : 'Selected Batch';
+            } else if (selectedRecipient === 'student' && selectedStudentId) {
+                const studentElement = document.querySelector('#studentSelection .selection-item.selected .item-name');
+                recipientsText = studentElement ? `Student: ${studentElement.textContent}` : 'Selected Student';
+            }
+            
+            document.getElementById('previewRecipients').textContent = recipientsText;
+            
+            // Show preview
+            document.getElementById('previewCard').classList.add('active');
+        }
+        
+        // Update Preview (real-time)
+        function updatePreview() {
+            if (document.getElementById('previewCard').classList.contains('active')) {
+                previewNotice();
+            }
+        }
+        
+        // Reset Form
+        function resetForm() {
+            document.getElementById('noticeForm').reset();
+            selectRecipient('all');
+            
+            // Reset selections
+            document.querySelectorAll('.selection-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            selectedBatchId = null;
+            selectedStudentId = null;
+            document.getElementById('selectedBatch').value = '';
+            document.getElementById('selectedStudent').value = '';
+            
+            // Reset priority to medium
+            document.querySelectorAll('.priority-badge').forEach(badge => {
+                badge.classList.remove('selected');
+            });
+            document.querySelector('.priority-badge[data-priority="medium"]').classList.add('selected');
+            document.getElementById('priority').value = 'medium';
+            
+            // Hide preview
+            document.getElementById('previewCard').classList.remove('active');
+        }
+        
+        // Form Validation
+        document.getElementById('noticeForm').addEventListener('submit', function(e) {
+            const title = document.getElementById('noticeTitle').value;
+            const message = document.getElementById('noticeMessage').value;
+            const recipientType = document.getElementById('recipientType').value;
+            
+            if (!title || !message) {
+                e.preventDefault();
+                alert('Please fill in the title and message.');
+                return;
+            }
+            
+            if (recipientType === 'batch' && !document.getElementById('selectedBatch').value) {
+                e.preventDefault();
+                alert('Please select a batch.');
+                return;
+            }
+            
+            if (recipientType === 'student' && !document.getElementById('selectedStudent').value) {
+                e.preventDefault();
+                alert('Please select a student.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            selectRecipient('all');
+        });
+    </script>
+</body>
+</html>

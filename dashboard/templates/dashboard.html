@@ -1,0 +1,1431 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Nirvant NEET</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --primary-orange: #ff7a00;
+            --light-orange: #fff8dc;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
+            --success: #10b981;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --white: #ffffff;
+            --light-bg: #fffef6;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background: var(--light-orange);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --primary-orange: #ff7a00;
+            --light-orange: #1a1a2e;
+            --dark-text: #e2e8f0;
+            --light-text: #94a3b8;
+            --white: #1e293b;
+            --light-bg: #2d3748;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Mobile First Approach */
+        .mobile-header {
+            display: none;
+            background: var(--white);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 0;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--light-bg);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .dark-mode .sidebar {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, rgba(255, 122, 0, 0.8) 100%);
+        }
+        
+        .dark-mode .sidebar-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            height: 35px;
+            margin-bottom: 10px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            background: var(--white);
+        }
+        
+        .dark-mode .sidebar-user {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            background: rgba(255, 122, 0, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu {
+            padding: 15px 0;
+            background: var(--white);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 2px 0;
+        }
+        
+        .sidebar-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 122, 0, 0.1);
+            color: var(--primary-orange);
+            border-left-color: var(--primary-orange);
+        }
+        
+        .sidebar-menu i {
+            width: 22px;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .top-bar {
+            border: 1px solid rgba(255, 122, 0, 0.3);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .page-title p {
+            margin: 5px 0 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        /* Custom Components */
+        .text-orange {
+            color: var(--primary-orange) !important;
+        }
+        
+        .bg-orange {
+            background-color: var(--primary-orange) !important;
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-orange:hover {
+            background: #e56b00;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 122, 0, 0.3);
+        }
+        
+        .btn-outline-orange {
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline-orange:hover {
+            background: var(--primary-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Cards */
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+        
+        .card-header {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 18px 20px;
+        }
+        
+        .dark-mode .card-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ff9d42 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 30px rgba(255, 122, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-banner p {
+            font-size: 1rem;
+            opacity: 0.95;
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Quick Stats Cards */
+        .quick-stats {
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--primary-orange);
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 122, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: var(--primary-orange);
+            font-size: 1.3rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--light-text);
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+        
+        /* Subject Cards */
+        .subject-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: var(--white);
+            border: 1px solid rgba(255, 122, 0, 0.15);
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .dark-mode .subject-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 122, 0, 0.2);
+            border-color: rgba(255, 122, 0, 0.4);
+        }
+        
+        .subject-card.active {
+            border-color: var(--primary-orange);
+            box-shadow: 0 10px 25px rgba(255, 122, 0, 0.25);
+        }
+        
+        .subject-header {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 122, 0, 0.1) 0%, rgba(255, 122, 0, 0.15) 100%);
+        }
+        
+        .subject-header .d-flex {
+            align-items: center;
+        }
+        
+        .subject-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .subject-icon.physics {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ff9d42 100%);
+        }
+        
+        .subject-icon.chemistry {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        
+        .subject-icon.biology {
+            background: linear-gradient(135deg, var(--success) 0%, #34d399 100%);
+        }
+        
+        .subject-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 5px;
+        }
+        
+        .subject-year {
+            font-size: 0.85rem;
+            color: var(--light-text);
+        }
+        
+        .subject-body {
+            padding: 15px 20px;
+        }
+        
+        .subject-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .subject-stat {
+            text-align: center;
+        }
+        
+        .subject-stat-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary-orange);
+            display: block;
+        }
+        
+        .subject-stat-label {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            display: block;
+        }
+        
+        /* PDF Cards */
+        .pdf-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.15);
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .dark-mode .pdf-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .pdf-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 122, 0, 0.2);
+            border-color: rgba(255, 122, 0, 0.4);
+        }
+        
+        .pdf-badge {
+            background: var(--primary-orange);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .pdf-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 10px 0;
+        }
+        
+        .pdf-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .pdf-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--light-text);
+            font-size: 0.85rem;
+        }
+        
+        .pdf-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .pdf-actions .btn {
+            flex: 1;
+        }
+        
+        /* Year Filter */
+        .year-filter {
+            margin-bottom: 20px;
+        }
+        
+        .year-filter select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 122, 0, 0.3);
+            background: var(--white);
+            color: var(--dark-text);
+            font-weight: 500;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .year-filter select {
+            border: 1px solid rgba(255, 122, 0, 0.5);
+        }
+        
+        /* No PDFs Message */
+        .no-pdfs {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 122, 0, 0.1);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 122, 0, 0.3);
+            color: var(--light-text);
+        }
+        
+        .no-pdfs i {
+            font-size: 3rem;
+            color: var(--primary-orange);
+            margin-bottom: 15px;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            background: rgba(255, 122, 0, 0.15);
+            color: var(--primary-orange);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Progress Bar */
+        .progress {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .dark-mode .progress {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-orange);
+        }
+        
+        /* Badges */
+        .badge {
+            font-weight: 600;
+        }
+        
+        /* Form Controls */
+        .form-select, .form-control {
+            background-color: var(--white);
+            color: var(--dark-text);
+            border-color: rgba(255, 122, 0, 0.3);
+        }
+        
+        .dark-mode .form-select, .dark-mode .form-control {
+            border-color: rgba(255, 122, 0, 0.5);
+        }
+        
+        .form-select:focus, .form-control:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 122, 0, 0.25);
+        }
+        
+        /* Notices Container */
+        .notices-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 122, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-orange) rgba(255, 122, 0, 0.1);
+        }
+        
+        .notices-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .notices-container::-webkit-scrollbar-track {
+            background: rgba(255, 122, 0, 0.1);
+            border-radius: 4px;
+        }
+        
+        .notices-container::-webkit-scrollbar-thumb {
+            background: var(--primary-orange);
+            border-radius: 4px;
+        }
+        
+        .dark-mode .notices-container {
+            border-color: rgba(255, 122, 0, 0.4) !important;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Notice Card */
+        .notice-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 122, 0, 0.15);
+            transition: all 0.3s;
+        }
+        
+        .notice-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 122, 0, 0.2);
+            border-color: rgba(255, 122, 0, 0.4);
+        }
+        
+        .dark-mode .notice-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .notice-unread {
+            border-left: 4px solid var(--primary-orange);
+            background: rgba(255, 122, 0, 0.05);
+        }
+        
+        .dark-mode .notice-unread {
+            background: rgba(255, 122, 0, 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                padding-top: 80px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .top-bar {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .notices-container {
+                max-height: 350px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 15px;
+            }
+            
+            .welcome-banner {
+                padding: 20px;
+            }
+            
+            .welcome-banner h2 {
+                font-size: 1.5rem;
+            }
+            
+            .subject-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .pdf-actions {
+                flex-direction: column;
+            }
+            
+            .btn-orange, .btn-outline-orange {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .notices-container {
+                max-height: 300px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 10px;
+                padding-top: 70px;
+            }
+            
+            .top-bar {
+                border-radius: 8px;
+            }
+            
+            .row {
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+            
+            .col, .col-md, .col-lg {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card-header h5 {
+                font-size: 1rem;
+            }
+            
+            .notices-container {
+                max-height: 250px;
+                padding: 10px;
+            }
+        }
+        
+        /* Utility Classes */
+        .rounded-lg {
+            border-radius: 12px;
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-mode .shadow-sm {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+        
+        /* Dark Mode Specific Styles */
+        .dark-mode .text-muted {
+            color: var(--light-text) !important;
+        }
+        
+        .dark-mode .bg-light {
+            background-color: #374151 !important;
+        }
+        
+        .dark-mode .border {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Notice Modal */
+        .notice-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .notice-modal-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 122, 0, 0.3);
+        }
+        
+        .dark-mode .notice-modal-content {
+            background: var(--light-bg);
+            border: 2px solid rgba(255, 122, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" height="30">
+        <div class="user-dropdown-mobile">
+            <i class="fas fa-user-circle" style="font-size: 1.5rem; color: var(--primary-orange);"></i>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="sidebar-logo">
+                <h3 style="color: white;">NEET Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Aspirant</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="/dashboard/profile/"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+                    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                    <li><a href="/dashboard/" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="/dashboard/mentor/"><i class="fas fa-chalkboard-teacher"></i> <span>Mentor</span></a></li>
+                    <li><a href="/dashboard/progress/"><i class="fas fa-chart-line"></i> <span>Progress</span></a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a></li>
+                    <li><a href="{% url 'studypack' %}"><i class="fas fa-book"></i> <span>Studypack</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1 id="greetingText">Welcome, {{ user.first_name|default:user.username }}!</h1>
+                    <p>Track your NEET preparation progress and access study materials</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-orange" id="themeToggle">
+                        <i class="fas fa-moon me-2"></i>Dark Mode
+                    </button>
+                </div>
+            </div>
+
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2>Welcome to Nirvant NEET Mentorship! 🎯</h2>
+                <p>Your personalized dashboard helps you track NEET preparation, access previous year questions, connect with mentors, and achieve your medical career goals. Keep studying and stay motivated!</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row quick-stats">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="stat-value">{{ total_pyq }}</div>
+                        <div class="stat-label">PYQ PDFs Available</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value">24/7</div>
+                        <div class="stat-label">Mentor Support</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Sessions This Month</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PYQ Analysis Section -->
+            <div class="pyq-section">
+                <div class="section-title">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Previous Year Questions (PYQ)</span>
+                </div>
+                
+                <!-- Subject Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="subject-card active" data-subject="Physics">
+                            <div class="subject-header">
+                                <div class="d-flex">
+                                    <div class="subject-icon physics">
+                                        <i class="fas fa-atom"></i>
+                                    </div>
+                                    <div>
+                                        <div class="subject-name">Physics</div>
+                                        <div class="subject-year">2014-2025 PYQs</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-body">
+                                <div class="subject-stats">
+                                    <div class="subject-stat">
+                                        <span class="subject-stat-value">{{ physics_count }}</span>
+                                        <span class="subject-stat-label">PDF Files</span>
+                                    </div>
+                                    <div class="subject-stat">
+                                        <span class="subject-stat-value">{% widthratio physics_count 1 30 %}+</span>
+                                        <span class="subject-stat-label">Questions</span>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar" style="width: {% widthratio physics_count total_pyq 100 %}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="subject-card" data-subject="Chemistry">
+                            <div class="subject-header">
+                                <div class="d-flex">
+                                    <div class="subject-icon chemistry">
+                                        <i class="fas fa-flask"></i>
+                                    </div>
+                                    <div>
+                                        <div class="subject-name">Chemistry</div>
+                                        <div class="subject-year">2014-2025 PYQs</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-body">
+                                <div class="subject-stats">
+                                    <div class="subject-stat">
+                                        <span class="subject-stat-value">{{ chemistry_count }}</span>
+                                        <span class="subject-stat-label">PDF Files</span>
+                                    </div>
+                                    <div class="subject-stat">
+                                        <span class="subject-stat-value">{% widthratio chemistry_count 1 30 %}+</span>
+                                        <span class="subject-stat-label">Questions</span>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar" style="width: {% widthratio chemistry_count total_pyq 100 %}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="subject-card" data-subject="Biology">
+                            <div class="subject-header">
+                                <div class="d-flex">
+                                    <div class="subject-icon biology">
+                                        <i class="fas fa-dna"></i>
+                                    </div>
+                                    <div>
+                                        <div class="subject-name">Biology</div>
+                                        <div class="subject-year">2014-2025 PYQs</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-body">
+                                <div class="subject-stats">
+                                    <div class="subject-stat">
+                                        <span class="subject-stat-value">{{ biology_count }}</span>
+                                        <span class="subject-stat-label">PDF Files</span>
+                                    </div>
+                                    <div class="subject-stat">
+                                        <span class="subject-stat-value">{% widthratio biology_count 1 30 %}+</span>
+                                        <span class="subject-stat-label">Questions</span>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar" style="width: {% widthratio biology_count total_pyq 100 %}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Year Filter -->
+                <div class="year-filter">
+                    <div class="d-flex align-items-center gap-3">
+                        <select id="yearFilter" class="form-select" style="max-width: 200px;">
+                            <option value="">All Years (2014-2025)</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
+                        </select>
+                        <div id="filterStatus" class="text-sm text-muted">
+                            Showing all {{ total_pyq }} PDFs
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Cards -->
+                <div class="row" id="pdfCards">
+                    {% if pyq_pdfs %}
+                        {% for pdf in pyq_pdfs %}
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="pdf-card" data-subject="{{ pdf.subject }}" data-year="{{ pdf.year }}">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="pdf-badge">{{ pdf.year }}</span>
+                                    {% if pdf.year == "2025" %}
+                                    <span class="badge bg-success">Latest</span>
+                                    {% elif pdf.year == "2024" %}
+                                    <span class="badge bg-info">Recent</span>
+                                    {% endif %}
+                                </div>
+                                <div class="pdf-title">{{ pdf.title }}</div>
+                                <div class="pdf-meta">
+                                    <span class="pdf-meta-item">
+                                        <i class="fas fa-file-pdf text-danger"></i>
+                                        {{ pdf.pages }} pages
+                                    </span>
+                                    <span class="pdf-meta-item">
+                                        <i class="fas fa-question-circle"></i>
+                                        {{ pdf.questions_count }} questions
+                                    </span>
+                                    <span class="pdf-meta-item">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ pdf.uploaded_at|date:"d M Y" }}
+                                    </span>
+                                </div>
+<div class="pdf-actions">
+    <a href="{% url 'download_pdf' pdf.id %}" class="btn btn-orange" target="_blank">
+        <i class="fas fa-download me-2"></i>Download
+    </a>
+    <a href="{% url 'view_pdf' pdf.id %}" class="btn btn-outline-orange" target="_blank">
+        <i class="fas fa-eye me-2"></i>View
+    </a>
+</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <div class="no-pdfs">
+                                <i class="fas fa-file-pdf"></i>
+                                <h4>No PYQ PDFs Available Yet</h4>
+                                <p>Check back soon or contact your mentor for study materials.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notices Section -->
+            <div class="pyq-section mt-5">
+                <div class="section-title">
+                    <i class="fas fa-bell"></i>
+                    <span>Notices from Mentor</span>
+                    {% if unread_notices_count %}
+                    <span class="badge bg-danger ms-2">{{ unread_notices_count }} new</span>
+                    {% endif %}
+                </div>
+                
+                {% if notices %}
+                <div class="notices-container">
+                    {% for notice in notices %}
+                    <div class="notice-card {% if not notice.is_read %}notice-unread{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="pdf-badge">{{ notice.priority|title }} Priority</span>
+                            <small class="text-muted">{{ notice.created_at|date:"d M Y, h:i A" }}</small>
+                        </div>
+                        <div class="pdf-title mb-2">{{ notice.title }}</div>
+                        <div class="pdf-meta mb-3">
+                            <span class="pdf-meta-item">
+                                <i class="fas fa-user-tie"></i>
+                                {{ notice.mentor.name }}
+                            </span>
+                            <span class="pdf-meta-item">
+                                <i class="fas fa-envelope"></i>
+                                {{ notice.mentor.email }}
+                            </span>
+                        </div>
+                        <div class="notice-message mb-3">
+                            <p class="mb-0">{{ notice.message|linebreaksbr|truncatechars:200 }}</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-outline-orange btn-sm" onclick="showNotice('{{ notice.id }}', '{{ notice.title }}', `{{ notice.message|escapejs }}`)">
+                                <i class="fas fa-eye me-2"></i> View Full Notice
+                            </button>
+                            {% if not notice.is_read %}
+                            <span class="badge bg-warning text-dark">NEW</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="no-pdfs">
+                    <i class="fas fa-bell-slash"></i>
+                    <h4>No Notices Yet</h4>
+                    <p>Your mentor hasn't sent any notices yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                this.innerHTML = '<i class="fas fa-sun me-2"></i>Light Mode';
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                this.innerHTML = '<i class="fas fa-moon me-2"></i>Dark Mode';
+            }
+            // Save preference to localStorage
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load saved theme preference on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggleBtn = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun me-2"></i>Light Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon me-2"></i>Dark Mode';
+            }
+            
+            // Update greeting based on time
+            const hour = new Date().getHours();
+            let greeting = "Good ";
+            if (hour < 12) greeting += "Morning";
+            else if (hour < 18) greeting += "Afternoon";
+            else greeting += "Evening";
+
+            const greetingText = document.getElementById('greetingText');
+            if (greetingText) {
+                greetingText.textContent = `${greeting}, {{ user.first_name|default:user.username }}!`;
+            }
+            
+            // Initialize filter
+            filterPYQs();
+        });
+
+        // Subject selection
+        document.querySelectorAll('.subject-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                document.querySelectorAll('.subject-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                // Add active class to clicked card
+                this.classList.add('active');
+                // Filter PDFs
+                filterPYQs();
+            });
+        });
+
+        // Filter PYQs by subject and year
+        function filterPYQs() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const activeCard = document.querySelector('.subject-card.active');
+            const selectedSubject = activeCard ? activeCard.getAttribute('data-subject') : 'All';
+            
+            const pdfCards = document.querySelectorAll('.pdf-card');
+            let visibleCount = 0;
+            
+            pdfCards.forEach(card => {
+                const cardSubject = card.getAttribute('data-subject');
+                const cardYear = card.getAttribute('data-year');
+                
+                let showCard = true;
+                
+                // Subject filter
+                if (selectedSubject !== 'All' && cardSubject !== selectedSubject) {
+                    showCard = false;
+                }
+                
+                // Year filter
+                if (yearFilter && cardYear !== yearFilter) {
+                    showCard = false;
+                }
+                
+                if (showCard) {
+                    card.parentElement.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.parentElement.style.display = 'none';
+                }
+            });
+            
+            // Update filter status message
+            const statusElement = document.getElementById('filterStatus');
+            let statusText = '';
+            
+            if (selectedSubject === 'All' && !yearFilter) {
+                statusText = `Showing all {{ total_pyq }} PDFs`;
+            } else if (selectedSubject !== 'All' && !yearFilter) {
+                statusText = `Showing ${selectedSubject} PDFs (${visibleCount} of {{ total_pyq }})`;
+            } else if (selectedSubject === 'All' && yearFilter) {
+                statusText = `Showing ${yearFilter} PDFs (${visibleCount} of {{ total_pyq }})`;
+            } else {
+                statusText = `Showing ${selectedSubject} ${yearFilter} PDFs (${visibleCount} of {{ total_pyq }})`;
+            }
+            
+            if (statusElement) {
+                statusElement.textContent = statusText;
+            }
+        }
+
+        // Year filter change
+        document.getElementById('yearFilter').addEventListener('change', filterPYQs);
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth <= 992 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Show Notice Modal
+        function showNotice(noticeId, title, message) {
+            // Remove existing modal if any
+            const existingModal = document.querySelector('.notice-modal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Create modal HTML
+            const modalHtml = `
+                <div class="notice-modal">
+                    <div class="notice-modal-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="mb-0 text-orange">📢 ${title}</h3>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--light-text);">&times;</button>
+                        </div>
+                        <div class="mb-4">
+                            <p style="white-space: pre-wrap; font-size: 1rem; line-height: 1.6;">${message}</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Notice ID: ${noticeId}</small>
+                            <div>
+                                <button class="btn btn-outline-orange btn-sm me-2" onclick="markAsRead(${noticeId})">
+                                    <i class="fas fa-check me-2"></i>Mark as Read
+                                </button>
+                                <button class="btn btn-orange btn-sm" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                                    <i class="fas fa-times me-2"></i>Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Close modal when clicking outside
+            document.querySelector('.notice-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.remove();
+                }
+            });
+        }
+
+        // Mark notice as read
+        function markAsRead(noticeId) {
+            // You can implement this function to mark notice as read via API
+            console.log(`Marking notice ${noticeId} as read`);
+            
+            // Update UI
+            const noticeCard = document.querySelector(`.notice-card`);
+            if (noticeCard) {
+                noticeCard.classList.remove('notice-unread');
+                const newBadge = noticeCard.querySelector('.badge.bg-warning');
+                if (newBadge) {
+                    newBadge.remove();
+                }
+            }
+            
+            // Close modal
+            const modal = document.querySelector('.notice-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+    </script>
+</body>
+</html>

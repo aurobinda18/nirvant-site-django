@@ -621,88 +621,109 @@
             {% endfor %}
 
             {% if show_otp %}
-            <!-- OTP FORM - EXACT SAME LOGIC AS ROOT CODE -->
-            <div class="form-header">
-                <h2>Verify OTP</h2>
-                <p>Enter the 6-digit code sent to {{ email|truncatechars:25 }}</p>
-            </div>
+<!-- OTP FORM -->
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="email" value="{{ email }}">
+    <input type="hidden" name="company_id" value="{{ request.POST.company_id|default:'' }}">
+    <!-- ADD THIS LINE -->
+    <input type="hidden" name="user_type" value="{{ request.POST.user_type|default:'student' }}">
+    
+    <div class="form-group">
+        <label class="form-label">Enter OTP</label>
+        <input type="text" name="otp" class="form-control otp-input" placeholder="6-digit OTP" required>
+    </div>
+    
+    <button name="action" value="verify_otp" class="btn btn-success">
+        Verify OTP
+    </button>
+</form>
 
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="email" value="{{ email }}">
-
-                <div class="form-group">
-                    <label class="form-label">Enter OTP</label>
-                    <input type="text" name="otp" class="form-control otp-input" placeholder="6-digit OTP" required>
-                </div>
-
-                <button name="action" value="verify_otp" class="btn btn-success">
-                    Verify OTP
-                </button>
-
-                <button name="action" value="resend_otp" class="btn-link">
-                    Resend OTP
-                </button>
-            </form>
-
-            {% else %}
+                        {% else %}
             <!-- REGISTRATION FORM - AGE FIELD REMOVED -->
             <div class="form-header">
                 <h2>Create Account</h2>
                 <p>Join Nirvant and start your growth journey</p>
             </div>
 
+            <!-- Registration Type Tabs -->
+            <div style="display: flex; margin-bottom: 2rem; border-bottom: 2px solid #e2e8f0;">
+                <button type="button" id="studentTab" class="tab-btn active" 
+                        style="flex: 1; padding: 12px; background: none; border: none; border-bottom: 3px solid #f97316; font-weight: 600; color: #f97316;">
+                    <i class="fas fa-user-graduate me-2"></i>Student
+                </button>
+                <button type="button" id="mentorTab" class="tab-btn"
+                        style="flex: 1; padding: 12px; background: none; border: none; font-weight: 500; color: #64748b;">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>Mentor
+                </button>
+            </div>
+
             <form method="POST">
                 {% csrf_token %}
+                
+                <!-- Hidden field for user type -->
+                <input type="hidden" name="user_type" id="userType" value="student">
 
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label class="form-label">First Name</label>
-                            <input type="text" name="first_name" class="form-control" placeholder="First name" required>
+                <div id="studentForm">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="First name" required>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" placeholder="Last name" required>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="form-group">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" name="last_name" class="form-control" placeholder="Last name" required>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Email address" required>
+                        <small class="input-hint">We'll send OTP to this email</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Choose username" required>
+                        <small class="input-hint">Choose a unique username</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password1" class="form-control" placeholder="Password" required id="password1">
+                            <button type="button" class="password-toggle" id="togglePassword1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="input-hint">Use a strong password</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password2" class="form-control" placeholder="Confirm password" required id="password2">
+                            <button type="button" class="password-toggle" id="togglePassword2">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="Email address" required>
-                    <small class="input-hint">We'll send OTP to this email</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Choose username" required>
-                    <small class="input-hint">Choose a unique username</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" name="password1" class="form-control" placeholder="Password" required id="password1">
-                        <button type="button" class="password-toggle" id="togglePassword1">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <small class="input-hint">Use a strong password</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Confirm Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" name="password2" class="form-control" placeholder="Confirm password" required id="password2">
-                        <button type="button" class="password-toggle" id="togglePassword2">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
+<!-- Mentor/Student ID Field - ALWAYS VISIBLE -->
+<div class="form-group">
+    <label class="form-label">Mentor/Company ID</label>
+    <input type="text" name="company_id" class="form-control" placeholder="Enter your assigned Mentor ID or Company ID" required>
+    <small class="input-hint">
+        Students: Enter your assigned Mentor's ID<br>
+        Mentors: Enter your Company ID (provided by Nirvant)
+    </small>
+</div>
 
                 <button name="action" value="register" class="btn btn-primary">
                     Register & Get OTP
@@ -818,6 +839,37 @@
                 this.value = this.value.replace(/[^0-9]/g, '');
             });
         }
+// Tab switching for Student/Mentor
+const studentTab = document.getElementById('studentTab');
+const mentorTab = document.getElementById('mentorTab');
+const userTypeField = document.getElementById('userType');
+
+if (studentTab && mentorTab) {
+    studentTab.addEventListener('click', function() {
+        studentTab.style.borderBottom = '3px solid #f97316';
+        studentTab.style.color = '#f97316';
+        studentTab.style.fontWeight = '600';
+        
+        mentorTab.style.borderBottom = 'none';
+        mentorTab.style.color = '#64748b';
+        mentorTab.style.fontWeight = '500';
+        
+        userTypeField.value = 'student';
+    });
+    
+    mentorTab.addEventListener('click', function() {
+    mentorTab.style.borderBottom = '3px solid #f97316';
+    mentorTab.style.color = '#f97316';
+    mentorTab.style.fontWeight = '600';
+    
+    studentTab.style.borderBottom = 'none';
+    studentTab.style.color = '#64748b';
+    studentTab.style.fontWeight = '500';  // FIXED: Changed mentorTab to studentTab
+    
+    userTypeField.value = 'mentor';
+    console.log("Mentor tab selected, user_type set to:", userTypeField.value);
+});
+}
     </script>
 </body>
 </html>

@@ -20,6 +20,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect
+from dashboard.models import StudentProfile
 
 # ==================== BASIC VIEWS ====================
 
@@ -157,6 +158,41 @@ def register(request):
             )
             user.save()
             
+            # Get user_type from POST, default to 'student'
+            user_type = request.POST.get('user_type', 'student').strip()
+            company_id = request.POST.get('company_id', '').strip()
+            
+            # Save user type and company_id to StudentProfile
+            from dashboard.models import StudentProfile
+            profile, created = StudentProfile.objects.get_or_create(
+                user=user,
+                defaults={
+                    'user_type': user_type,
+                    'company_id': company_id
+                }
+            )
+            
+            # If student, try to find and assign mentor
+            if profile.user_type == 'student':
+                if company_id:
+                    try:
+                        # Find mentor with this company_id
+                        from dashboard.models import Mentor
+                        mentor = Mentor.objects.get(company_id=company_id)
+                        profile.mentor = mentor  # Connect student to mentor
+                        profile.save()
+                        print(f"DEBUG: Student {user.username} assigned to mentor {mentor.name}")
+                    except Mentor.DoesNotExist:
+                        # Mentor not found - student entered wrong ID
+                        print(f"DEBUG: Mentor with company_id {company_id} not found")
+                        pass
+                    
+            # Update existing profile if needed
+            if not created:
+                profile.user_type = user_type
+                profile.company_id = company_id
+                profile.save()
+            
             # Link user to EmailOTP
             email_otp_obj.user = user
             email_otp_obj.save()
@@ -194,6 +230,8 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
+        login_type = request.POST.get("login_type", "student")
+        company_id = request.POST.get("company_id", "")
         
         user = authenticate(
             request,
@@ -202,21 +240,73 @@ def login_view(request):
         )
         
         if user is not None:
-            login(request, user)
-            messages.success(request, "Login successful!")
-            return redirect("dashboard")
+            # Check if mentor login
+            if login_type == "mentor":
+                # Verify company ID matches
+                if hasattr(user, 'studentprofile'):
+                    if user.studentprofile.company_id == company_id:
+                        login(request, user)
+                        messages.success(request, "Mentor login successful!")
+                        return redirect("mentor_dashboard")
+                    else:
+                        messages.error(request, "Invalid Company ID for mentor account")
+                        return render(request, "login.html")
+                else:
+                    messages.error(request, "This account is not registered as mentor")
+                    return render(request, "login.html")
+            else:
+                # Student login
+                login(request, user)
+                messages.success(request, "Login successful!")
+                return redirect("dashboard")
         else:
             messages.error(request, "Invalid username or password!")
     
     return render(request, "login.html")
 
-@login_required(login_url="login")
 def dashboard(request):
-    """User dashboard"""
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    # Get user profile
+    from dashboard.models import StudentProfile
+    profile, created = StudentProfile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'attempt_year': 2025,
+            'neet_exam_date': '2025-05-05',
+            'batch_enrolled': 'NEET 2025 Batch A',
+        }
+    )
+    
+    # ADD THESE 3 LINES HERE ↓↓↓
+    # Get student's notices
+    student_notices = profile.get_mentor_notices()
+    unread_notices_count = len(student_notices)
+    
+    # Get active PYQ PDFs
+    from dashboard.models import PYQPDF
+    pyq_pdfs = PYQPDF.objects.filter(is_active=True)
+    
+    # Calculate counts per subject
+    physics_count = pyq_pdfs.filter(subject='Physics').count()
+    chemistry_count = pyq_pdfs.filter(subject='Chemistry').count()
+    biology_count = pyq_pdfs.filter(subject='Biology').count()
+    
     context = {
-        "user": request.user
+        'profile': profile,
+        'user': request.user,
+        'pyq_pdfs': pyq_pdfs,
+        'physics_count': physics_count,
+        'chemistry_count': chemistry_count,
+        'biology_count': biology_count,
+        'total_pyq': physics_count + chemistry_count + biology_count,
+        # ADD THESE 2 LINES TO CONTEXT ↓↓↓
+        'notices': student_notices[:3],  # Show only 3 latest notices
+        'unread_notices_count': unread_notices_count,
     }
-    return render(request, "dashboard.html", context)
+    
+    return render(request, 'dashboard.html', context)
 
 @login_required(login_url="login")
 def logout_view(request):
@@ -245,3 +335,62 @@ class CustomPasswordResetView(PasswordResetView):
         }
         form.save(**opts)
         return HttpResponseRedirect(self.get_success_url())
+
+# Add this function to your Home/views.py file
+# You can add it after the courses_view function
+
+def checkout_view(request):
+    """Checkout page view"""
+    # Get course details from URL parameters
+    course_id = request.GET.get('course_id')
+    
+    # Default values
+    plan_type = request.GET.get('plan_type', 'Free Trial')
+    duration = request.GET.get('duration', '3 days')
+    price = request.GET.get('price', '0')
+    original_price = request.GET.get('original_price', '')
+    
+    # If course_id is provided, try to get the course details
+    if course_id:
+        try:
+            from Payment.models import Course
+            course = Course.objects.get(id=course_id)
+            plan_type = course.plan_type
+            duration = course.duration_text
+            price = str(course.course_price)
+            if course.original_price:
+                original_price = str(course.original_price)
+        except Course.DoesNotExist:
+            pass
+    
+    context = {
+        'plan_type': plan_type,
+        'duration': duration,
+        'price': price,
+        'original_price': original_price,
+    }
+    
+    return render(request, "checkout.html", context)
+@login_required(login_url="login")
+def mentor_dashboard(request):
+    """Mentor dashboard - shows assigned students"""
+    # Check if user is mentor
+    if not hasattr(request.user, 'studentprofile') or request.user.studentprofile.user_type != 'mentor':
+        return redirect('dashboard')
+    
+    # Get mentor's profile
+    mentor_profile = request.user.studentprofile
+    
+    # Get students assigned to this mentor (students who entered this mentor's company_id)
+    students = StudentProfile.objects.filter(
+        company_id=mentor_profile.company_id,
+        user_type='student'
+    )
+    
+    context = {
+        'students': students,
+        'company_id': mentor_profile.company_id,
+        'user': request.user
+    }
+    return render(request, 'mentor_dashboard.html', context)
+

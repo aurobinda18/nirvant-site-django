@@ -1,0 +1,795 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PYQs | Nirvant Mentor</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            min-height: 100vh;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar - Same as mentor dashboard */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        }
+        
+        .sidebar-header img {
+            height: 35px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 3px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 14px 25px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+            color: white;
+            border-left-color: #f59e0b;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.12);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            margin: 8px 0 0;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        /* Upload Card */
+        .upload-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.12);
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+        
+        .card-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+        
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            outline: none;
+        }
+        
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            background: #f8fafc;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .file-upload-area:hover, .file-upload-area.dragover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #f59e0b;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        
+        /* Uploaded PDFs */
+        .uploads-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.12);
+            margin-top: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .pdfs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .pdf-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .pdf-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .pdf-subject {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 1rem;
+        }
+        
+        .pdf-year {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .pdf-title {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .pdf-details {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+        
+        .pdf-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f59e0b;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 30px;
+            background: rgba(245, 158, 11, 0.05);
+            border-radius: 16px;
+            border: 2px dashed rgba(245, 158, 11, 0.3);
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #f59e0b;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pdfs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo">
+                <h3>Mentor Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Mentor</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="{% url 'mentor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="{% url 'assign_batch' %}"><i class="fas fa-graduation-cap"></i> <span>Assign Batch</span></a></li>
+                    <li><a href="{% url 'manage_test_series' %}"><i class="fas fa-clipboard-list"></i> <span>Manage Test Series</span></a></li>
+                    <li><a href="#" class="active"><i class="fas fa-file-pdf"></i> <span>Upload PYQs</span></a></li>
+                    <li><a href="#"><i class="fas fa-bell"></i> <span>Send Notices</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Upload Previous Year Questions</h1>
+                    <p>Upload and manage PYQ PDFs for your students (2014-2025)</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_pdfs }}</div>
+                    <div class="stat-label">Total PDFs Uploaded</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ physics_count }}</div>
+                    <div class="stat-label">Physics PYQs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ chemistry_count }}</div>
+                    <div class="stat-label">Chemistry PYQs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ biology_count }}</div>
+                    <div class="stat-label">Biology PYQs</div>
+                </div>
+            </div>
+
+            <!-- Upload Form Card -->
+            <div class="upload-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Upload New PYQ PDF</h2>
+                        <p class="card-subtitle">Upload previous year question papers for NEET preparation</p>
+                    </div>
+                </div>
+
+                <form id="uploadForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="upload_pdf">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" class="form-select" required>
+                                <option value="">-- Select Subject --</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="year">Year *</label>
+                            <select id="year" name="year" class="form-select" required>
+                                <option value="">-- Select Year --</option>
+                                {% for year in year_range %}
+                                <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="title">PDF Title *</label>
+                            <input type="text" id="title" name="title" class="form-control" 
+                                   placeholder="e.g., NEET 2024 Physics Solved Paper" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pages">Number of Pages</label>
+                            <input type="number" id="pages" name="pages" class="form-control" 
+                                   value="1" min="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="questions">Number of Questions</label>
+                            <input type="number" id="questions" name="questions" class="form-control" 
+                                   value="0" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" class="form-control" 
+                                      rows="3" placeholder="Brief description of this PDF..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- File Upload Area -->
+                    <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('pdfFile').click()">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h4>Click to upload PDF file</h4>
+                        <p class="text-muted">or drag and drop PDF file here</p>
+                        <p class="text-muted">Maximum file size: 50MB</p>
+                        
+                        <input type="file" id="pdfFile" name="pdf_file" accept=".pdf" 
+                               style="display: none;" required onchange="showFileInfo(this)">
+                        
+                        <div id="fileInfo" class="file-info" style="display: none;">
+                            <i class="fas fa-file-pdf text-danger"></i>
+                            <span id="fileName">No file selected</span>
+                            <span id="fileSize" class="ms-2"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="resetUploadForm()">
+                            <i class="fas fa-redo"></i> Clear Form
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload PDF
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Uploaded PDFs Section -->
+            <div class="uploads-section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Uploaded PYQs ({{ uploaded_pdfs.count }})</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="filterPDFs('all')">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                
+                {% if uploaded_pdfs %}
+                <div class="pdfs-grid">
+                    {% for pdf in uploaded_pdfs %}
+                    <div class="pdf-card">
+                        <div class="pdf-header">
+                            <div class="pdf-subject">{{ pdf.subject }}</div>
+                            <div class="pdf-year">{{ pdf.year }}</div>
+                        </div>
+                        
+                        <div class="pdf-title">{{ pdf.title }}</div>
+                        
+                        <div class="pdf-details">
+                            <div><i class="fas fa-file-pdf text-danger"></i> {{ pdf.pages }} pages</div>
+                            <div><i class="fas fa-question-circle"></i> {{ pdf.questions_count }} questions</div>
+                            <div><i class="fas fa-calendar"></i> {{ pdf.uploaded_at|date:"d M Y" }}</div>
+                            <div><i class="fas fa-weight"></i> {{ pdf.file_size }}</div>
+                        </div>
+                        
+                        <div class="pdf-actions">
+                            <button class="btn btn-primary" onclick="editPDF('{{ pdf.id }}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger" onclick="deletePDF('{{ pdf.id }}', '{{ pdf.title }}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-file-pdf"></i>
+                    <h4>No PYQs Uploaded Yet</h4>
+                    <p>Upload your first PYQ PDF using the form above.</p>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // File Upload Handling
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('pdfFile');
+        
+        // Drag and drop
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+        
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                showFileInfo(fileInput);
+            }
+        });
+        
+        // Show file info
+        function showFileInfo(input) {
+            const file = input.files[0];
+            if (file) {
+                const fileInfo = document.getElementById('fileInfo');
+                const fileName = document.getElementById('fileName');
+                const fileSize = document.getElementById('fileSize');
+                
+                // Check file type
+                if (file.type !== 'application/pdf') {
+                    alert('Please select a PDF file.');
+                    resetFileInput();
+                    return;
+                }
+                
+                // Check file size (50MB limit)
+                const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+                if (file.size > maxSize) {
+                    alert('File size exceeds 50MB limit.');
+                    resetFileInput();
+                    return;
+                }
+                
+                fileName.textContent = file.name;
+                
+                // Format file size
+                let sizeText = '';
+                if (file.size < 1024) {
+                    sizeText = file.size + ' B';
+                } else if (file.size < 1024 * 1024) {
+                    sizeText = (file.size / 1024).toFixed(1) + ' KB';
+                } else {
+                    sizeText = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                }
+                fileSize.textContent = '(' + sizeText + ')';
+                
+                fileInfo.style.display = 'block';
+            }
+        }
+        
+        // Reset file input
+        function resetFileInput() {
+            fileInput.value = '';
+            document.getElementById('fileInfo').style.display = 'none';
+        }
+        
+        // Reset upload form
+        function resetUploadForm() {
+            document.getElementById('uploadForm').reset();
+            resetFileInput();
+            document.getElementById('pages').value = 1;
+            document.getElementById('questions').value = 0;
+        }
+        
+        // PDF Actions
+        function editPDF(pdfId) {
+            alert(`Edit PDF ID: ${pdfId}\n\nThis will open edit modal.`);
+        }
+        
+        function deletePDF(pdfId, pdfTitle) {
+            if (confirm(`Are you sure you want to delete:\n"${pdfTitle}"\n\nThis action cannot be undone.`)) {
+                // In real app, submit delete form
+                alert(`PDF "${pdfTitle}" will be deleted.\n\nIn real app, this would send delete request.`);
+            }
+        }
+        
+        // Filter PDFs
+        function filterPDFs(filter) {
+            alert(`Filter PDFs by: ${filter}\n\nIn real app, this would filter the displayed PDFs.`);
+        }
+        
+        // Auto-fill questions count based on year
+        document.getElementById('year').addEventListener('change', function() {
+            const year = this.value;
+            const questionsInput = document.getElementById('questions');
+            
+            if (year && !questionsInput.value) {
+                // Set default questions count based on year
+                const currentYear = new Date().getFullYear();
+                const yearDiff = currentYear - parseInt(year);
+                
+                if (yearDiff <= 1) {
+                    questionsInput.value = 200; // Recent years
+                } else if (yearDiff <= 5) {
+                    questionsInput.value = 180; // 2-5 years old
+                } else {
+                    questionsInput.value = 150; // Older papers
+                }
+            }
+        });
+        
+        // Set current year as default in year dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentYear = new Date().getFullYear();
+            const yearSelect = document.getElementById('year');
+            
+            // Set current year as selected if available
+            for (let option of yearSelect.options) {
+                if (option.value == currentYear) {
+                    option.selected = true;
+                    break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

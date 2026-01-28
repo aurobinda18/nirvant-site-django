@@ -2062,14 +2062,67 @@
     });
     
     // ================= PRICING BUTTON CLICK HANDLERS =================
-    document.querySelectorAll('.enroll-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const planDuration = this.closest('.pricing-card').querySelector('.plan-duration').textContent;
-            const currentPrice = this.closest('.pricing-card').querySelector('.current-price').textContent;
-            
-            alert(`You have selected the ${planDuration} plan for ${currentPrice}. Our team will contact you shortly!`);
-        });
+    // ================= PRICING BUTTON CLICK HANDLERS =================
+document.querySelectorAll('.enroll-button').forEach(button => {
+    button.addEventListener('click', function() {
+        // Get plan details from the card
+        const card = this.closest('.pricing-card');
+        const planTypeElement = card.querySelector('.plan-type');
+        const durationElement = card.querySelector('.plan-duration');
+        const priceElement = card.querySelector('.current-price');
+        const originalPriceElement = card.querySelector('.original-price');
+        const courseId = this.getAttribute('data-course-id');
+        
+        // Extract values
+        const planTypeText = planTypeElement.textContent.trim();
+        let planType = '';
+        
+        if (planTypeText.includes('Free Trial')) {
+            planType = 'Free Trial';
+        } else if (planTypeText.includes('Paid Trial')) {
+            planType = 'Paid Trial';
+        } else if (planTypeText.includes('NEET 2026')) {
+            planType = 'NEET 2026';
+        } else if (planTypeText.includes('Monthly')) {
+            planType = 'NEET Monthly';
+        } else if (planTypeText.includes('Extended')) {
+            planType = 'NEET Extended';
+        } else if (planTypeText.includes('Intensive')) {
+            planType = 'NEET Intensive';
+        } else {
+            planType = planTypeText;
+        }
+        
+        // Extract duration (remove any extra text)
+        let duration = durationElement.textContent.trim();
+        
+        // Extract price (remove ₹ symbol)
+        const price = priceElement.textContent.replace('₹', '').trim();
+        
+        // Extract original price if available
+        let originalPrice = '';
+        if (originalPriceElement) {
+            originalPrice = originalPriceElement.textContent.replace('₹', '').trim();
+        }
+        
+        // Build URL with parameters
+        let checkoutUrl = "{% url 'checkout' %}";
+        checkoutUrl += `?plan_type=${encodeURIComponent(planType)}`;
+        checkoutUrl += `&duration=${encodeURIComponent(duration)}`;
+        checkoutUrl += `&price=${encodeURIComponent(price)}`;
+        
+        if (originalPrice) {
+            checkoutUrl += `&original_price=${encodeURIComponent(originalPrice)}`;
+        }
+        
+        if (courseId) {
+            checkoutUrl += `&course_id=${encodeURIComponent(courseId)}`;
+        }
+        
+        // Redirect to checkout page
+        window.location.href = checkoutUrl;
     });
+});
 </script>
 </body>
 </html>

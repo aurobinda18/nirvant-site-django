@@ -1,0 +1,1183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Nirvant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon1.ico' %}">
+
+    <style>
+        /* ================= RESET & GLOBAL ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff8dc;
+            color: #0f172a;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* ================= NAVBAR (SAME AS COURSE PAGE) ================= */
+        .navbar {
+            background: #fffef6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+        
+        .logo-img {
+            height: 150px;
+            width: auto;
+            max-height: 135px;
+            object-fit: contain;
+            display: block;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            margin-right: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 8px 0;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #f97316;
+        }
+        
+        .nav-links a.dashboard-link {
+            color: #1e40af;
+            font-weight: 600;
+        }
+        
+        .nav-links a.logout-link {
+            color: #dc2626;
+            font-weight: 600;
+            background: rgba(220, 38, 38, 0.05);
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.logout-link:hover {
+            color: #ffffff;
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+        
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .account-dropbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            color: #334155;
+            font-weight: 500;
+            background: none;
+            border: none;
+        }
+        
+        .account-dropbtn:hover {
+            color: #f97316;
+        }
+        
+        .account-dropbtn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropbtn i {
+            transform: rotate(180deg);
+        }
+        
+        .account-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fffef6;
+            min-width: 180px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            z-index: 1001;
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .account-dropdown.active .account-dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .account-dropdown-content a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .account-dropdown-content a:hover {
+            background: rgba(249, 115, 22, 0.08);
+            color: #f97316;
+            border-left-color: #f97316;
+            padding-left: 1.75rem;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #0f172a;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        
+        /* ================= MAIN CHECKOUT CONTENT ================= */
+        .main-checkout-container {
+            padding-top: 90px; /* Space for fixed navbar */
+            min-height: calc(100vh - 300px); /* Adjust based on footer height */
+        }
+        
+        /* ================= CHECKOUT HEADER ================= */
+        .checkout-header {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 30px;
+        }
+        
+        .checkout-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .checkout-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 20px;
+            letter-spacing: -0.025em;
+        }
+        
+        /* ================= ORDER SUMMARY SECTION (TOP) ================= */
+        .order-summary-section {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+        
+        .order-summary-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .order-logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #111827;
+            letter-spacing: -0.025em;
+        }
+        
+        .plan-badge {
+            background: #10b981;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .plan-info {
+            margin-bottom: 30px;
+        }
+        
+        .plan-duration {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+        
+        .amount-due {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #111827;
+        }
+        
+        /* ================= CHECKOUT STEPS ================= */
+        .checkout-steps {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            width: 33.33%;
+        }
+        
+        .step-number {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .step.active .step-number {
+            background: #ff7a00;
+            color: white;
+            border-color: #ff7a00;
+            box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.2);
+        }
+        
+        .step-label {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-label {
+            color: #111827;
+        }
+        
+        .steps-line {
+            position: absolute;
+            top: 22px;
+            left: 22px;
+            right: 22px;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+        
+        /* ================= CHECKOUT FORM SECTION ================= */
+        .checkout-form-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+        
+        .checkout-form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .price-label {
+            font-weight: 500;
+            color: #6b7280;
+            font-size: 1rem;
+        }
+        
+        .price-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #111827;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #ff7a00;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .select-wrapper {
+            position: relative;
+        }
+        
+        .select-wrapper select {
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+        }
+        
+        /* ================= SECURITY NOTICE ================= */
+        .security-notice {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .security-icon {
+            color: #10b981;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        
+        .security-text {
+            font-size: 0.9rem;
+            color: #065f46;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        /* ================= CHECKBOX ================= */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 25px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: #ff7a00;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-group label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        .checkbox-group a {
+            color: #ff7a00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+        
+        /* ================= BUTTONS ================= */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: #ff7a00;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #ff6a00;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 2px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+        
+        /* ================= HELP LINK ================= */
+        .checkout-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .help-link {
+            color: #ff7a00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .help-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 768px) {
+            /* Navbar Mobile */
+            .navbar {
+                height: 65px;
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fffef6;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+                gap: 0;
+                z-index: 1001;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                width: 100%;
+                display: block;
+                text-align: left;
+                font-size: 1.1rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .account-dropdown {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .account-dropbtn {
+                padding: 1rem 0;
+                justify-content: space-between;
+                border-bottom: none !important;
+                border-radius: 0;
+                background: none;
+                border: none;
+                color: #334155;
+                font-weight: 500;
+            }
+            
+            .account-dropdown-content {
+                position: static;
+                display: none;
+                background: rgba(249, 115, 22, 0.03);
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                border: none;
+                border-left: 3px solid transparent;
+                transform: none;
+                opacity: 1;
+            }
+            
+            .account-dropdown.active .account-dropdown-content {
+                display: block;
+            }
+            
+            .account-dropdown-content a {
+                padding: 0.8rem 1rem 0.8rem 2rem;
+                border-left: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            /* Logo size */
+            .logo-img {
+                height: 120px;
+                max-height: 110px;
+            }
+            
+            /* Main content padding */
+            .main-checkout-container {
+                padding-top: 75px;
+            }
+            
+            .checkout-header {
+                padding: 25px 15px;
+            }
+            
+            .checkout-title {
+                font-size: 1.5rem;
+            }
+            
+            /* Order Summary */
+            .order-summary-section {
+                padding: 0 15px;
+                margin-bottom: 30px;
+            }
+            
+            .order-summary-card {
+                padding: 25px;
+            }
+            
+            .order-logo {
+                font-size: 1.8rem;
+            }
+            
+            .plan-duration {
+                font-size: 1.4rem;
+            }
+            
+            .amount-due {
+                font-size: 2.5rem;
+            }
+            
+            /* Steps */
+            .step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .steps-line {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+            }
+            
+            /* Checkout Form */
+            .checkout-form-section {
+                padding: 0 15px 50px;
+            }
+            
+            .checkout-form-card {
+                padding: 25px;
+            }
+            
+            .form-title {
+                font-size: 1.4rem;
+            }
+            
+            .price-value {
+                font-size: 1.6rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .security-notice {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar {
+                height: 60px;
+            }
+            
+            .logo-img {
+                height: 100px;
+                max-height: 90px;
+            }
+            
+            .main-checkout-container {
+                padding-top: 70px;
+            }
+            
+            .order-summary-card {
+                padding: 20px;
+            }
+            
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .plan-badge {
+                align-self: flex-start;
+            }
+            
+            .order-logo {
+                font-size: 1.6rem;
+            }
+            
+            .plan-duration {
+                font-size: 1.3rem;
+            }
+            
+            .amount-due {
+                font-size: 2.2rem;
+            }
+            
+            .checkout-form-card {
+                padding: 20px;
+            }
+            
+            .form-control {
+                padding: 12px 14px;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+                font-size: 0.95rem;
+            }
+            
+            .step-label {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .logo-img {
+                height: 90px;
+                max-height: 85px;
+            }
+            
+            .order-summary-card,
+            .checkout-form-card {
+                padding: 18px;
+            }
+            
+            .order-logo {
+                font-size: 1.5rem;
+            }
+            
+            .plan-duration {
+                font-size: 1.2rem;
+            }
+            
+            .amount-due {
+                font-size: 2rem;
+            }
+            
+            .form-title {
+                font-size: 1.3rem;
+            }
+            
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .steps-line {
+                top: 17px;
+                left: 17px;
+                right: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="logo-img">
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'courses' %}">Courses</a>
+                <a href="{% url 'team' %}">Team</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'terms' %}">T&C</a>
+                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="dashboard-link">Dashboard</a>
+                    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+                {% else %}
+                    <div class="account-dropdown">
+                        <a href="#" class="account-dropbtn">
+                            Account <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="account-dropdown-content">
+                            <a href="{% url 'login' %}">Log in</a>
+                            <a href="{% url 'register' %}">Create account</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CHECKOUT CONTENT -->
+    <div class="main-checkout-container">
+        <!-- CHECKOUT HEADER -->
+        <div class="checkout-header">
+            <div class="checkout-header-content">
+                <h1 class="checkout-title">Complete Your Enrollment</h1>
+            </div>
+        </div>
+
+        <!-- ORDER SUMMARY SECTION (TOP) -->
+        <div class="order-summary-section">
+            <div class="order-summary-card">
+                <div class="order-header">
+                    <h2 class="order-logo">NT nirvant</h2>
+                    <span class="plan-badge" id="planType">{{ plan_type }}</span>
+                </div>
+                
+                <div class="plan-info">
+                    <div class="plan-duration" id="planDuration">Enroll: {{ duration }}</div>
+                    <div class="amount-due" id="amountDue">₹{{ price }}</div>
+                </div>
+                
+                <!-- CHECKOUT STEPS -->
+                <div class="checkout-steps">
+                    <div class="steps-line"></div>
+                    <div class="steps-container">
+                        <div class="step active">
+                            <div class="step-number">1</div>
+                            <span class="step-label">Checkout</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <span class="step-label">Payment</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <span class="step-label">Confirmation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHECKOUT FORM SECTION -->
+        <div class="checkout-form-section">
+            <div class="checkout-form-card">
+                <h2 class="form-title">Student details</h2>
+                
+                <div class="price-display">
+                    <span class="price-label">Price:</span>
+                    <span class="price-value" id="formPrice">₹{{ price }}</span>
+                </div>
+                
+                <form id="checkoutForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First name</label>
+                            <input type="text" id="firstName" class="form-control" placeholder="Enter your first name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last name</label>
+                            <input type="text" id="lastName" class="form-control" placeholder="Enter your last name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="classStatus">Current class/status</label>
+                        <div class="select-wrapper">
+                            <select id="classStatus" class="form-control" required>
+                                <option value="" disabled selected>Select your current class/status</option>
+                                <option value="11th">11th Standard</option>
+                                <option value="12th">12th Standard</option>
+                                <option value="dropper">Dropper (Repeater)</option>
+                                <option value="graduate">Graduate</option>
+                                <option value="working">Working Professional</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" class="form-control" rows="3" placeholder="Enter your complete address" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                        </div>
+                    </div>
+                    
+                    <!-- SECURITY NOTICE -->
+                    <div class="security-notice">
+                        <i class="fas fa-shield-alt security-icon"></i>
+                        <span class="security-text">Secure checkout • Refund policy applies • 24/7 support</span>
+                    </div>
+                    
+                    <!-- TERMS CHECKBOX -->
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            By continuing you agree to our <a href="{% url 'terms' %}" target="_blank">terms & refund policy</a>.
+                        </label>
+                    </div>
+                    
+                    <!-- BUTTONS -->
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" id="clearAllBtn">Clear all</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            {% if plan_type == "free_trial" or price == "0" %}
+                                Start Free Trial
+                            {% else %}
+                                Pay Now
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- HELP LINK -->
+                <div class="checkout-footer">
+                    Need help? Email <a href="mailto:nirvant.trgyy@gmail.com" class="help-link">nirvant.trgyy@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer" style="background: #fff8dc; color: #111827; padding: 3.5rem 0 2.5rem; border-top: 1px solid rgba(0, 0, 0, 0.04);">
+        <div class="footer-content" style="display: grid; grid-template-columns: 1.4fr 1.2fr 1.4fr; gap: 3rem; align-items: flex-start; max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <div class="footer-section">
+                <h3 class="footer-heading" style="font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Navigate Nirvant</h3>
+                <div class="footer-links">
+                    <a href="{% url 'home' %}" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-home"></i> Home</a>
+                    <a href="{% url 'courses' %}" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-book"></i> Courses</a>
+                    <a href="#" style="text-decoration: none; color: #374151; font-size: 0.95rem; opacity: 0.7; cursor: not-allowed;"><i class="fas fa-info-circle"></i> About</a>
+                    <a href="{% url 'contact' %}" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-phone"></i> Contact</a>
+                    <a href="{% url 'terms' %}" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-file-contract"></i> T&C</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-heading" style="font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Connect With Us</h3>
+                <div class="footer-links">
+                    <a href="tel:+917735932023" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-phone"></i> +91 77359 32023</a>
+                    <a href="tel:+916371214085" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-phone"></i> +91 63712 14085</a>
+                    <a href="mailto:nirvant.trgyy@gmail.com" style="text-decoration: none; color: #374151; font-size: 0.95rem;"><i class="fas fa-envelope"></i> nirvant.trgyy@gmail.com</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-heading" style="font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Stay Connected</h3>
+                <div class="social-icons" style="display: flex; gap: 0.75rem; margin: 0.35rem 0 0.75rem;">
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; border-radius: 999px; border: 1.8px solid #ff7a00; display: inline-flex; align-items: center; justify-content: center; color: #ff7a00; background: transparent; font-size: 1rem; transition: all 0.3s ease; text-decoration: none;"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; border-radius: 999px; border: 1.8px solid #ff7a00; display: inline-flex; align-items: center; justify-content: center; color: #ff7a00; background: transparent; font-size: 1rem; transition: all 0.3s ease; text-decoration: none;"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; border-radius: 999px; border: 1.8px solid #ff7a00; display: inline-flex; align-items: center; justify-content: center; color: #ff7a00; background: transparent; font-size: 1rem; transition: all 0.3s ease; text-decoration: none;"><i class="fas fa-comment-dots"></i></a>
+                </div>
+                <p class="footer-tagline" style="font-size: 0.95rem; color: #374151; max-width: 260px; line-height: 1.5;">Modern, calm, and confident guidance for students and professionals.</p>
+            </div>
+        </div>
+        <div class="footer-bottom" style="border-top: 1px solid rgba(0, 0, 0, 0.06); margin-top: 2.25rem; padding-top: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; font-size: 0.85rem; color: #6b7280; max-width: 1200px; margin: 2.25rem auto 0; padding: 1.25rem 2rem 0;">
+            <div class="footer-bottom-left" style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="footer-circle" style="width: 34px; height: 34px; border-radius: 999px; background: #111827; color: #f9fafb; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 600;">N</div>
+                <p class="copyright">© 2026 Nirvant. All rights reserved.</p>
+            </div>
+            <div class="footer-bottom-right" style="text-align: right; color: #6b7280;">
+                Built with care — <span style="color: #111827; font-weight: 600;">education</span> · <span style="color: #111827; font-weight: 600;">wellness</span> · <span style="color: #111827; font-weight: 600;">tech</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ================= NAVBAR FUNCTIONALITY =================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (mobileMenuBtn && navLinks) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('active');
+                    mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                        ? '<i class="fas fa-times"></i>' 
+                        : '<i class="fas fa-bars"></i>';
+                });
+                
+                // Close mobile menu when clicking on links
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    });
+                });
+            }
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navLinks && mobileMenuBtn) {
+                    if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target) && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+            
+            // Account dropdown
+            const accountDropdown = document.querySelector('.account-dropdown');
+            const accountDropbtn = document.querySelector('.account-dropbtn');
+            
+            if (accountDropbtn) {
+                accountDropbtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    accountDropdown.classList.toggle('active');
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!accountDropdown.contains(e.target)) {
+                        accountDropdown.classList.remove('active');
+                    }
+                });
+            }
+            
+            // ================= FORM SUBMISSION =================
+            const checkoutForm = document.getElementById('checkoutForm');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Validate form
+                    const isValid = this.checkValidity();
+                    if (!isValid) {
+                        alert('Please fill in all required fields correctly.');
+                        return;
+                    }
+                    
+                    // Collect form data
+                    const formData = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        classStatus: document.getElementById('classStatus').value,
+                        address: document.getElementById('address').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        planType: document.getElementById('planType').textContent,
+                        duration: document.getElementById('planDuration').textContent.replace('Enroll: ', ''),
+                        price: document.getElementById('amountDue').textContent.replace('₹', '')
+                    };
+                    
+                    // Show success message
+                    const planType = document.getElementById('planType').textContent;
+                    const price = document.getElementById('amountDue').textContent;
+                    
+                    if (price === '₹0' || planType.includes('Free')) {
+                        alert(`Thank you for enrolling in the Free Trial! You will receive access details via email shortly.`);
+                    } else {
+                        alert(`Thank you for your payment of ${price}! Our team will contact you shortly for payment confirmation.`);
+                    }
+                    
+                    // For demo purposes, redirect to home after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = "{% url 'home' %}";
+                    }, 2000);
+                });
+            }
+            
+            // ================= CLEAR ALL BUTTON =================
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            if (clearAllBtn) {
+                clearAllBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to clear all form data?')) {
+                        checkoutForm.reset();
+                    }
+                });
+            }
+            
+            // ================= HANDLE WINDOW RESIZE =================
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768 && navLinks && mobileMenuBtn) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    if (accountDropdown) {
+                        accountDropdown.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

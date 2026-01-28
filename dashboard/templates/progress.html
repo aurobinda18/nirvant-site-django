@@ -1,0 +1,1545 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress | Nirvant NEET</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --primary-orange: #ff7a00;
+            --light-orange: #fff8dc;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
+            --success: #10b981;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --white: #ffffff;
+            --light-bg: #fffef6;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background: var(--light-orange);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile First Approach */
+        .mobile-header {
+            display: none;
+            background: var(--white);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-menu-toggle {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 0;
+        }
+        
+        /* Sidebar - EXACTLY SAME AS MENTOR.HTML */
+        .sidebar {
+            width: 280px;
+            background: var(--light-bg);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            border-right: 1px solid rgba(0, 0, 0, 0.04);
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            text-align: center;
+            background: linear-gradient(135deg, var(--light-orange) 0%, #fff0c4 100%);
+        }
+        
+        .sidebar-logo {
+            height: 35px;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            background: var(--white);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            background: rgba(255, 122, 0, 0.08);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu {
+            padding: 15px 0;
+            background: var(--white);
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 2px 0;
+        }
+        
+        .sidebar-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 122, 0, 0.05);
+            color: var(--primary-orange);
+            border-left-color: var(--primary-orange);
+        }
+        
+        .sidebar-menu i {
+            width: 22px;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Top Bar - SAME AS MENTOR.HTML */
+        .top-bar {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.1);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .page-title p {
+            margin: 5px 0 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        /* Custom Components - SAME AS MENTOR.HTML */
+        .text-orange {
+            color: var(--primary-orange) !important;
+        }
+        
+        .bg-orange {
+            background-color: var(--primary-orange) !important;
+        }
+        
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-orange:hover {
+            background: #e56b00;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-orange {
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline-orange:hover {
+            background: var(--primary-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Cards */
+        .card {
+            border-radius: 12px;
+            border: none;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 18px 20px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Daily Study Log Card */
+        .study-log-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 2px dashed rgba(255, 122, 0, 0.3);
+            margin-bottom: 25px;
+        }
+        
+        .study-log-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .study-log-header i {
+            background: rgba(255, 122, 0, 0.1);
+            color: var(--primary-orange);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Progress Overview Cards */
+        .progress-overview {
+            margin-bottom: 25px;
+        }
+        
+        .progress-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-card.overall {
+            border-color: var(--primary-orange);
+            background: linear-gradient(135deg, rgba(255, 122, 0, 0.05) 0%, rgba(255, 122, 0, 0.1) 100%);
+        }
+        
+        .progress-card.days {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+        
+        .progress-card.streak {
+            border-color: var(--info);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+        }
+        
+        .progress-card.hours {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .overall .card-icon {
+            background: var(--primary-orange);
+        }
+        
+        .days .card-icon {
+            background: var(--success);
+        }
+        
+        .streak .card-icon {
+            background: var(--info);
+        }
+        
+        .hours .card-icon {
+            background: var(--warning);
+        }
+        
+        .progress-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            margin-bottom: 5px;
+        }
+        
+        .progress-label {
+            color: var(--light-text);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* Circular Progress */
+        .circular-progress {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+        
+        .circular-progress svg {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
+        }
+        
+        .circular-progress circle {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+        }
+        
+        .circular-progress .bg {
+            stroke: rgba(255, 122, 0, 0.1);
+        }
+        
+        .circular-progress .progress {
+            stroke: var(--primary-orange);
+            stroke-dasharray: 314;
+            stroke-dashoffset: calc(314 - (314 * var(--progress)) / 100);
+            animation: progress-animation 1.5s ease-out;
+        }
+        
+        @keyframes progress-animation {
+            from { stroke-dashoffset: 314; }
+        }
+        
+        .circular-progress .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        /* Topics List */
+        .topics-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .topic-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: rgba(255, 122, 0, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .topic-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .topic-item .btn-sm {
+            padding: 3px 8px;
+            font-size: 0.8rem;
+        }
+        
+        /* Manual Topic Input */
+        .manual-topic-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid rgba(255, 122, 0, 0.3);
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--dark-text);
+            transition: all 0.3s;
+        }
+        
+        .manual-topic-input:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
+        }
+        
+        /* Quick Add Buttons */
+        .quick-add-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .quick-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--primary-orange);
+            background: white;
+            color: var(--primary-orange);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-btn:hover {
+            background: var(--primary-orange);
+            color: white;
+        }
+        
+        /* Subject Cards */
+        .subject-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .subject-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        
+        .subject-progress {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+        }
+        
+        /* Track Reports */
+        .track-report {
+            background: rgba(255, 122, 0, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-orange);
+            position: relative;
+        }
+        
+        .delete-test-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .track-date {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .track-score {
+            font-weight: 600;
+            color: var(--dark-text);
+            font-size: 1.1rem;
+        }
+        
+        .track-improvement {
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        /* Improvement Items */
+        .improvement-item {
+            padding: 12px 15px;
+            background: var(--white);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--warning);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .delete-goal-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        /* Progress Bars */
+        .progress {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-orange);
+        }
+        
+        /* Progress Stats */
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+        
+        /* Countdown Box */
+        .countdown-box {
+            padding: 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .countdown-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .countdown-label {
+            font-size: 0.7rem;
+            color: var(--light-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Form Controls */
+        .form-control, .form-select {
+            border: 1px solid rgba(255, 122, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            background: var(--white);
+            color: var(--dark-text);
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.25rem rgba(255, 122, 0, 0.25);
+        }
+        
+        .target-input {
+            width: 70px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid var(--light-text);
+            border-radius: 4px;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            background: rgba(255, 122, 0, 0.1);
+            color: var(--primary-orange);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Responsive Design - SAME AS MENTOR.HTML */
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                padding-top: 80px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .top-bar {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .progress-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 15px;
+            }
+            
+            .progress-value {
+                font-size: 2rem;
+            }
+            
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .circular-progress {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .circular-progress svg {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .circular-progress .progress-text {
+                font-size: 1.5rem;
+            }
+            
+            .btn-orange, .btn-outline-orange {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .quick-add-buttons {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 10px;
+                padding-top: 70px;
+            }
+            
+            .top-bar {
+                border-radius: 8px;
+            }
+            
+            .row {
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+            
+            .col, .col-md, .col-lg {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card-header h5 {
+                font-size: 1rem;
+            }
+            
+            .progress-card {
+                padding: 20px;
+            }
+            
+            .study-log-card {
+                padding: 20px;
+            }
+            
+            .topic-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .topic-item .btn-sm {
+                align-self: flex-end;
+            }
+        }
+        
+        /* Utility Classes */
+        .rounded-lg {
+            border-radius: 12px;
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" height="30">
+        <div class="user-dropdown-mobile">
+            <i class="fas fa-user-circle" style="font-size: 1.5rem; color: var(--primary-orange);"></i>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar - EXACTLY SAME AS MENTOR.HTML -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="sidebar-logo">
+                <h3>NEET Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Aspirant</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="/dashboard/profile/"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+                    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                    <li><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="/dashboard/mentor/"><i class="fas fa-chalkboard-teacher"></i> <span>Mentor</span></a></li>
+                    <li><a href="/dashboard/progress/" class="active"><i class="fas fa-chart-line"></i> <span>Progress</span></a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a></li>
+                    <li><a href="{% url 'studypack' %}"><i class="fas fa-book"></i> <span>Studypack</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>My Progress</h1>
+                    <p>Track your preparation, improvements, and mentorship journey</p>
+                </div>
+                <div>
+                    <a href="/dashboard/" class="btn btn-outline-orange">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Display Messages -->
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Daily Study Log Section -->
+            <div class="study-log-card">
+                <div class="study-log-header">
+                    <i class="fas fa-pen-alt"></i>
+                    <h4 class="mb-0 text-orange">Today's Study Log ({{ today }})</h4>
+                </div>
+                
+                <form method="POST" class="row">
+                    {% csrf_token %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Study Hours Today</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="number" name="study_hours" class="form-control" 
+                                   value="{{ today_log.study_hours }}" min="0" max="12" step="0.5" style="width: 120px;">
+                            <button type="submit" name="log_hours" class="btn btn-orange">
+                                <i class="fas fa-save me-1"></i>Log Hours
+                            </button>
+                        </div>
+                        <small class="text-sm text-muted">Enter hours studied today (0-12)</small>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="text-muted">Daily Target:</span>
+                                <h5 class="mb-0">8 hours</h5>
+                            </div>
+                            <div class="text-success">
+                                <span id="dailyProgress">
+                                    {% with progress=today_log.study_hours|divisibleby:8|floatformat:0 %}
+                                        {% if progress <= 100 %}{{ progress }}{% else %}100{% endif %}%
+                                    {% endwith %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" id="dailyProgressBar" 
+                                 style="width: {% widthratio today_log.study_hours 8 100 %}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 mt-3">
+                        <h6 class="mb-2">Today's Topics Completed:</h6>
+                        
+                        <!-- Manual Topic Entry -->
+                        <div class="mb-3">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input type="text" class="form-control manual-topic-input" 
+                                           name="topic" id="newTopicInput" 
+                                           placeholder="Type what you studied (e.g., Optics Chapter 1, Organic Reactions)">
+                                    <button class="btn btn-orange" type="submit" name="add_topic">
+                                        <i class="fas fa-plus me-1"></i>Add
+                                    </button>
+                                </div>
+                            </form>
+                            <small class="text-sm text-muted">Type topics separated by commas</small>
+                        </div>
+                        
+                        <!-- Quick Add Buttons -->
+                        <div class="mb-3">
+                            <small class="text-sm text-muted d-block mb-2">Quick Add:</small>
+                            <div class="quick-add-buttons">
+                                <form method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="topic" value="Physics - Optics">
+                                    <button type="submit" name="add_topic" class="quick-btn">
+                                        <i class="fas fa-bolt me-1"></i>Optics
+                                    </button>
+                                </form>
+                                <form method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="topic" value="Chemistry - Organic">
+                                    <button type="submit" name="add_topic" class="quick-btn">
+                                        <i class="fas fa-flask me-1"></i>Organic
+                                    </button>
+                                </form>
+                                <form method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="topic" value="Biology - Genetics">
+                                    <button type="submit" name="add_topic" class="quick-btn">
+                                        <i class="fas fa-dna me-1"></i>Genetics
+                                    </button>
+                                </form>
+                                <form method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="topic" value="Physics - Thermodynamics">
+                                    <button type="submit" name="add_topic" class="quick-btn">
+                                        <i class="fas fa-fire me-1"></i>Thermo
+                                    </button>
+                                </form>
+                                <form method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="topic" value="Chemistry - Inorganic">
+                                    <button type="submit" name="add_topic" class="quick-btn">
+                                        <i class="fas fa-atom me-1"></i>Inorganic
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Today's Topics List -->
+                        <div class="topics-list" id="topicsList">
+                            {% for topic in today_topics %}
+                            <div class="topic-item">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>{{ topic }}</span>
+                                </div>
+                                <form method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="topic" value="{{ topic }}">
+                                    <button type="submit" name="remove_topic" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-3 border rounded">
+                                <i class="fas fa-book-open fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No topics added yet today</p>
+                                <small class="text-sm text-muted">Start by adding what you studied!</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Progress Overview Cards -->
+            <div class="row progress-overview">
+                <!-- Overall Preparation Status -->
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="progress-card overall">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="circular-progress">
+                            <svg>
+                                <circle class="bg" cx="60" cy="60" r="50"></circle>
+                                <circle class="progress" cx="60" cy="60" r="50" 
+                                        style="--progress: {{ student_progress.overall_preparation }}"></circle>
+                            </svg>
+                            <div class="progress-text">{{ student_progress.overall_preparation }}%</div>
+                        </div>
+                        <h3 class="progress-label text-center mb-3">Overall Progress</h3>
+                        
+                        <div class="progress-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">{{ today_topics|length }}</div>
+                                <div class="stat-label">Today's Topics</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ student_progress.total_study_hours }}</div>
+                                <div class="stat-label">Total Hours</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ student_progress.total_tests_taken }}</div>
+                                <div class="stat-label">Tests Taken</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Days Left for NEET -->
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="progress-card days">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="progress-value text-center" id="neet-days">{{ days_to_neet }}</div>
+                        <h3 class="progress-label text-center">Days to NEET</h3>
+                        
+                        <div class="mt-4">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="countdown-box">
+                                        <div class="countdown-number" id="neet-hours">00</div>
+                                        <small class="countdown-label">Hours</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="countdown-box">
+                                        <div class="countdown-number" id="neet-minutes">00</div>
+                                        <small class="countdown-label">Minutes</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mentorship Streak -->
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="progress-card streak">
+                        <div class="card-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="progress-value text-center">{{ student_progress.mentorship_streak }}</div>
+                        <h3 class="progress-label text-center">Study Streak</h3>
+                        
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Current Streak:</span>
+                                <strong class="text-orange">{{ student_progress.mentorship_streak }} days</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Longest Streak:</span>
+                                <strong>21 days</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Next Milestone:</span>
+                                <strong class="text-success">30 days</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weekly Study Hours -->
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="progress-card hours">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="progress-value text-center" id="weeklyHours">
+                            {{ weekly_hours_total|floatformat:0 }}
+                        </div>
+                        <h3 class="progress-label text-center">Weekly Hours</h3>
+                        
+                        <div class="mt-4">
+                            <canvas id="weeklyChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject-wise Progress -->
+            <div class="section-title">
+                <i class="fas fa-book"></i>
+                <span>Subject-wise Progress</span>
+            </div>
+            
+            <div class="row mb-4">
+                {% for subject in subjects_progress %}
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="subject-card">
+                        <div class="subject-header">
+                            <span class="subject-name">{{ subject.name }}</span>
+                            <span class="subject-progress">{{ subject.progress }}%</span>
+                        </div>
+                        
+                        <div class="progress mb-3" style="height: 10px;">
+                            <div class="progress-bar 
+                                {% if subject.progress >= 70 %}bg-success
+                                {% elif subject.progress >= 50 %}bg-warning
+                                {% else %}bg-danger
+                                {% endif %}" 
+                                style="width: {{ subject.progress }}%">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-sm text-muted d-block mb-1">Needs Attention:</small>
+                            <span class="text-danger">{{ subject.needs_attention }}</span>
+                            <small class="text-sm text-muted d-block mt-1">(Set by your mentor)</small>
+                        </div>
+                        
+                        <!-- Student can set target for this subject -->
+                        <div class="mt-3">
+                            <small class="text-sm text-muted d-block mb-1">My Target for this week:</small>
+                            <form method="POST" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="subject" value="{{ subject.name }}">
+                                <input type="number" name="target" class="target-input" 
+                                       value="{{ subject.weekly_target }}" min="0" max="100">
+                                <button type="submit" name="update_subject_target" 
+                                        class="btn btn-sm btn-outline-orange">
+                                    Set
+                                </button>
+                            </form>
+                            <small class="text-sm text-muted">Aim for {{ subject.weekly_target }}% this week</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Track Reports & Goals -->
+            <div class="row">
+                <!-- Track Reports -->
+                <div class="col-lg-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-history me-2"></i>My Test Scores
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="testScoresList">
+                                {% for test in test_scores %}
+                                <div class="track-report">
+                                    <form method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="test_id" value="{{ test.id }}">
+                                        <button type="submit" name="delete_test" class="delete-test-btn" 
+                                                onclick="return confirm('Delete this test score?')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <div class="track-date">{{ test.date_taken }}</div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ test.subject }} - {{ test.test_name }}</h6>
+                                            <span class="track-score">{{ test.score }}/{{ test.max_marks }}</span>
+                                        </div>
+                                        <div class="track-improvement">
+                                            {{ test.percentage|floatformat:1 }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="text-center py-3">
+                                    <i class="fas fa-file-alt fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted mb-0">No test scores added yet</p>
+                                    <small class="text-sm text-muted">Add your first test score!</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Add Test Score Button -->
+                            <div class="text-center mt-3">
+                                <button class="btn btn-outline-orange" data-bs-toggle="modal" data-bs-target="#addTestModal">
+                                    <i class="fas fa-plus me-2"></i>Add Test Score
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Goals & Achievements -->
+                <div class="col-lg-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-orange">
+                                <i class="fas fa-trophy me-2"></i>My Goals & Achievements
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="goalsList">
+                                {% for goal in goals %}
+                                <div class="improvement-item">
+                                    <form method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="goal_id" value="{{ goal.id }}">
+                                        <button type="submit" name="delete_goal" class="delete-goal-btn" 
+                                                onclick="return confirm('Delete this goal?')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-bullseye text-primary me-2 mt-1"></i>
+                                        <span>{{ goal.goal_text }}</span>
+                                    </div>
+                                    {% if goal.deadline %}
+                                    <small class="text-sm text-muted d-block mt-1">Deadline: {{ goal.deadline }}</small>
+                                    {% endif %}
+                                </div>
+                                {% empty %}
+                                <div class="text-center py-3">
+                                    <i class="fas fa-bullseye fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted mb-0">No goals set yet</p>
+                                    <small class="text-sm text-muted">Set your first study goal!</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Add Goal Button -->
+                            <div class="text-center mt-3">
+                                <button class="btn btn-outline-orange" data-bs-toggle="modal" data-bs-target="#addGoalModal">
+                                    <i class="fas fa-plus me-2"></i>Add New Goal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Test Score Modal -->
+    <div class="modal fade" id="addTestModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Test Score</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <select class="form-select" name="subject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Full Mock">Full Mock Test</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Test Name</label>
+                            <input type="text" class="form-control" name="test_name" 
+                                   placeholder="e.g., Optics Chapter Test" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Your Score</label>
+                                <input type="number" class="form-control" name="score" 
+                                       placeholder="e.g., 85" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Max Marks</label>
+                                <input type="number" class="form-control" name="max_marks" value="100" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" name="date_taken" 
+                                   value="{{ today }}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="add_test" class="btn btn-orange">Save Score</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Goal Modal -->
+    <div class="modal fade" id="addGoalModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Goal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Goal Description</label>
+                            <textarea class="form-control" name="goal_text" rows="3" 
+                                      placeholder="e.g., Complete all Optics problems by Friday" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Deadline (Optional)</label>
+                            <input type="date" class="form-control" name="deadline">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="add_goal" class="btn btn-orange">Add Goal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Update NEET countdown every second
+        function updateNEETCountdown() {
+            const neetDate = new Date("{{ profile.neet_exam_date|date:'Y-m-d' }}T00:00:00").getTime();
+            const now = new Date().getTime();
+            const timeLeft = neetDate - now;
+            
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                document.getElementById('neet-days').textContent = days;
+                document.getElementById('neet-hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('neet-minutes').textContent = minutes.toString().padStart(2, '0');
+            }
+        }
+
+        // Initialize weekly chart
+        function initWeeklyChart() {
+            const ctx = document.getElementById('weeklyChart');
+            if (!ctx) return;
+            
+            const weeklyHours = {{ weekly_hours|safe }};
+            
+            // Destroy existing chart if exists
+            if (window.weeklyChartInstance) {
+                window.weeklyChartInstance.destroy();
+            }
+            
+            window.weeklyChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Study Hours',
+                        data: weeklyHours,
+                        backgroundColor: '#ff7a00',
+                        borderColor: '#e56b00',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            display: false 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + ' hours';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 12,
+                            grid: {
+                                display: true,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + 'h';
+                                },
+                                stepSize: 2
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update NEET countdown immediately
+            updateNEETCountdown();
+            // Update every minute
+            setInterval(updateNEETCountdown, 60000);
+            
+            // Set active menu item
+            const currentPage = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.sidebar-menu a');
+            menuLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Initialize weekly chart
+            try {
+                initWeeklyChart();
+            } catch (error) {
+                console.error('Error initializing chart:', error);
+            }
+            
+            // Calculate daily progress
+            const studyHours = parseFloat("{{ today_log.study_hours }}") || 0;
+            const dailyProgress = Math.min(Math.round((studyHours / 8) * 100), 100);
+            const dailyProgressElement = document.getElementById('dailyProgress');
+            const dailyProgressBar = document.getElementById('dailyProgressBar');
+            
+            if (dailyProgressElement) {
+                dailyProgressElement.textContent = dailyProgress + '%';
+            }
+            if (dailyProgressBar) {
+                dailyProgressBar.style.width = dailyProgress + '%';
+            }
+            
+            // Set today's date in forms
+            const today = new Date().toISOString().split('T')[0];
+            const testDateInput = document.querySelector('input[name="date_taken"]');
+            if (testDateInput && !testDateInput.value) {
+                testDateInput.value = today;
+            }
+            
+            // Set today's date in deadline input
+            const deadlineInput = document.querySelector('input[name="deadline"]');
+            if (deadlineInput) {
+                deadlineInput.min = today;
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth <= 992 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "Home",
     "Payment",
     "team",
+    'dashboard.apps.DashboardConfig'
 ]
 
 MIDDLEWARE = [
