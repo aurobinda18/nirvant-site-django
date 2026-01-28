@@ -1,0 +1,930 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Nirvant Mentor</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar - MENTOR VERSION */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+        }
+        
+        .sidebar-header img {
+            height: 35px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 3px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 14px 25px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+            color: white;
+            border-left-color: #8b5cf6;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.12);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            margin: 8px 0 0;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        /* Profile Container */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 992px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.12);
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .profile-avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+        
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #8b5cf6;
+            background: #f3f4f6;
+        }
+        
+        .profile-avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #8b5cf6;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.3s;
+        }
+        
+        .profile-avatar-upload:hover {
+            background: #7c3aed;
+            transform: scale(1.1);
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+        
+        .profile-title {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+        
+        .profile-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .stars {
+            color: #fbbf24;
+        }
+        
+        .rating-text {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .profile-status {
+            display: inline-block;
+            padding: 6px 15px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        /* Profile Details */
+        .profile-details {
+            margin-top: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #475569;
+            flex: 1;
+        }
+        
+        .detail-value {
+            flex: 2;
+            color: #0f172a;
+            text-align: right;
+        }
+        
+        /* Edit Form */
+        .profile-edit-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-edit {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 8px 16px;
+        }
+        
+        .btn-edit:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        /* Stats Card */
+        .stats-card {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .stats-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .profile-card {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .detail-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo">
+                <h3>Mentor Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Mentor</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="{% url 'mentor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="{% url 'mentor_profile' %}" class="active"><i class="fas fa-user"></i> <span>My Profile</span></a></li>
+                    <li><a href="{% url 'my_students' %}"><i class="fas fa-users"></i> <span>My Students</span></a></li>
+                    <li><a href="{% url 'assign_batch' %}"><i class="fas fa-graduation-cap"></i> <span>Assign Batch</span></a></li>
+                    <li><a href="{% url 'manage_test_series' %}"><i class="fas fa-clipboard-list"></i> <span>Test Series</span></a></li>
+                    <li><a href="{% url 'upload_pyqs' %}"><i class="fas fa-file-pdf"></i> <span>Upload PYQs</span></a></li>
+                    <li><a href="{% url 'send_notices' %}"><i class="fas fa-bell"></i> <span>Send Notices</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>My Profile</h1>
+                    <p>Manage your mentor profile and update your information</p>
+                </div>
+                <button class="btn btn-edit" onclick="toggleEditMode()">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+
+            <div class="profile-container">
+                <!-- Left Column: Profile Display -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            {% if mentor_profile.profile_picture %}
+                                <img src="{{ mentor_profile.profile_picture.url }}" alt="Profile" class="profile-avatar-img" id="profileImage">
+                            {% else %}
+                                <div class="profile-avatar-img" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); color: white; font-size: 3rem; font-weight: bold;">
+                                    {{ user.first_name|first|default:user.username|first|upper }}
+                                </div>
+                            {% endif %}
+                            <label for="profilePictureUpload" class="profile-avatar-upload" title="Change photo">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" id="profilePictureUpload" accept="image/*" style="display: none;" onchange="uploadProfilePicture(event)">
+                        </div>
+                        
+                        <h2 class="profile-name" id="displayName">
+                            {% if mentor_profile.full_name %}{{ mentor_profile.full_name }}{% else %}{{ user.get_full_name|default:user.username }}{% endif %}
+                        </h2>
+                        
+                        <p class="profile-title" id="displayQualifications">
+                            {% if mentor_profile.qualifications %}{{ mentor_profile.qualifications }}{% else %}NEET Mentor{% endif %}
+                        </p>
+                        
+                        <div class="profile-rating">
+                            <div class="stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= mentor_profile.rating|default:5 %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="rating-text">{{ mentor_profile.rating|default:"4.8" }}/5.0</span>
+                        </div>
+                        
+                        <div class="profile-status">
+                            <i class="fas fa-circle" style="font-size: 0.7rem;"></i> 
+                            {% if mentor_profile.is_available %}Active Now{% else %}Offline{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Specialization:</span>
+                            <span class="detail-value" id="displaySpecialization">
+                                {% if mentor_profile.specialization %}{{ mentor_profile.specialization }}{% else %}Not specified{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Experience:</span>
+                            <span class="detail-value" id="displayExperience">
+                                {% if mentor_profile.experience %}{{ mentor_profile.experience }}{% else %}Not specified{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Availability:</span>
+                            <span class="detail-value" id="displayAvailability">
+                                {% if mentor_profile.availability %}{{ mentor_profile.availability }}{% else %}Mon-Fri, 10 AM - 6 PM{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">{{ user.email }}</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value" id="displayPhone">
+                                {% if mentor_profile.phone %}{{ mentor_profile.phone }}{% else %}Not provided{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Address:</span>
+                            <span class="detail-value" id="displayAddress">
+                                {% if mentor_profile.address %}{{ mentor_profile.address }}{% else %}Not provided{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stats-title">Mentor Stats</div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">{{ total_students }}</div>
+                                <div class="stat-label">Total Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ batches_count }}</div>
+                                <div class="stat-label">Active Batches</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ mentor_profile.years_experience|default:"5" }}+</div>
+                                <div class="stat-label">Years Experience</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ mentor_profile.rating|default:"4.8" }}</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Edit Form (Initially Hidden) -->
+                <div class="profile-card" id="editFormContainer" style="display: none;">
+                    <h3 style="margin-bottom: 25px; color: #0f172a;">Edit Profile Information</h3>
+                    
+                    <form id="profileEditForm" class="profile-edit-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="editFullName" 
+                                   value="{% if mentor_profile.full_name %}{{ mentor_profile.full_name }}{% else %}{{ user.get_full_name|default:'' }}{% endif %}"
+                                   placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Qualifications *</label>
+                            <input type="text" class="form-control" id="editQualifications" 
+                                   value="{% if mentor_profile.qualifications %}{{ mentor_profile.qualifications }}{% else %}NEET Mentor{% endif %}"
+                                   placeholder="e.g., MBBS, MD, M.Sc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Specialization *</label>
+                            <input type="text" class="form-control" id="editSpecialization" 
+                                   value="{% if mentor_profile.specialization %}{{ mentor_profile.specialization }}{% else %}Physics{% endif %}"
+                                   placeholder="e.g., Physics, Chemistry, Biology">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Experience *</label>
+                            <input type="text" class="form-control" id="editExperience" 
+                                   value="{% if mentor_profile.experience %}{{ mentor_profile.experience }}{% else %}5+ years mentoring NEET students{% endif %}"
+                                   placeholder="e.g., 5+ years mentoring NEET students">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="editPhone" 
+                                   value="{{ mentor_profile.phone|default:'' }}"
+                                   placeholder="Enter your phone number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" id="editAddress" 
+                                      placeholder="Enter your address">{{ mentor_profile.address|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Availability *</label>
+                            <input type="text" class="form-control" id="editAvailability" 
+                                   value="{% if mentor_profile.availability %}{{ mentor_profile.availability }}{% else %}Mon-Fri, 10 AM - 6 PM{% endif %}"
+                                   placeholder="e.g., Mon-Fri, 10 AM - 6 PM">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Bio / Description</label>
+                            <textarea class="form-control" id="editBio" rows="4"
+                                      placeholder="Tell students about yourself, your teaching style, etc.">{{ mentor_profile.bio|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editIsAvailable" 
+                                       {% if mentor_profile.is_available %}checked{% endif %}>
+                                <label class="form-check-label" for="editIsAvailable">
+                                    Show as "Available Now" on profile
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="toggleEditMode()">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="saveProfile()">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle between view and edit modes
+        function toggleEditMode() {
+            const editForm = document.getElementById('editFormContainer');
+            const isEditing = editForm.style.display === 'block';
+            
+            if (isEditing) {
+                // Switch to view mode
+                editForm.style.display = 'none';
+                document.querySelector('.btn-edit').innerHTML = '<i class="fas fa-edit"></i> Edit Profile';
+            } else {
+                // Switch to edit mode
+                editForm.style.display = 'block';
+                document.querySelector('.btn-edit').innerHTML = '<i class="fas fa-eye"></i> View Profile';
+            }
+        }
+        
+        // Save profile changes
+        function saveProfile() {
+            // Get form values
+            const formData = {
+                full_name: document.getElementById('editFullName').value.trim(),
+                qualifications: document.getElementById('editQualifications').value.trim(),
+                specialization: document.getElementById('editSpecialization').value.trim(),
+                experience: document.getElementById('editExperience').value.trim(),
+                phone: document.getElementById('editPhone').value.trim(),
+                address: document.getElementById('editAddress').value.trim(),
+                availability: document.getElementById('editAvailability').value.trim(),
+                bio: document.getElementById('editBio').value.trim(),
+                is_available: document.getElementById('editIsAvailable').checked,
+                csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value
+            };
+            
+            // Validate required fields
+            if (!formData.full_name || !formData.qualifications || !formData.specialization || !formData.experience || !formData.availability) {
+                alert('Please fill all required fields (marked with *)');
+                return;
+            }
+            
+            // Show loading
+            const saveBtn = document.querySelector('.btn-primary');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveBtn.disabled = true;
+            
+            // Send AJAX request
+            fetch('{% url "mentor_profile_update" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': formData.csrfmiddlewaretoken
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update display values
+                    document.getElementById('displayName').textContent = formData.full_name;
+                    document.getElementById('displayQualifications').textContent = formData.qualifications;
+                    document.getElementById('displaySpecialization').textContent = formData.specialization;
+                    document.getElementById('displayExperience').textContent = formData.experience;
+                    document.getElementById('displayPhone').textContent = formData.phone || 'Not provided';
+                    document.getElementById('displayAddress').textContent = formData.address || 'Not provided';
+                    document.getElementById('displayAvailability').textContent = formData.availability;
+                    
+                    // Update status
+                    const statusElement = document.querySelector('.profile-status');
+                    if (formData.is_available) {
+                        statusElement.innerHTML = '<i class="fas fa-circle" style="font-size: 0.7rem;"></i> Active Now';
+                        statusElement.style.background = 'rgba(34, 197, 94, 0.1)';
+                        statusElement.style.color = '#16a34a';
+                    } else {
+                        statusElement.innerHTML = '<i class="fas fa-circle" style="font-size: 0.7rem;"></i> Offline';
+                        statusElement.style.background = 'rgba(107, 114, 128, 0.1)';
+                        statusElement.style.color = '#6b7280';
+                    }
+                    
+                    // Show success message
+                    showNotification('Profile updated successfully!', 'success');
+                    
+                    // Switch back to view mode
+                    toggleEditMode();
+                } else {
+                    showNotification(data.error || 'Failed to update profile', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred. Please try again.', 'error');
+            })
+            .finally(() => {
+                // Reset button
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            });
+        }
+        
+        // Upload profile picture
+        function uploadProfilePicture(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size should be less than 5MB');
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const profileImage = document.getElementById('profileImage');
+                if (profileImage) {
+                    profileImage.src = e.target.result;
+                } else {
+                    // If no image element exists, create one
+                    const avatarDiv = document.querySelector('.profile-avatar-img');
+                    if (avatarDiv) {
+                        avatarDiv.innerHTML = `<img src="${e.target.result}" alt="Profile" class="profile-avatar-img" id="profileImage">`;
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+            
+            // Upload to server
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            
+            fetch('{% url "mentor_profile_picture" %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Profile picture updated!', 'success');
+                } else {
+                    showNotification(data.error || 'Failed to upload picture', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to upload picture', 'error');
+            });
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            // Set styles
+            let bgColor = '#10b981'; // success green
+            let icon = 'check-circle';
+            
+            if (type === 'error') {
+                bgColor = '#ef4444'; // error red
+                icon = 'exclamation-circle';
+            } else if (type === 'info') {
+                bgColor = '#3b82f6'; // info blue
+                icon = 'info-circle';
+            }
+            
+            notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

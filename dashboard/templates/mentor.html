@@ -590,52 +590,109 @@
                             {% if user.studentprofile.mentor %}
                             <div class="row align-items-center">
                                 <!-- Mentor Photo -->
-                                <div class="col-md-4 text-center mb-4 mb-md-0">
-                                    {% if user.studentprofile.mentor.photo %}
-                                        <img src="{{ user.studentprofile.mentor.photo.url }}" 
-                                             alt="{{ user.studentprofile.mentor.name }}"
-                                             class="mentor-avatar">
-                                    {% else %}
-                                        <div class="mentor-avatar d-flex align-items-center justify-content-center text-white" 
-                                             style="background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%); font-size: 2.5rem;">
-                                            {{ user.studentprofile.mentor.name|first|upper }}
-                                        </div>
-                                    {% endif %}
-                                </div>
+<div class="col-md-4 text-center mb-4 mb-md-0">
+    {% if mentor_profile.profile_picture %}
+        <img src="{{ mentor_profile.profile_picture.url }}" 
+             alt="{% if mentor_profile.full_name %}{{ mentor_profile.full_name }}{% else %}{{ user.studentprofile.mentor.name }}{% endif %}"
+             class="mentor-avatar">
+    {% elif user.studentprofile.mentor.photo %}
+        <img src="{{ user.studentprofile.mentor.photo.url }}" 
+             alt="{{ user.studentprofile.mentor.name }}"
+             class="mentor-avatar">
+    {% else %}
+        <div class="mentor-avatar d-flex align-items-center justify-content-center text-white" 
+             style="background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%); font-size: 2.5rem;">
+            {% if mentor_profile.full_name %}
+                {{ mentor_profile.full_name|first|upper }}
+            {% else %}
+                {{ user.studentprofile.mentor.name|first|upper }}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
                                 
                                 <!-- Mentor Details -->
                                 <div class="col-md-8">
-                                    <h3 class="text-orange">{{ user.studentprofile.mentor.name }}</h3>
-                                    
-                                    <div class="mb-3">
-                                        <span class="badge bg-orange me-2">
-                                            <i class="fas fa-graduation-cap me-1"></i>{{ user.studentprofile.mentor.qualification }}
-                                        </span>
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-star me-1"></i>4.8/5.0
-                                        </span>
-                                    </div>
-                                    
-                                    <p class="mb-3">
-                                        <strong>Specialization:</strong> {{ user.studentprofile.mentor.specialization }}
-                                    </p>
-                                    
-                                    <p class="mb-3">
-                                        <strong>Experience:</strong> 5+ years mentoring NEET students
-                                    </p>
-                                    
-                                    <p class="mb-4">
-                                        <strong>Availability:</strong> Mon-Fri, 10 AM - 6 PM
-                                    </p>
+<h3 class="text-orange">
+    {% if mentor_profile.full_name %}
+        {{ mentor_profile.full_name }}
+    {% else %}
+        {{ user.studentprofile.mentor.name }}
+    {% endif %}
+</h3>
+
+<div class="mb-3">
+    <span class="badge bg-orange me-2">
+        <i class="fas fa-graduation-cap me-1"></i>
+        {% if mentor_profile.qualifications %}
+            {{ mentor_profile.qualifications }}
+        {% else %}
+            {{ user.studentprofile.mentor.qualification|default:"NEET Mentor" }}
+        {% endif %}
+    </span>
+    <span class="badge bg-success">
+        <i class="fas fa-star me-1"></i>
+        {% if mentor_profile.rating %}
+            {{ mentor_profile.rating }}/5.0
+        {% else %}
+            4.8/5.0
+        {% endif %}
+    </span>
+</div>
+
+<p class="mb-3">
+    <strong>Specialization:</strong> 
+    {% if mentor_profile.specialization %}
+        {{ mentor_profile.specialization }}
+    {% else %}
+        {{ user.studentprofile.mentor.specialization|default:"Physics" }}
+    {% endif %}
+</p>
+
+<p class="mb-3">
+    <strong>Experience:</strong> 
+    {% if mentor_profile.experience %}
+        {{ mentor_profile.experience }}
+    {% else %}
+        5+ years mentoring NEET students
+    {% endif %}
+</p>
+
+<p class="mb-4">
+    <strong>Availability:</strong> 
+    {% if mentor_profile.availability %}
+        {{ mentor_profile.availability }}
+    {% else %}
+        Mon-Fri, 10 AM - 6 PM
+    {% endif %}
+</p>
                                     
                                     <!-- Active Status -->
-                                    <div class="d-flex align-items-center mb-4">
-                                        <span class="status-dot status-active me-2"></span>
-                                        <span class="fw-bold text-success">Active Now</span>
-                                        <span class="text-muted ms-3">
-                                            <i class="fas fa-clock me-1"></i>Online for next 3 hours
-                                        </span>
-                                    </div>
+<div class="d-flex align-items-center mb-4">
+    {% if mentor_profile.is_available %}
+        <span class="status-dot status-active me-2"></span>
+        <span class="fw-bold text-success">Active Now</span>
+        <span class="text-muted ms-3">
+            <i class="fas fa-clock me-1"></i>
+            {% if mentor_profile.availability %}
+                Available: {{ mentor_profile.availability }}
+            {% else %}
+                Online for next 3 hours
+            {% endif %}
+        </span>
+    {% else %}
+        <span class="status-dot status-inactive me-2"></span>
+        <span class="fw-bold text-danger">Currently Offline</span>
+        <span class="text-muted ms-3">
+            <i class="fas fa-clock me-1"></i>
+            {% if mentor_profile.availability %}
+                Check back: {{ mentor_profile.availability }}
+            {% else %}
+                Check back during working hours
+            {% endif %}
+        </span>
+    {% endif %}
+</div>
                                 </div>
                             </div>
                             {% else %}

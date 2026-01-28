@@ -5,8 +5,13 @@ from django.utils import timezone
 from datetime import timedelta
 import json
 from django.contrib.auth.models import User 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 
 from .forms import ProfileForm
+from .models import MentorProfile
 
 # Add these imports (keep existing ones)
 from .models import (
@@ -66,31 +71,95 @@ def profile_view(request):
 # ADD ONLY THIS NEW FUNCTION
 @login_required
 def mentor_view(request):
-    return render(request, 'mentor.html')
+    mentor_profile = None
+    
+    try:
+        student_profile = request.user.studentprofile
+        
+        if student_profile.mentor:
+            # Now mentor has user field!
+            if student_profile.mentor.user:
+                # Get or create MentorProfile for this mentor
+                mentor_profile, created = MentorProfile.objects.get_or_create(
+                    user=student_profile.mentor.user,
+                    defaults={
+                        'full_name': student_profile.mentor.name,
+                        'qualifications': student_profile.mentor.qualification,
+                        'specialization': student_profile.mentor.specialization,
+                        'experience': '5+ years mentoring NEET students',
+                        'availability': 'Mon-Fri, 10 AM - 6 PM',
+                        'rating': 4.8,
+                        'is_available': True
+                    }
+                )
+                
+                # Update with mentor data if just created
+                if created:
+                    if student_profile.mentor.photo:
+                        mentor_profile.profile_picture = student_profile.mentor.photo
+                    mentor_profile.save()
+    
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    context = {'mentor_profile': mentor_profile}
+    return render(request, 'mentor.html', context)
 
 
 @login_required
 def mentor_dashboard(request):
+    print(f"DEBUG MENTOR_DASHBOARD: User={request.user.username}")
+    
     # Check if user is mentor
-    if not hasattr(request.user, 'studentprofile') or request.user.studentprofile.user_type != 'mentor':
+    if not hasattr(request.user, 'studentprofile'):
+        print(f"DEBUG: No studentprofile found!")
         messages.error(request, "Access denied. Mentor only.")
         return redirect('dashboard')
+    
+    profile = request.user.studentprofile
+    print(f"DEBUG: user_type={profile.user_type}, company_id={profile.company_id}")
+    
+    if profile.user_type != 'mentor':
+        print(f"DEBUG: User is NOT mentor! user_type={profile.user_type}")
+        messages.error(request, "Access denied. Mentor only.")
+        return redirect('dashboard')
+    
+    print(f"DEBUG: User IS mentor, continuing...")
     
     # Get mentor's profile
     mentor_profile = request.user.studentprofile
     
-    # FIX 1: Get mentor object from mentor field (not company_id)
+    # AUTO-CREATE MENTOR RECORD IF MISSING
+    if mentor_profile.user_type == 'mentor' and not mentor_profile.mentor:
+        from .models import Mentor
+        mentor_record = Mentor.objects.create(
+            name=request.user.get_full_name() or request.user.username,
+            qualification="NEET Mentor",
+            specialization="Physics",
+            company_id=mentor_profile.company_id or "",
+            user=request.user
+        )
+        mentor_profile.mentor = mentor_record
+        mentor_profile.save()
+        print(f"Auto-created mentor record for {request.user.username}")
+    
+    # Get mentor object
     mentor_obj = mentor_profile.mentor
     
     if not mentor_obj:
+        print(f"DEBUG: No mentor object found in profile!")
         messages.error(request, "No mentor profile found. Please contact admin.")
         return redirect('dashboard')
+    
+    print(f"DEBUG: Mentor object found: {mentor_obj.name}")
     
     # FIX 2: Find students by mentor ForeignKey (NOT company_id)
     students = StudentProfile.objects.filter(
         mentor=mentor_obj,  # This is the ForeignKey to Mentor model
         user_type='student'
     )
+    
+    print(f"DEBUG: Found {students.count()} students")
     
     # Calculate statistics
     total_students = students.count()
@@ -127,6 +196,8 @@ def mentor_dashboard(request):
         'tests_assigned': tests_assigned,
         'avg_progress': avg_progress,
     }
+    
+    print(f"DEBUG: Rendering mentor_dashboard.html")
     return render(request, 'mentor_dashboard.html', context)
 
 @login_required
@@ -988,3 +1059,271 @@ def send_notices(request):
     }
     
     return render(request, 'send_notices.html', context)
+
+@login_required
+def my_students(request):
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get mentor object
+    mentor_obj = profile.mentor
+    if not mentor_obj:
+        messages.error(request, "No mentor profile found.")
+        return redirect('mentor_dashboard')
+    
+    # Get mentor's students
+    students = StudentProfile.objects.filter(
+        mentor=mentor_obj,
+        user_type='student'
+    ).select_related('user')
+    
+    # Get progress for each student
+    for student in students:
+        try:
+            student.progress = StudentProgress.objects.get(student=student.user)
+        except StudentProgress.DoesNotExist:
+            student.progress = None
+    
+    context = {
+        'students': students,
+    }
+    
+    return render(request, 'my_students.html', context)
+
+@login_required
+def mentor_profile(request):
+    """
+    Display mentor profile page
+    """
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get or create mentor profile
+    mentor_profile_obj, created = MentorProfile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'full_name': request.user.get_full_name() or request.user.username,
+            'qualifications': 'NEET Mentor',
+            'specialization': 'Physics',
+            'experience': '5+ years mentoring NEET students',
+            'availability': 'Mon-Fri, 10 AM - 6 PM',
+            'rating': 4.8,
+            'is_available': True
+        }
+    )
+    
+    # Get mentor stats
+    mentor_obj = profile.mentor
+    total_students = 0
+    batches_count = 0
+    
+    if mentor_obj:
+        total_students = StudentProfile.objects.filter(mentor=mentor_obj).count()
+        # Count unique batches from mentor's students
+        batches = StudentProfile.objects.filter(
+            mentor=mentor_obj
+        ).exclude(batch_enrolled='').values_list('batch_enrolled', flat=True).distinct()
+        batches_count = len(batches)
+    
+    context = {
+        'mentor_profile': mentor_profile_obj,
+        'total_students': total_students,
+        'batches_count': batches_count,
+        'user': request.user
+    }
+    
+    return render(request, 'mentor_profile.html', context)
+
+
+@csrf_exempt
+@login_required
+def mentor_profile_update(request):
+    """
+    Update mentor profile via AJAX
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    try:
+        data = json.loads(request.body)
+        
+        # Get or create mentor profile
+        mentor_profile, created = MentorProfile.objects.get_or_create(user=request.user)
+        
+        # Update fields
+        mentor_profile.full_name = data.get('full_name', mentor_profile.full_name)
+        mentor_profile.qualifications = data.get('qualifications', mentor_profile.qualifications)
+        mentor_profile.specialization = data.get('specialization', mentor_profile.specialization)
+        mentor_profile.experience = data.get('experience', mentor_profile.experience)
+        mentor_profile.phone = data.get('phone', mentor_profile.phone)
+        mentor_profile.address = data.get('address', mentor_profile.address)
+        mentor_profile.availability = data.get('availability', mentor_profile.availability)
+        mentor_profile.bio = data.get('bio', mentor_profile.bio)
+        mentor_profile.is_available = data.get('is_available', False)
+        
+        # Also update user's first and last name if full_name is provided
+        if data.get('full_name'):
+            name_parts = data['full_name'].split(' ', 1)
+            request.user.first_name = name_parts[0]
+            request.user.last_name = name_parts[1] if len(name_parts) > 1 else ''
+            request.user.save()
+        
+        mentor_profile.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile updated successfully'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@csrf_exempt
+@login_required
+def mentor_profile_picture(request):
+    """
+    Update mentor profile picture via AJAX
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    try:
+        if 'profile_picture' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+        
+        # Get or create mentor profile
+        mentor_profile, created = MentorProfile.objects.get_or_create(user=request.user)
+        
+        # Handle file upload
+        uploaded_file = request.FILES['profile_picture']
+        
+        # Validate file size (5MB max)
+        if uploaded_file.size > 5 * 1024 * 1024:
+            return JsonResponse({'error': 'File size should be less than 5MB'}, status=400)
+        
+        # Validate file type
+        allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
+        if uploaded_file.content_type not in allowed_types:
+            return JsonResponse({'error': 'Invalid file type. Only JPEG, PNG, JPG, GIF allowed'}, status=400)
+        
+        # Save file
+        fs = FileSystemStorage(location='media/profile_pictures/')
+        filename = fs.save(f"mentor_{request.user.id}_{uploaded_file.name}", uploaded_file)
+        
+        # Update profile picture
+        mentor_profile.profile_picture = f'profile_pictures/{filename}'
+        mentor_profile.save()
+        
+        # Also update studentprofile if exists
+        try:
+            student_profile = request.user.studentprofile
+            student_profile.profile_picture = mentor_profile.profile_picture
+            student_profile.save()
+        except:
+            pass
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile picture updated',
+            'url': mentor_profile.profile_picture.url
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+    
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+@login_required
+def mentor_profile_update(request):
+    """
+    Update mentor profile via AJAX
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    try:
+        data = json.loads(request.body)
+        
+        # Get or create mentor profile
+        mentor_profile, created = MentorProfile.objects.get_or_create(user=request.user)
+        
+        # Update fields
+        mentor_profile.full_name = data.get('full_name', mentor_profile.full_name)
+        mentor_profile.qualifications = data.get('qualifications', mentor_profile.qualifications)
+        mentor_profile.specialization = data.get('specialization', mentor_profile.specialization)
+        mentor_profile.experience = data.get('experience', mentor_profile.experience)
+        mentor_profile.phone = data.get('phone', mentor_profile.phone)
+        mentor_profile.address = data.get('address', mentor_profile.address)
+        mentor_profile.availability = data.get('availability', mentor_profile.availability)
+        mentor_profile.bio = data.get('bio', mentor_profile.bio)
+        mentor_profile.is_available = data.get('is_available', False)
+        
+        mentor_profile.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile updated successfully'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@csrf_exempt
+@login_required
+def mentor_profile_picture(request):
+    """
+    Update mentor profile picture via AJAX
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    try:
+        if 'profile_picture' not in request.FILES:
+            return JsonResponse({'error': 'No file provided'}, status=400)
+        
+        # Get or create mentor profile
+        mentor_profile, created = MentorProfile.objects.get_or_create(user=request.user)
+        
+        # Save uploaded file
+        uploaded_file = request.FILES['profile_picture']
+        mentor_profile.profile_picture = uploaded_file
+        mentor_profile.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile picture updated'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)

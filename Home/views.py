@@ -157,7 +157,24 @@ def register(request):
                 last_name=email_otp_obj.last_name
             )
             user.save()
+            # IMPORTANT: Add this code RIGHT AFTER user.save()
+            from dashboard.models import Mentor
             
+            # Get user_type
+            user_type = request.POST.get('user_type', 'student').strip()
+            company_id = request.POST.get('company_id', '').strip()
+            
+            # IF USER IS MENTOR, CREATE MENTOR RECORD
+            if user_type == 'mentor' and company_id:
+                mentor_record = Mentor.objects.create(
+                    name=email_otp_obj.first_name + " " + email_otp_obj.last_name,
+                    qualification="NEET Mentor",
+                    specialization="Physics",
+                    company_id=company_id,
+                    user=user  # Link to User
+                )
+                
+                print(f"Created mentor record for {user.username}")
             # Get user_type from POST, default to 'student'
             user_type = request.POST.get('user_type', 'student').strip()
             company_id = request.POST.get('company_id', '').strip()
@@ -233,6 +250,8 @@ def login_view(request):
         login_type = request.POST.get("login_type", "student")
         company_id = request.POST.get("company_id", "")
         
+        print(f"DEBUG LOGIN: username={username}, login_type={login_type}, company_id={company_id}")
+        
         user = authenticate(
             request,
             username=username,
@@ -240,25 +259,34 @@ def login_view(request):
         )
         
         if user is not None:
-            # Check if mentor login
-            if login_type == "mentor":
-                # Verify company ID matches
-                if hasattr(user, 'studentprofile'):
-                    if user.studentprofile.company_id == company_id:
+            try:
+                profile = user.studentprofile
+                print(f"DEBUG PROFILE: user_type={profile.user_type}, company_id_in_db={profile.company_id}")
+                
+                if profile.user_type == 'mentor':
+                    print(f"DEBUG: User is mentor, checking company_id")
+                    if company_id == profile.company_id:
+                        print(f"DEBUG: Company ID matches! Redirecting to mentor_dashboard")
                         login(request, user)
                         messages.success(request, "Mentor login successful!")
                         return redirect("mentor_dashboard")
                     else:
-                        messages.error(request, "Invalid Company ID for mentor account")
-                        return render(request, "login.html")
+                        print(f"DEBUG: Company ID mismatch: entered={company_id}, expected={profile.company_id}")
+                        messages.error(request, f"Please enter correct Company ID for mentor account")
+                        return render(request, "login.html", {
+                            'show_mentor_tab': True,
+                            'username': username
+                        })
                 else:
-                    messages.error(request, "This account is not registered as mentor")
-                    return render(request, "login.html")
-            else:
-                # Student login
-                login(request, user)
-                messages.success(request, "Login successful!")
-                return redirect("dashboard")
+                    print(f"DEBUG: User is student, redirecting to dashboard")
+                    login(request, user)
+                    messages.success(request, "Login successful!")
+                    return redirect("dashboard")
+                    
+            except Exception as e:
+                print(f"DEBUG ERROR: {e}")
+                messages.error(request, "Profile not found. Please register first.")
+                return render(request, "login.html")
         else:
             messages.error(request, "Invalid username or password!")
     
@@ -371,26 +399,4 @@ def checkout_view(request):
     }
     
     return render(request, "checkout.html", context)
-@login_required(login_url="login")
-def mentor_dashboard(request):
-    """Mentor dashboard - shows assigned students"""
-    # Check if user is mentor
-    if not hasattr(request.user, 'studentprofile') or request.user.studentprofile.user_type != 'mentor':
-        return redirect('dashboard')
-    
-    # Get mentor's profile
-    mentor_profile = request.user.studentprofile
-    
-    # Get students assigned to this mentor (students who entered this mentor's company_id)
-    students = StudentProfile.objects.filter(
-        company_id=mentor_profile.company_id,
-        user_type='student'
-    )
-    
-    context = {
-        'students': students,
-        'company_id': mentor_profile.company_id,
-        'user': request.user
-    }
-    return render(request, 'mentor_dashboard.html', context)
 

@@ -1,0 +1,788 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Students | Nirvant Mentor</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar - MENTOR VERSION */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+        
+        .sidebar-header img {
+            height: 35px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .sidebar-user {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 3px 0;
+        }
+        
+        .sidebar-menu a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 14px 25px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: white;
+            border-left-color: #10b981;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.12);
+        }
+        
+        .page-title h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            margin: 8px 0 0;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        /* Students Grid */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .student-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.12);
+            transition: all 0.3s ease;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
+        }
+        
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .student-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+        
+        .student-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+        }
+        
+        /* Student Details */
+        .student-details {
+            margin: 20px 0;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .detail-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        /* Progress Bar */
+        .progress-section {
+            margin: 20px 0;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .progress-label {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .progress-percent {
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            border-radius: 4px;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 30px;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 16px;
+            border: 2px dashed rgba(16, 185, 129, 0.3);
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        /* MODAL STYLES - ADDED */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+            border-radius: 50%;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Notification Styles - ADDED */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo">
+                <h3>Mentor Dashboard</h3>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {% if user.studentprofile.profile_picture %}
+                        <img src="{{ user.studentprofile.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="user-name">{{ user.first_name|default:user.username }}</div>
+                <div class="user-role">NEET Mentor</div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="{% url 'mentor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="{% url 'mentor_profile' %}"><i class="fas fa-user"></i> <span>My Profile</span></a></li>
+                    <li><a href="#" class="active"><i class="fas fa-users"></i> <span>My Students</span></a></li>
+                    <li><a href="{% url 'assign_batch' %}"><i class="fas fa-graduation-cap"></i> <span>Assign Batch</span></a></li>
+                    <li><a href="{% url 'manage_test_series' %}"><i class="fas fa-clipboard-list"></i> <span>Test Series</span></a></li>
+                    <li><a href="{% url 'upload_pyqs' %}"><i class="fas fa-file-pdf"></i> <span>Upload PYQs</span></a></li>
+                    <li><a href="{% url 'send_notices' %}"><i class="fas fa-bell"></i> <span>Send Notices</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>My Students ({{ students.count }})</h1>
+                    <p>View detailed profiles and progress of all your assigned students</p>
+                </div>
+            </div>
+
+            <!-- Students Grid -->
+            <div class="students-grid">
+                {% for student in students %}
+                <div class="student-card">
+                    <div class="student-header">
+                        <div class="student-avatar">
+                            {{ student.user.first_name|first|default:"S" }}
+                        </div>
+                        <div class="student-info">
+                            <h4>{{ student.user.get_full_name|default:student.user.username }}</h4>
+                            <p>{{ student.user.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Batch:</span>
+                            <span class="detail-value">
+                                {% if student.batch_enrolled %}
+                                {{ student.batch_enrolled }}
+                                {% else %}
+                                <span class="text-muted">Not Assigned</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Test Series:</span>
+                            <span class="detail-value">
+                                {% if student.enrolled_test_series.all %}
+                                {% for ts in student.enrolled_test_series.all|slice:":2" %}
+                                {{ ts.test_series.series_code }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <span class="text-muted">None</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Joined:</span>
+                            <span class="detail-value">{{ student.user.date_joined|date:"d M Y" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-percent">
+                                {% if student.progress.overall_preparation %}
+                                {{ student.progress.overall_preparation }}%
+                                {% else %}
+                                30%
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {% if student.progress.overall_preparation %}{{ student.progress.overall_preparation }}{% else %}30{% endif %}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="viewStudentDetails('{{ student.user.id }}', '{{ student.user.get_full_name }}')">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="btn btn-success" onclick="sendMessage('{{ student.user.id }}', '{{ student.user.get_full_name }}')">
+                            <i class="fas fa-comment"></i> Message
+                        </button>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h4>No Students Assigned</h4>
+                    <p>You haven't been assigned any students yet. Contact admin for student assignments.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <!-- MESSAGE MODAL - ADDED -->
+    <div id="messageModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Send Message to Student</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="messageText">Your Message:</label>
+                    <textarea id="messageText" class="form-control" rows="4" placeholder="Type your message here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="sendMessageFinal()">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store current student info
+        let currentStudentId = null;
+        let currentStudentName = null;
+        
+        // View Student Details - opens a detailed view
+        function viewStudentDetails(studentId, studentName) {
+            // For now, show detailed info in alert
+            alert(`STUDENT DETAILS\n\nStudent: ${studentName}\nID: ${studentId}\n\nThis would show:\n• Full Profile\n• Contact Information\n• Test Scores\n• Attendance Records\n• Progress Reports\n• Notes\n• Performance Analytics\n\nBackend integration needed for full functionality.`);
+            
+            // Future implementation: window.location.href = `/student-profile/${studentId}/`;
+        }
+        
+        // Open Message Modal
+        function sendMessage(studentId, studentName) {
+            currentStudentId = studentId;
+            currentStudentName = studentName;
+            
+            // Update modal title
+            document.getElementById('modalTitle').textContent = `Send Message to ${studentName}`;
+            
+            // Show modal
+            document.getElementById('messageModal').style.display = 'flex';
+            
+            // Focus on textarea
+            setTimeout(() => {
+                document.getElementById('messageText').focus();
+            }, 100);
+        }
+        
+        // Close Modal
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+            document.getElementById('messageText').value = '';
+            currentStudentId = null;
+            currentStudentName = null;
+        }
+        
+        // Send Message (Final)
+        function sendMessageFinal() {
+            const message = document.getElementById('messageText').value.trim();
+            
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+            
+            // Show sending notification
+            showNotification('Sending message...', 'info');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Success - show notification
+                showNotification(`Message sent to ${currentStudentName}!`, 'success');
+                
+                // Log to console (for debugging)
+                console.log(`Message to ${currentStudentName} (ID: ${currentStudentId}): ${message}`);
+                
+                // Close modal
+                closeModal();
+                
+                // In real implementation, you would:
+                // 1. Send AJAX request to backend
+                // 2. Save message to database
+                // 3. Send email/SMS notification
+                // 4. Update UI with success message
+            }, 1000);
+        }
+        
+        // Show Notification
+        function showNotification(message, type = 'success') {
+            // Remove any existing notification
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            // Set icon based on type
+            let icon = 'check-circle';
+            let bgColor = '#10b981'; // green
+            if (type === 'info') {
+                icon = 'info-circle';
+                bgColor = '#3b82f6'; // blue
+            } else if (type === 'error') {
+                icon = 'exclamation-circle';
+                bgColor = '#ef4444'; // red
+            }
+            
+            notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            notification.style.background = bgColor;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('messageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

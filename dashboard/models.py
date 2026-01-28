@@ -6,8 +6,10 @@ class Mentor(models.Model):
     photo = models.ImageField(upload_to='mentor_photos/', blank=True, null=True)
     qualification = models.CharField(max_length=200)
     specialization = models.CharField(max_length=100, blank=True)
-    # ADD THIS LINE
     company_id = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    
+    # ADD THIS ONE LINE:
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='mentor_account')
     
     def __str__(self):
         return self.name
@@ -38,6 +40,8 @@ class StudentProfile(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+
+    mentor_profile = models.ForeignKey('MentorProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
     
     def days_to_neet(self):
         from datetime import date
@@ -392,3 +396,24 @@ def get_notices(self):
 def get_unread_notices_count(self):
     """Count unread notices"""
     return len([n for n in self.get_notices() if not n.is_read_by(self.user)])
+
+class MentorProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='mentor_profile')
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    full_name = models.CharField(max_length=255, blank=True)
+    qualifications = models.CharField(max_length=255, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+    specialization = models.CharField(max_length=100, blank=True)
+    experience = models.TextField(blank=True)
+    years_experience = models.IntegerField(default=0)
+    bio = models.TextField(blank=True)
+    availability = models.CharField(max_length=255, blank=True, default="Mon-Fri, 10 AM - 6 PM")
+    is_available = models.BooleanField(default=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, default=4.8)
+    total_reviews = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Mentor Profile: {self.user.username}"
