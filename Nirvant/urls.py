@@ -107,7 +107,9 @@ urlpatterns = [
         name='password_reset_complete'),
 ]
 
-# Serve media and static files in development
+# Serve media files (for local/dev and simple deployments)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Serve static files in development
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

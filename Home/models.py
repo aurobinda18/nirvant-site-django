@@ -26,6 +26,11 @@ class SuperMentor(models.Model):
     def __str__(self):
         return self.name
     
+    @property
+    def role(self):
+        """Return expertise as role for template compatibility"""
+        return self.expertise
+    
     class Meta:
         verbose_name = "Mentor & Super Mentor"
         verbose_name_plural = "Mentor & Super Mentor"

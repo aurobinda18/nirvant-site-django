@@ -7,6 +7,7 @@ class TeamMember(models.Model):
         ('FOUNDERS', 'Founders'),
         ('SUPER_MENTORS', 'Super Mentors'),
         ('MENTORS', 'Mentors'),
+        ('TECH_TEAM', 'Tech Team'),
     ]
 
     team_name = models.CharField(max_length=50, choices=TEAM_CHOICES)
