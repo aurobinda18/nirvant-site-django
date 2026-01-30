@@ -333,6 +333,87 @@
             border-radius: 3px;
             width: 0;
         }
+
+        .schedule-section {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 20px 22px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .schedule-header {
+            align-items: flex-start;
+        }
+
+        .schedule-subtitle {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .schedule-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .schedule-tab {
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #334155;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .schedule-tab.active {
+            background: #1e293b;
+            border-color: #1e293b;
+            color: #ffffff;
+        }
+
+        .schedule-panel {
+            display: none;
+            margin-top: 18px;
+        }
+
+        .schedule-panel.is-active {
+            display: block;
+        }
+
+        .schedule-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+        }
+
+        .schedule-card h6 {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .schedule-meta {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .schedule-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .schedule-empty {
+            color: #94a3b8;
+            margin-top: 8px;
+        }
         
         /* Responsive */
         @media (max-width: 992px) {
@@ -443,114 +524,121 @@
             </div>
 
 
-                <!-- ============================= -->
-<!-- Mentor Schedule Section -->
-<!-- ============================= -->
+                        <!-- ============================= -->
+                        <!-- Mentor Schedule Section -->
+                        <!-- ============================= -->
 
-<div class="students-section" style="margin-top: 20px;">
-  <div class="section-header">
-    <div class="section-title">
-      My Mentorship Schedule – {{ month_label }}
-    </div>
-  </div>
+                        {% now "Y-m-d" as today_date %}
+                        {% now "W" as current_week %}
 
-  <!-- UPCOMING SESSIONS -->
-  {% if upcoming_by_week %}
-    {% for week, calls in upcoming_by_week.items %}
-      <div style="margin-bottom: 20px;">
-        <h6 style="color:#475569; font-weight:600; margin-bottom:10px;">
-          {{ week }}
-        </h6>
+                        <div class="students-section schedule-section" style="margin-top: 20px;">
+                            <div class="section-header schedule-header">
+                                <div>
+                                    <div class="section-title">My Mentorship Schedule</div>
+                                    <div class="schedule-subtitle">{{ month_label }}</div>
+                                </div>
+                                <div class="schedule-tabs" role="tablist">
+                                    <button class="schedule-tab active" data-schedule-view="today">Today</button>
+                                    <button class="schedule-tab" data-schedule-view="week">This Week</button>
+                                    <button class="schedule-tab" data-schedule-view="month">Full Month</button>
+                                </div>
+                            </div>
 
-        <div class="row">
-          {% for call in calls %}
-            <div class="col-md-6 col-lg-4">
-              <div class="stat-card" style="padding:18px; margin-bottom:15px;">
-                
-                <div style="font-weight:700; color:#0f172a;">
-                  {{ call.student.username }}
-                </div>
+                            <!-- Today / Week (filtered) -->
+                            <div id="schedule-flat" class="schedule-panel is-active">
+                                {% if upcoming_by_week %}
+                                    <div class="row" id="schedule-flat-cards">
+                                        {% for week, calls in upcoming_by_week.items %}
+                                            {% for call in calls %}
+                                                <div class="col-md-6 col-lg-4 schedule-card-item" data-date="{{ call.start_time|date:"Y-m-d" }}" data-week="{{ call.start_time|date:"W" }}">
+                                                    <div class="schedule-card">
+                                                        <h6>{{ call.student.username }}</h6>
+                                                        <div class="schedule-meta">
+                                                            {{ call.start_time|date:"D, d M" }} · {{ call.start_time|date:"g:i A" }} – {{ call.end_time|date:"g:i A" }}
+                                                        </div>
+                                                        <div class="schedule-actions">
+                                                            <span class="status-badge {% if call.call_type == 'academic' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                                                {{ call.call_type|title }}
+                                                            </span>
+                                                            <a href="{% url 'join_call' call.id %}" target="_blank" class="btn btn-sm btn-primary">Join</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                    <p class="schedule-empty" id="schedule-empty-filtered" style="display:none;">No sessions for this view.</p>
+                                {% else %}
+                                    <p class="schedule-empty">No upcoming sessions scheduled.</p>
+                                {% endif %}
+                            </div>
 
-                <div style="font-size:0.9rem; color:#64748b; margin:6px 0;">
-                  {{ call.start_time|date:"D, d M Y" }} <br>
-                  {{ call.start_time|date:"g:i A" }} – {{ call.end_time|date:"g:i A" }}
-                </div>
+                            <!-- Month (grouped) -->
+                            <div id="schedule-month" class="schedule-panel">
+                                {% if upcoming_by_week %}
+                                    {% for week, calls in upcoming_by_week.items %}
+                                        <div style="margin-bottom: 16px;">
+                                            <h6 style="color:#475569; font-weight:600; margin-bottom:10px;">
+                                                {{ week }}
+                                            </h6>
+                                            <div class="row">
+                                                {% for call in calls %}
+                                                    <div class="col-md-6 col-lg-4">
+                                                        <div class="schedule-card">
+                                                            <h6>{{ call.student.username }}</h6>
+                                                            <div class="schedule-meta">
+                                                                {{ call.start_time|date:"D, d M" }} · {{ call.start_time|date:"g:i A" }} – {{ call.end_time|date:"g:i A" }}
+                                                            </div>
+                                                            <div class="schedule-actions">
+                                                                <span class="status-badge {% if call.call_type == 'academic' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                                                    {{ call.call_type|title }}
+                                                                </span>
+                                                                <a href="{% url 'join_call' call.id %}" target="_blank" class="btn btn-sm btn-primary">Join</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="schedule-empty">No upcoming sessions this month.</p>
+                                {% endif %}
 
-                <span class="status-badge 
-                  {% if call.call_type == 'academic' %}
-                    bg-danger
-                  {% else %}
-                    bg-warning text-dark
-                  {% endif %}
-                ">
-                  {{ call.call_type|title }}
-                </span>
+                                <div style="margin-top:24px;">
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="toggleCompleted()">
+                                        Show Completed Sessions
+                                    </button>
+                                </div>
 
-                <div style="margin-top:12px;">
-                  <a href="{% url 'join_call' call.id %}" 
-                     target="_blank"
-                     class="btn btn-sm btn-primary">
-                    Join Call
-                  </a>
-                </div>
-
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endfor %}
-  {% else %}
-    <p style="color:#64748b;">No upcoming sessions this month.</p>
-  {% endif %}
-
-  <!-- COMPLETED TOGGLE -->
-  <div style="margin-top:30px;">
-    <button class="btn btn-outline-secondary btn-sm"
-            onclick="toggleCompleted()">
-      Show Completed Sessions
-    </button>
-  </div>
-
-  <!-- COMPLETED SESSIONS -->
-  <div id="completed-section" style="display:none; margin-top:20px;">
-    {% if completed_by_week %}
-      {% for week, calls in completed_by_week.items %}
-        <div style="margin-bottom: 20px;">
-          <h6 style="color:#94a3b8; font-weight:600;">
-            {{ week }}
-          </h6>
-
-          <div class="row">
-            {% for call in calls %}
-              <div class="col-md-6 col-lg-4">
-                <div class="stat-card"
-                     style="padding:18px; opacity:0.6; margin-bottom:15px;">
-                  
-                  <div style="font-weight:700;">
-                    {{ call.student.username }}
-                  </div>
-
-                  <div style="font-size:0.85rem;">
-                    {{ call.start_time|date:"D, d M Y" }} <br>
-                    {{ call.start_time|date:"g:i A" }} – {{ call.end_time|date:"g:i A" }}
-                  </div>
-
-                  <span class="status-badge bg-secondary">
-                    Completed
-                  </span>
-
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p style="color:#94a3b8;">No completed sessions this month.</p>
-    {% endif %}
-  </div>
-</div>
+                                <div id="completed-section" style="display:none; margin-top:18px;">
+                                    {% if completed_by_week %}
+                                        {% for week, calls in completed_by_week.items %}
+                                            <div style="margin-bottom: 16px;">
+                                                <h6 style="color:#94a3b8; font-weight:600;">
+                                                    {{ week }}
+                                                </h6>
+                                                <div class="row">
+                                                    {% for call in calls %}
+                                                        <div class="col-md-6 col-lg-4">
+                                                            <div class="schedule-card" style="opacity:0.6;">
+                                                                <h6>{{ call.student.username }}</h6>
+                                                                <div class="schedule-meta">
+                                                                    {{ call.start_time|date:"D, d M" }} · {{ call.start_time|date:"g:i A" }} – {{ call.end_time|date:"g:i A" }}
+                                                                </div>
+                                                                <span class="status-badge bg-secondary">Completed</span>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="schedule-empty">No completed sessions this month.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -656,6 +744,51 @@
                 const clamped = Math.min(Math.max(value, 0), 100);
                 el.style.width = `${clamped}%`;
             });
+
+            const todayDate = "{{ today_date }}";
+            const currentWeek = "{{ current_week }}";
+            const flatPanel = document.getElementById('schedule-flat');
+            const monthPanel = document.getElementById('schedule-month');
+            const flatCards = document.querySelectorAll('.schedule-card-item');
+            const emptyFiltered = document.getElementById('schedule-empty-filtered');
+
+            function filterFlat(view) {
+                let visibleCount = 0;
+                flatCards.forEach((card) => {
+                    const cardDate = card.dataset.date;
+                    const cardWeek = card.dataset.week;
+                    const show = view === 'today'
+                        ? cardDate === todayDate
+                        : cardWeek === currentWeek;
+                    card.style.display = show ? '' : 'none';
+                    if (show) {
+                        visibleCount += 1;
+                    }
+                });
+                if (emptyFiltered) {
+                    emptyFiltered.style.display = visibleCount === 0 ? 'block' : 'none';
+                }
+            }
+
+            function setScheduleView(view) {
+                document.querySelectorAll('.schedule-tab').forEach((tab) => {
+                    tab.classList.toggle('active', tab.dataset.scheduleView === view);
+                });
+                if (view === 'month') {
+                    flatPanel.classList.remove('is-active');
+                    monthPanel.classList.add('is-active');
+                } else {
+                    monthPanel.classList.remove('is-active');
+                    flatPanel.classList.add('is-active');
+                    filterFlat(view);
+                }
+            }
+
+            document.querySelectorAll('.schedule-tab').forEach((tab) => {
+                tab.addEventListener('click', () => setScheduleView(tab.dataset.scheduleView));
+            });
+
+            setScheduleView('today');
         });
     </script>
 

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+import os
 from datetime import timedelta
 import json
 from django.contrib.auth.models import User 
@@ -9,6 +10,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
+from pathlib import Path
 
 from collections import defaultdict
 
@@ -120,25 +122,35 @@ def mentor_view(request):
 
 @login_required
 def mentor_dashboard(request):
-    print(f"DEBUG MENTOR_DASHBOARD: User={request.user.username}")
+    from pathlib import Path
+    def log_debug(message: str) -> None:
+        debug_file = Path("/workspaces/nirvant-site-django/debug_mentor_dashboard.txt")
+        debug_file.parent.mkdir(parents=True, exist_ok=True)
+        with debug_file.open("a", encoding="utf-8") as handle:
+            handle.write(f"{message}\n")
+
+    log_debug(f"DEBUG MENTOR_DASHBOARD: User={request.user.username}")
     
     # Check if user is mentor
+    log_debug("DEBUG: Checking if user has studentprofile")
     if not hasattr(request.user, 'studentprofile'):
-        print(f"DEBUG: No studentprofile found!")
+        log_debug("DEBUG: No studentprofile found!")
         messages.error(request, "Access denied. Mentor only.")
         return redirect('dashboard')
     
     profile = request.user.studentprofile
-    print(f"DEBUG: user_type={profile.user_type}, company_id={profile.company_id}")
+    log_debug(f"DEBUG: user_type={profile.user_type}, company_id={profile.company_id}")
     
+    log_debug("DEBUG: Checking user type")
     if profile.user_type != 'mentor':
-        print(f"DEBUG: User is NOT mentor! user_type={profile.user_type}")
+        log_debug(f"DEBUG: User is NOT mentor! user_type={profile.user_type}")
         messages.error(request, "Access denied. Mentor only.")
         return redirect('dashboard')
     
-    print(f"DEBUG: User IS mentor, continuing...")
+    log_debug("DEBUG: User IS mentor, continuing...")
     
     # Get mentor's profile
+    log_debug("DEBUG: Getting mentor profile")
     mentor_profile = request.user.studentprofile
     mentor_profile_obj, created = MentorProfile.objects.get_or_create(
         user=request.user,
@@ -152,6 +164,7 @@ def mentor_dashboard(request):
             'is_available': True
         }
     )
+    log_debug(f"DEBUG: MentorProfile created={created}, id={mentor_profile_obj.id}, user={mentor_profile_obj.user}")
 
     # ============================
     # Mentor Schedule (This Month)
@@ -162,10 +175,19 @@ def mentor_dashboard(request):
     current_month = now.month
 
     # Fetch all calls for this mentor in last 7 days
+    log_debug("DEBUG: Fetching mentor calls")
+    log_debug(f"DEBUG: mentor_profile_obj.id={mentor_profile_obj.id}, user={mentor_profile_obj.user}")
+    log_debug(f"DEBUG: Filtering calls with mentor={mentor_profile_obj}")
+    log_debug(f"DEBUG: Date filter: start_time__gte={timezone.now() - timedelta(days=7)}")
+    
     mentor_calls = Call.objects.filter(
         mentor=mentor_profile_obj,
         start_time__gte=timezone.now() - timedelta(days=7)
     ).order_by("start_time")
+    
+    log_debug(f"DEBUG: Found {mentor_calls.count()} mentor_calls")
+    log_debug(f"DEBUG: All calls in DB: {Call.objects.count()}")
+    log_debug(f"DEBUG: All calls for this mentor (no date filter): {Call.objects.filter(mentor=mentor_profile_obj).count()}")
 
     upcoming_calls = []
     completed_calls = []
@@ -200,17 +222,17 @@ def mentor_dashboard(request):
         )
         mentor_profile.mentor = mentor_record
         mentor_profile.save()
-        print(f"Auto-created mentor record for {request.user.username}")
+        log_debug(f"Auto-created mentor record for {request.user.username}")
     
     # Get mentor object
     mentor_obj = mentor_profile.mentor
     
     if not mentor_obj:
-        print(f"DEBUG: No mentor object found in profile!")
+        log_debug("DEBUG: No mentor object found in profile!")
         messages.error(request, "No mentor profile found. Please contact admin.")
         return redirect('dashboard')
     
-    print(f"DEBUG: Mentor object found: {mentor_obj.name}")
+    log_debug(f"DEBUG: Mentor object found: {mentor_obj.name}")
     
     # FIX 2: Find students by mentor ForeignKey (NOT company_id)
     students = StudentProfile.objects.filter(
@@ -254,6 +276,9 @@ def mentor_dashboard(request):
         'batches_count': batches_count,
         'tests_assigned': tests_assigned,
         'avg_progress': avg_progress,
+        'month_label': month_label,
+        'upcoming_by_week': upcoming_by_week,
+        'completed_by_week': completed_by_week,
     }
     
     print(f"DEBUG: Rendering mentor_dashboard.html")
