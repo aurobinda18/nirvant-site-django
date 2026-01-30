@@ -10,6 +10,13 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 
+from collections import defaultdict
+
+from scheduler.models import Call
+from django.contrib.auth.decorators import login_required
+from dashboard.models import MentorProfile
+
+
 from .forms import ProfileForm
 from .models import MentorProfile
 
@@ -65,6 +72,11 @@ def profile_view(request):
         'form': form,
         'days_to_neet': days_to_neet,
         'mentors': mentors,  # ADDED THIS
+         # 🔽 ADD THESE (schedule data)
+        'month_label': month_label,
+        'upcoming_by_week': upcoming_by_week,
+        'completed_by_week': completed_by_week,
+        
     }
     return render(request, 'profile.html', context)
 
@@ -128,6 +140,53 @@ def mentor_dashboard(request):
     
     # Get mentor's profile
     mentor_profile = request.user.studentprofile
+    mentor_profile_obj, created = MentorProfile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'full_name': request.user.get_full_name() or request.user.username,
+            'qualifications': 'NEET Mentor',
+            'specialization': 'Physics',
+            'experience': '5+ years mentoring NEET students',
+            'availability': 'Mon-Fri, 10 AM - 6 PM',
+            'rating': 4.8,
+            'is_available': True
+        }
+    )
+
+    # ============================
+    # Mentor Schedule (This Month)
+    # ============================
+
+    now = timezone.now()
+    current_year = now.year
+    current_month = now.month
+
+    # Fetch all calls for this mentor in last 7 days
+    mentor_calls = Call.objects.filter(
+        mentor=mentor_profile_obj,
+        start_time__gte=timezone.now() - timedelta(days=7)
+    ).order_by("start_time")
+
+    upcoming_calls = []
+    completed_calls = []
+
+    for call in mentor_calls:
+        if call.start_time >= now:
+            upcoming_calls.append(call)
+        else:
+            completed_calls.append(call)
+
+    def group_by_week(calls):
+        weeks = defaultdict(list)
+        for call in calls:
+            week_number = call.start_time.isocalendar()[1]
+            weeks[f"Week {week_number}"].append(call)
+        return dict(weeks)
+
+    upcoming_by_week = group_by_week(upcoming_calls)
+    completed_by_week = group_by_week(completed_calls)
+
+    month_label = now.strftime("%B %Y")
     
     # AUTO-CREATE MENTOR RECORD IF MISSING
     if mentor_profile.user_type == 'mentor' and not mentor_profile.mentor:
@@ -1327,3 +1386,36 @@ def mentor_profile_picture(request):
             'success': False,
             'error': str(e)
         }, status=500)
+
+
+@login_required
+def student_calls_view(request):
+    calls = Call.objects.filter(
+        student=request.user,
+        start_time__gte=timezone.now()
+    ).order_by("start_time")
+
+    return render(
+        request,
+        "student_calls.html",
+        {"calls": calls}
+    )
+
+
+@login_required
+def mentor_calls_view(request):
+    try:
+        mentor_profile = MentorProfile.objects.get(user=request.user)
+    except MentorProfile.DoesNotExist:
+        return render(request, "not_a_mentor.html")
+
+    calls = Call.objects.filter(
+        mentor=mentor_profile,
+        start_time__gte=timezone.now()
+    ).order_by("start_time")
+
+    return render(
+        request,
+        "mentor_calls.html",
+        {"calls": calls}
+    )

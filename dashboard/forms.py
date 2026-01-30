@@ -1,6 +1,6 @@
 # dashboard/forms.py
 from django import forms
-from .models import StudentProfile
+from .models import StudentProfile, MentorProfile
 from django.contrib.auth.models import User
 
 class ProfileForm(forms.ModelForm):
@@ -47,3 +47,8 @@ class ProfileForm(forms.ModelForm):
             profile.save()
         
         return profile
+
+class MentorMeetLinkForm(forms.ModelForm):
+    class Meta:
+        model = MentorProfile
+        fields = ["meet_link"]

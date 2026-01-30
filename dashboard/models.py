@@ -412,6 +412,7 @@ class MentorProfile(models.Model):
     is_available = models.BooleanField(default=True)
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=4.8)
     total_reviews = models.IntegerField(default=0)
+    meet_link = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

@@ -922,7 +922,13 @@
                     <li><a href="/dashboard/" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
                     <li><a href="/dashboard/mentor/"><i class="fas fa-chalkboard-teacher"></i> <span>Mentor</span></a></li>
                     <li><a href="/dashboard/progress/"><i class="fas fa-chart-line"></i> <span>Progress</span></a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a></li>
+                    <li>
+                        {% if user.studentprofile.user_type == "student" %}
+                            <a href="{% url 'student_calls' %}"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a>
+                        {% elif user.studentprofile.user_type == "mentor" %}
+                            <a href="{% url 'mentor_calls' %}"><i class="fas fa-calendar-alt"></i> <span>Schedule</span></a>
+                        {% endif %}
+                    </li>
                     <li><a href="{% url 'studypack' %}"><i class="fas fa-book"></i> <span>Studypack</span></a></li>
                 </ul>
             </nav>

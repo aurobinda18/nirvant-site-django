@@ -1,0 +1,107 @@
+/* ===== Schedule Page Background ===== */
+
+.schedule-page {
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    #fff4df 0%,
+    #fff9f0 60%,
+    #ffffff 100%
+  );
+  padding: 40px 0;
+}
+
+.schedule-wrapper {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 10px 20px;
+}
+
+/* Headings */
+
+.schedule-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: #2b2b2b;
+}
+
+/* Card improvements */
+
+.schedule-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.schedule-card:hover {
+  transform: translateY(-2px);
+}
+
+.schedule-date {
+  font-size: 14px;
+  color: #7A7A7A;
+  margin-bottom: 4px;
+}
+
+/* Time emphasis */
+
+.schedule-time {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1f1f1f;
+}
+
+.schedule-meta {
+  margin-bottom: 8px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge.normal {
+  background: #FFF1D6;
+  color: #A96B00;
+}
+
+.badge.academic {
+  background: #FFE3E3;
+  color: #9B2C2C;
+}
+
+.schedule-person {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+/* Join button stronger */
+
+.join-btn {
+  display: inline-block;
+  padding: 9px 18px;
+  background: linear-gradient(135deg, #ff9f1c, #ff7a18);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 6px 16px rgba(255, 159, 28, 0.4);
+}
+
+.join-btn:hover {
+  background: linear-gradient(135deg, #ff8c00, #ff6a00);
+}
+
+.empty-state {
+  color: #777;
+  margin-top: 30px;
+}

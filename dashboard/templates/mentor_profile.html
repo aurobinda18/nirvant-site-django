@@ -378,6 +378,25 @@
         .btn-edit:hover {
             background: rgba(139, 92, 246, 0.2);
         }
+
+        /* Meet Link Card */
+        .meet-link-card {
+            border: 1px dashed rgba(139, 92, 246, 0.35);
+            background: linear-gradient(180deg, #ffffff 0%, #f7f5ff 100%);
+        }
+
+        .meet-link-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .meet-link-hint {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
         
         .action-buttons {
             display: flex;
@@ -690,6 +709,33 @@
                             </button>
                             <button type="button" class="btn btn-primary" onclick="saveProfile()">
                                 <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Meet Link Card -->
+                <div class="profile-card meet-link-card">
+                    <div class="meet-link-title">Google Meet Link</div>
+                    <div class="meet-link-hint">
+                        Add your meeting link once and students will use it for scheduled calls.
+                    </div>
+                    <form method="post" class="profile-edit-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="form-label" for="meetLink">Meet Link</label>
+                            <input
+                                id="meetLink"
+                                type="url"
+                                name="meet_link"
+                                class="form-control"
+                                placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                                value="{{ mentor_profile.meet_link|default:'' }}"
+                            >
+                        </div>
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-link"></i> Save Meet Link
                             </button>
                         </div>
                     </form>

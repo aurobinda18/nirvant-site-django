@@ -49,7 +49,11 @@ INSTALLED_APPS = [
     "Home",
     "Payment",
     "team",
-    'dashboard.apps.DashboardConfig'
+    'dashboard.apps.DashboardConfig',
+    'scheduler',
+    'video',
+
+
 ]
 
 MIDDLEWARE = [
@@ -152,6 +156,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Home/static'),
+    os.path.join(BASE_DIR, 'dashboard/static'),
 ]
 # MEDIA FILES CONFIGURATION (ADD THIS)
 MEDIA_URL = '/media/'

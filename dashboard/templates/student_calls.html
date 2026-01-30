@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule | Student</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/calls.css' %}">
+</head>
+<body>
+
+<div class="schedule-page">
+  <div class="schedule-wrapper">
+
+  <h2 class="schedule-title">My Schedule</h2>
+
+  {% if calls %}
+    {% for call in calls %}
+      <div class="schedule-card">
+        <div class="schedule-date">
+          {{ call.start_time|date:"D, d M Y" }}
+        </div>
+
+        <div class="schedule-time">
+          {{ call.start_time|date:"g:i A" }} –
+          {{ call.end_time|date:"g:i A" }}
+        </div>
+
+        <div class="schedule-meta">
+          <span class="badge {{ call.call_type }}">
+            {{ call.call_type|title }}
+          </span>
+        </div>
+
+        <div class="schedule-person">
+          Mentor: {{ call.mentor }}
+        </div>
+
+        <a class="join-btn" href="{% url 'join_call' call.id %}" target="_blank">
+          Join Call
+        </a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty-state">No upcoming calls scheduled.</p>
+  {% endif %}
+</div>
+</div>
+</body>
+</html>

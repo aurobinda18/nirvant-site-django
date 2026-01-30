@@ -5,6 +5,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
+from dashboard import views as dashboard_views
+from video.views import join_call
+
 
 # Import ALL views from Home app
 from Home.views import (
@@ -82,6 +85,11 @@ urlpatterns = [
     path('view-pdf/<int:pdf_id>/', view_pdf, name='view_pdf'),
     path('download-pdf/<int:pdf_id>/', download_pdf, name='download_pdf'),
     
+
+    path("join/<int:call_id>/", join_call, name="join_call"),
+
+
+
     # ==================== PASSWORD RESET URLS ====================
     path('password-reset/', 
         CustomPasswordResetView.as_view(),
@@ -105,6 +113,10 @@ urlpatterns = [
             template_name='password_reset_complete.html'
         ), 
         name='password_reset_complete'),
+    
+    # ==================== CALL MANAGEMENT URLS ====================
+    path("dashboard/students/calls/", dashboard_views.student_calls_view, name="student_calls"),
+    path("dashboard/mentor/calls/", dashboard_views.mentor_calls_view, name="mentor_calls"),
 ]
 
 # Serve media files (for local/dev and simple deployments)

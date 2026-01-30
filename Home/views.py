@@ -306,6 +306,9 @@ def dashboard(request):
             'batch_enrolled': 'NEET 2025 Batch A',
         }
     )
+
+    if profile.user_type == 'mentor':
+        return redirect('mentor_dashboard')
     
     # ADD THESE 3 LINES HERE ↓↓↓
     # Get student's notices
