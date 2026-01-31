@@ -43,3 +43,93 @@ DEBUG: Found 40 mentor_calls
 DEBUG: All calls in DB: 420
 DEBUG: All calls for this mentor (no date filter): 40
 DEBUG: Mentor object found: dummy_mentor_1
+DEBUG MENTOR_DASHBOARD: User=dummy_mentor_1
+DEBUG: Checking if user has studentprofile
+DEBUG: user_type=mentor, company_id=ron0012
+DEBUG: Checking user type
+DEBUG: User IS mentor, continuing...
+DEBUG: Getting mentor profile
+DEBUG: MentorProfile created=False, id=3, user=dummy_mentor_1
+DEBUG: Fetching mentor calls
+DEBUG: mentor_profile_obj.id=3, user=dummy_mentor_1
+DEBUG: Filtering calls with mentor=Mentor Profile: dummy_mentor_1
+DEBUG: Date filter: start_time__gte=2026-01-23 09:20:31.733777+00:00
+DEBUG: Found 40 mentor_calls
+DEBUG: All calls in DB: 420
+DEBUG: All calls for this mentor (no date filter): 40
+DEBUG: Mentor object found: dummy_mentor_1
+DEBUG MENTOR_DASHBOARD: User=dummy_mentor_1
+DEBUG: Checking if user has studentprofile
+DEBUG: user_type=mentor, company_id=ron0012
+DEBUG: Checking user type
+DEBUG: User IS mentor, continuing...
+DEBUG: Getting mentor profile
+DEBUG: MentorProfile created=False, id=3, user=dummy_mentor_1
+DEBUG: Fetching mentor calls
+DEBUG: mentor_profile_obj.id=3, user=dummy_mentor_1
+DEBUG: Filtering calls with mentor=Mentor Profile: dummy_mentor_1
+DEBUG: Date filter: start_time__gte=2026-01-23 09:20:32.686278+00:00
+DEBUG: Found 40 mentor_calls
+DEBUG: All calls in DB: 420
+DEBUG: All calls for this mentor (no date filter): 40
+DEBUG: Mentor object found: dummy_mentor_1
+DEBUG MENTOR_DASHBOARD: User=ronak
+DEBUG: Checking if user has studentprofile
+DEBUG: user_type=mentor, company_id=ronak555
+DEBUG: Checking user type
+DEBUG: User IS mentor, continuing...
+DEBUG: Getting mentor profile
+DEBUG: MentorProfile created=False, id=2, user=ronak
+DEBUG: Fetching mentor calls
+DEBUG: mentor_profile_obj.id=2, user=ronak
+DEBUG: Filtering calls with mentor=Mentor Profile: ronak
+DEBUG: Date filter: start_time__gte=2026-01-23 09:33:39.431326+00:00
+DEBUG: Found 0 mentor_calls
+DEBUG: All calls in DB: 420
+DEBUG: All calls for this mentor (no date filter): 0
+DEBUG: Mentor object found: IIIT BBSR
+DEBUG MENTOR_DASHBOARD: User=dummy_mentor_1
+DEBUG: Checking if user has studentprofile
+DEBUG: user_type=mentor, company_id=ron0012
+DEBUG: Checking user type
+DEBUG: User IS mentor, continuing...
+DEBUG: Getting mentor profile
+DEBUG: MentorProfile created=False, id=3, user=dummy_mentor_1
+DEBUG: Fetching mentor calls
+DEBUG: mentor_profile_obj.id=3, user=dummy_mentor_1
+DEBUG: Filtering calls with mentor=Mentor Profile: dummy_mentor_1
+DEBUG: Date filter: start_time__gte=2026-01-23 09:35:32.255094+00:00
+DEBUG: Found 40 mentor_calls
+DEBUG: All calls in DB: 420
+DEBUG: All calls for this mentor (no date filter): 40
+DEBUG: Mentor object found: dummy_mentor_1
+DEBUG MENTOR_DASHBOARD: User=dummy_mentor_1
+DEBUG: Checking if user has studentprofile
+DEBUG: user_type=mentor, company_id=ron0012
+DEBUG: Checking user type
+DEBUG: User IS mentor, continuing...
+DEBUG: Getting mentor profile
+DEBUG: MentorProfile created=False, id=3, user=dummy_mentor_1
+DEBUG: Fetching mentor calls
+DEBUG: mentor_profile_obj.id=3, user=dummy_mentor_1
+DEBUG: Filtering calls with mentor=Mentor Profile: dummy_mentor_1
+DEBUG: Date filter: start_time__gte=2026-01-23 09:37:37.833118+00:00
+DEBUG: Found 40 mentor_calls
+DEBUG: All calls in DB: 420
+DEBUG: All calls for this mentor (no date filter): 40
+DEBUG: Mentor object found: dummy_mentor_1
+DEBUG MENTOR_DASHBOARD: User=dummy_mentor_1
+DEBUG: Checking if user has studentprofile
+DEBUG: user_type=mentor, company_id=ron0012
+DEBUG: Checking user type
+DEBUG: User IS mentor, continuing...
+DEBUG: Getting mentor profile
+DEBUG: MentorProfile created=False, id=3, user=dummy_mentor_1
+DEBUG: Fetching mentor calls
+DEBUG: mentor_profile_obj.id=3, user=dummy_mentor_1
+DEBUG: Filtering calls with mentor=Mentor Profile: dummy_mentor_1
+DEBUG: Date filter: start_time__gte=2026-01-23 13:40:16.393868+00:00
+DEBUG: Found 40 mentor_calls
+DEBUG: All calls in DB: 420
+DEBUG: All calls for this mentor (no date filter): 40
+DEBUG: Mentor object found: dummy_mentor_1
