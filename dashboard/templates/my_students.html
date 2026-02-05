@@ -9,68 +9,123 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --primary-orange: #ff7a00;
+            --light-orange: #fff8dc;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
+            --white: #ffffff;
+            --light-bg: #fffef6;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
         
         body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            min-height: 100vh;
+            background: var(--light-orange);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
         
-        /* Dashboard Layout */
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --primary-orange: #ff7a00;
+            --light-orange: #1a1a2e;
+            --dark-text: #e2e8f0;
+            --light-text: #94a3b8;
+            --white: #1e293b;
+            --light-bg: #2d3748;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* ========== MOBILE FIRST ========== */
+        
+        /* Mobile Header - MUST BE VISIBLE ON MOBILE */
+        .mobile-header {
+            display: none;
+            background: var(--white);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 70px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .mobile-menu-toggle {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        /* Dashboard Container */
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            padding-top: 0;
+            position: relative;
         }
         
-        /* Sidebar - MENTOR VERSION */
+        /* Sidebar - FIXED FOR MOBILE */
         .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            padding: 0;
+            width: 280px;
+            background: var(--light-bg);
             position: fixed;
+            left: 0;
+            top: 0;
             height: 100vh;
             overflow-y: auto;
-            z-index: 1000;
-            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow);
+            border-right: 1px solid rgba(0, 0, 0, 0.04);
+            z-index: 999;
+            transition: transform 0.3s ease;
         }
         
         .sidebar-header {
-            padding: 25px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             text-align: center;
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            background: linear-gradient(135deg, var(--light-orange) 0%, #fff0c4 100%);
         }
         
-        .sidebar-header img {
+        .sidebar-logo {
             height: 35px;
-            filter: brightness(0) invert(1);
-        }
-        
-        .sidebar-header h3 {
-            color: white;
-            font-size: 1.1rem;
-            margin-top: 10px;
-            font-weight: 600;
+            margin-bottom: 10px;
         }
         
         .sidebar-user {
             text-align: center;
-            padding: 25px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            background: var(--white);
         }
         
         .user-avatar {
             width: 70px;
             height: 70px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -78,24 +133,36 @@
             font-size: 28px;
             color: white;
             font-weight: bold;
-            border: 3px solid rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
         
         .user-name {
             font-size: 1.1rem;
             font-weight: 700;
-            color: white;
+            color: var(--dark-text);
             margin-bottom: 8px;
         }
         
         .user-role {
             font-size: 0.8rem;
-            color: #6ee7b7;
-            background: rgba(16, 185, 129, 0.2);
+            color: var(--light-text);
+            background: rgba(255, 122, 0, 0.08);
             padding: 4px 12px;
             border-radius: 20px;
             display: inline-block;
             font-weight: 500;
+        }
+        
+        .sidebar-menu {
+            padding: 15px 0;
+            background: var(--white);
         }
         
         .sidebar-menu ul {
@@ -105,15 +172,15 @@
         }
         
         .sidebar-menu li {
-            margin: 3px 0;
+            margin: 2px 0;
         }
         
         .sidebar-menu a {
-            color: #cbd5e1;
+            color: var(--dark-text);
             text-decoration: none;
             display: flex;
             align-items: center;
-            padding: 14px 25px;
+            padding: 12px 20px;
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             font-weight: 500;
@@ -122,68 +189,118 @@
         
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
-            background: linear-gradient(90deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
-            color: white;
-            border-left-color: #10b981;
-            font-weight: 600;
+            background: rgba(255, 122, 0, 0.05);
+            color: var(--primary-orange);
+            border-left-color: var(--primary-orange);
+        }
+        
+        .sidebar-menu i {
+            width: 22px;
+            margin-right: 12px;
+            font-size: 1rem;
         }
         
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 260px;
-            padding: 30px;
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
         }
         
         /* Top Bar */
         .top-bar {
-            background: white;
+            background: var(--white);
             border-radius: 12px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
+            padding: 20px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(16, 185, 129, 0.12);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .page-title h1 {
             margin: 0;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #0f172a;
-            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark-text);
         }
         
         .page-title p {
-            margin: 8px 0 0;
-            color: #64748b;
-            font-size: 0.95rem;
+            margin: 5px 0 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
         }
         
-        /* Students Grid */
+        /* Buttons */
+        .btn-orange {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-orange:hover {
+            background: #e56b00;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 122, 0, 0.3);
+        }
+        
+        .btn-outline-orange {
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-outline-orange:hover {
+            background: var(--primary-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Students Grid - MOBILE FIRST */
         .students-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
         
         .student-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.12);
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.15);
             transition: all 0.3s ease;
         }
         
         .student-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 122, 0, 0.15);
+            border-color: rgba(255, 122, 0, 0.3);
         }
         
         .student-header {
@@ -197,24 +314,25 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ff9d42 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
         
         .student-info h4 {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--dark-text);
             margin: 0;
         }
         
         .student-info p {
-            color: #64748b;
+            color: var(--light-text);
             font-size: 0.9rem;
             margin: 5px 0 0;
         }
@@ -226,20 +344,22 @@
         
         .detail-item {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             margin-bottom: 12px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 122, 0, 0.1);
+            gap: 5px;
         }
         
         .detail-label {
-            color: #64748b;
+            color: var(--light-text);
             font-size: 0.9rem;
         }
         
         .detail-value {
             font-weight: 600;
-            color: #0f172a;
+            color: var(--dark-text);
+            font-size: 0.95rem;
         }
         
         /* Progress Bar */
@@ -255,24 +375,26 @@
         
         .progress-label {
             font-weight: 600;
-            color: #0f172a;
+            color: var(--dark-text);
+            font-size: 0.9rem;
         }
         
         .progress-percent {
             font-weight: 700;
-            color: #10b981;
+            color: var(--primary-orange);
+            font-size: 0.9rem;
         }
         
         .progress-bar {
             height: 8px;
-            background: #e2e8f0;
+            background: rgba(255, 122, 0, 0.1);
             border-radius: 4px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            background: linear-gradient(90deg, var(--primary-orange) 0%, #ff9d42 100%);
             border-radius: 4px;
         }
         
@@ -281,11 +403,11 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            flex-direction: column;
         }
         
         .btn {
-            flex: 1;
-            padding: 10px;
+            padding: 10px 15px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.9rem;
@@ -296,55 +418,56 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            width: 100%;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: var(--primary-orange);
             color: white;
         }
         
         .btn-primary:hover {
+            background: #e56b00;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #64748b;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #475569;
+            box-shadow: 0 8px 20px rgba(255, 122, 0, 0.3);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            background: rgba(34, 197, 94, 0.9);
             color: white;
         }
         
         .btn-success:hover {
+            background: rgba(34, 197, 94, 1);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
         }
         
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 50px 30px;
-            background: rgba(16, 185, 129, 0.05);
-            border-radius: 16px;
-            border: 2px dashed rgba(16, 185, 129, 0.3);
-            color: #64748b;
+            padding: 40px 20px;
+            background: rgba(255, 122, 0, 0.05);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 122, 0, 0.3);
+            color: var(--light-text);
+            grid-column: 1 / -1;
         }
         
         .empty-state i {
-            font-size: 3rem;
-            color: #10b981;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: var(--primary-orange);
+            margin-bottom: 15px;
             opacity: 0.5;
         }
         
-        /* MODAL STYLES - ADDED */
+        .empty-state h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-text);
+        }
+        
+        /* MODAL STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -355,17 +478,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 10000;
             display: none;
+            backdrop-filter: blur(3px);
         }
         
         .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .modal-header {
@@ -373,12 +500,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 122, 0, 0.1);
         }
         
         .modal-title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--dark-text);
         }
         
         .modal-close {
@@ -386,19 +515,20 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #64748b;
+            color: var(--light-text);
             padding: 0;
             width: 30px;
             height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
         }
         
         .modal-close:hover {
-            color: #0f172a;
-            background: #f1f5f9;
-            border-radius: 50%;
+            color: var(--dark-text);
+            background: rgba(255, 122, 0, 0.1);
         }
         
         .modal-body {
@@ -411,18 +541,22 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
-            color: #475569;
+            color: var(--light-text);
+            font-size: 0.9rem;
         }
         
         .form-control {
             width: 100%;
             padding: 10px 15px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid rgba(255, 122, 0, 0.2);
             border-radius: 8px;
             font-size: 0.95rem;
             font-family: inherit;
+            background: var(--white);
+            color: var(--dark-text);
+            transition: all 0.3s;
         }
         
         textarea.form-control {
@@ -432,23 +566,27 @@
         
         .form-control:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
         }
         
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
-        /* Notification Styles - ADDED */
+        .modal-footer .btn {
+            width: auto;
+            min-width: 120px;
+        }
+        
+        /* Notification Styles */
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #10b981;
-            color: white;
             padding: 15px 20px;
             border-radius: 8px;
             z-index: 10000;
@@ -457,6 +595,8 @@
             align-items: center;
             gap: 10px;
             animation: slideIn 0.3s ease;
+            color: white;
+            max-width: 350px;
         }
         
         @keyframes slideIn {
@@ -481,47 +621,308 @@
             }
         }
         
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            
-            .students-grid {
-                grid-template-columns: 1fr;
-            }
+        /* ===== DARK MODE FIXES ===== */
+        
+        /* Dark Mode Specific */
+        .dark-mode .sidebar {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        @media (max-width: 768px) {
-            .top-bar {
-                padding: 15px;
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
+        .dark-mode .sidebar-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark-mode .sidebar-user {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark-mode .top-bar {
+            border: 1px solid rgba(255, 122, 0, 0.3);
+        }
+        
+        .dark-mode .student-card {
+            border: 1px solid rgba(255, 122, 0, 0.3);
+        }
+        
+        .dark-mode .detail-item {
+            border-bottom: 1px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        .dark-mode .modal-content {
+            border: 1px solid rgba(255, 122, 0, 0.3);
+        }
+        
+        .dark-mode .modal-header {
+            border-bottom: 1px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        /* Dark Mode Text Fixes */
+        .dark-mode .detail-value {
+            color: var(--dark-text) !important;
+        }
+        
+        .dark-mode .detail-label {
+            color: var(--light-text) !important;
+        }
+        
+        .dark-mode .student-info p {
+            color: var(--light-text) !important;
+        }
+        
+        .dark-mode .progress-bar {
+            background: rgba(255, 122, 0, 0.2) !important;
+        }
+        
+        .dark-mode .progress-percent {
+            color: var(--primary-orange) !important;
+        }
+        
+        .dark-mode .progress-label {
+            color: var(--dark-text) !important;
+        }
+        
+        /* Dark Mode Button Fixes */
+        .dark-mode .btn-primary {
+            background: var(--primary-orange) !important;
+            color: white !important;
+        }
+        
+        .dark-mode .btn-success {
+            background: rgba(34, 197, 94, 0.9) !important;
+            color: white !important;
+        }
+        
+        .dark-mode .btn-success:hover {
+            background: rgba(34, 197, 94, 1) !important;
+        }
+        
+        .dark-mode .btn-primary:hover {
+            background: #e56b00 !important;
+        }
+        
+        /* Dark Mode Empty State */
+        .dark-mode .empty-state {
+            background: rgba(255, 122, 0, 0.1);
+            border-color: rgba(255, 122, 0, 0.4);
+        }
+        
+        /* ========== RESPONSIVE BREAKPOINTS ========== */
+        
+        /* Tablet View (768px and up) */
+        @media (min-width: 768px) {
+            .students-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            
+            .student-card {
+                padding: 25px;
             }
             
             .action-buttons {
-                flex-direction: column;
+                flex-direction: row;
+            }
+            
+            .btn {
+                width: auto;
+                flex: 1;
+            }
+            
+            .detail-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .detail-value {
+                text-align: right;
+            }
+        }
+        
+        /* Desktop View (992px and up) */
+        @media (min-width: 992px) {
+            .mobile-header {
+                display: none !important;
+            }
+            
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+            
+            .main-content {
+                margin-left: 280px;
+                padding: 20px;
+                padding-top: 20px;
+            }
+            
+            .top-bar {
+                flex-direction: row;
+                padding: 25px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .students-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 30px;
+            }
+            
+            .student-card {
+                padding: 30px;
+                border-radius: 16px;
             }
             
             .modal-content {
-                padding: 20px;
+                padding: 30px;
+            }
+        }
+        
+        /* ========== MOBILE VIEW (Below 992px) ========== */
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0 !important;
+                padding: 15px !important;
+                padding-top: 85px !important;
+                width: 100% !important;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                top: 0;
+                height: 100vh;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-header {
+                display: flex !important;
+            }
+            
+            .top-bar {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            /* Overlay for mobile sidebar */
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                backdrop-filter: blur(3px);
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        
+        /* Small Mobile (Below 576px) */
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 12px !important;
+                padding-top: 75px !important;
+            }
+            
+            .mobile-header {
+                padding: 12px;
+                height: 65px;
+            }
+            
+            .top-bar {
+                padding: 15px 12px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.3rem;
+            }
+            
+            .page-title p {
+                font-size: 0.85rem;
+            }
+            
+            .student-card {
+                padding: 18px;
+            }
+            
+            .student-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 1rem;
+            }
+            
+            .student-info h4 {
+                font-size: 1rem;
+            }
+            
+            .empty-state {
+                padding: 30px 15px;
+            }
+            
+            .empty-state i {
+                font-size: 2rem;
+            }
+            
+            .empty-state h4 {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar-menu a {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .user-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .user-name {
+                font-size: 1rem;
+            }
+            
+            .modal-content {
+                padding: 15px;
                 margin: 10px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Header - ALWAYS SHOWN ON MOBILE -->
+    <div class="mobile-header">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" height="30">
+        <div class="user-dropdown-mobile">
+            <i class="fas fa-user-circle" style="font-size: 1.5rem; color: var(--primary-orange);"></i>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo">
+                <img src="{% static 'images/Nirvant_logo.png' %}" alt="Nirvant Logo" class="sidebar-logo">
                 <h3>Mentor Dashboard</h3>
             </div>
 
@@ -539,11 +940,12 @@
 
             <nav class="sidebar-menu">
                 <ul>
+                    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> <span>Home</span></a></li>
                     <li><a href="{% url 'mentor_dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
                     <li><a href="{% url 'mentor_profile' %}"><i class="fas fa-user"></i> <span>My Profile</span></a></li>
-                    <li><a href="#" class="active"><i class="fas fa-users"></i> <span>My Students</span></a></li>
+                    <li><a href="{% url 'my_students' %}" class="active"><i class="fas fa-users"></i> <span>My Students</span></a></li>
                     <li><a href="{% url 'assign_batch' %}"><i class="fas fa-graduation-cap"></i> <span>Assign Batch</span></a></li>
-                    <li><a href="{% url 'manage_test_series' %}"><i class="fas fa-clipboard-list"></i> <span>Test Series</span></a></li>
+                    <li><a href="{% url 'manage_test_series' %}"><i class="fas fa-clipboard-list"></i> <span>Manage Test Series</span></a></li>
                     <li><a href="{% url 'upload_pyqs' %}"><i class="fas fa-file-pdf"></i> <span>Upload PYQs</span></a></li>
                     <li><a href="{% url 'send_notices' %}"><i class="fas fa-bell"></i> <span>Send Notices</span></a></li>
                 </ul>
@@ -558,6 +960,11 @@
                     <h1>My Students ({{ students.count }})</h1>
                     <p>View detailed profiles and progress of all your assigned students</p>
                 </div>
+                <div>
+                    <button class="btn btn-outline-orange" id="themeToggle">
+                        <i class="fas fa-moon me-2"></i>Dark Mode
+                    </button>
+                </div>
             </div>
 
             <!-- Students Grid -->
@@ -566,7 +973,7 @@
                 <div class="student-card">
                     <div class="student-header">
                         <div class="student-avatar">
-                            {{ student.user.first_name|first|default:"S" }}
+                            {{ student.user.first_name|first|default:"S"|upper }}
                         </div>
                         <div class="student-info">
                             <h4>{{ student.user.get_full_name|default:student.user.username }}</h4>
@@ -586,18 +993,21 @@
                             </span>
                         </div>
                         
-                        <div class="detail-item">
-                            <span class="detail-label">Test Series:</span>
-                            <span class="detail-value">
-                                {% if student.enrolled_test_series.all %}
-                                {% for ts in student.enrolled_test_series.all|slice:":2" %}
-                                {{ ts.test_series.series_code }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                                {% else %}
-                                <span class="text-muted">None</span>
-                                {% endif %}
-                            </span>
-                        </div>
+<div class="detail-item">
+    <span class="detail-label">Test Series:</span>
+    <span class="detail-value">
+        {% if student.test_series_list %}
+            {% for ts in student.test_series_list|slice:":2" %}
+                {{ ts.test_series.series_name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            {% if student.test_series_list|length > 2 %}
+                <span class="text-muted">+{{ student.test_series_list|length|add:"-2" }} more</span>
+            {% endif %}
+        {% else %}
+            <span class="text-muted">None</span>
+        {% endif %}
+    </span>
+</div>
                         
                         <div class="detail-item">
                             <span class="detail-label">Joined:</span>
@@ -622,12 +1032,9 @@
                     </div>
                     
                     <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="viewStudentDetails('{{ student.user.id }}', '{{ student.user.get_full_name }}')">
-                            <i class="fas fa-eye"></i> View Details
-                        </button>
-                        <button class="btn btn-success" onclick="sendMessage('{{ student.user.id }}', '{{ student.user.get_full_name }}')">
-                            <i class="fas fa-comment"></i> Message
-                        </button>
+<a href="{% url 'view_student_profile' student.user.id %}" class="btn btn-primary">
+    <i class="fas fa-eye"></i> View Details
+</a>
                     </div>
                 </div>
                 {% empty %}
@@ -641,7 +1048,7 @@
         </main>
     </div>
 
-    <!-- MESSAGE MODAL - ADDED -->
+    <!-- MESSAGE MODAL -->
     <div id="messageModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -656,14 +1063,89 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-success" onclick="sendMessageFinal()">
+                <button class="btn btn-orange" onclick="sendMessageFinal()">
                     <i class="fas fa-paper-plane"></i> Send Message
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript -->
     <script>
+        // Mobile Menu Toggle - FIXED
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // Close sidebar when clicking overlay
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Close sidebar when clicking a link on mobile
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                this.innerHTML = '<i class="fas fa-sun me-2"></i>Light Mode';
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                this.innerHTML = '<i class="fas fa-moon me-2"></i>Dark Mode';
+            }
+            // Save preference to localStorage
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load saved theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggleBtn = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun me-2"></i>Light Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon me-2"></i>Dark Mode';
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                // On desktop, ensure sidebar is visible and overlay is hidden
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
         // Store current student info
         let currentStudentId = null;
         let currentStudentName = null;
@@ -706,7 +1188,7 @@
             const message = document.getElementById('messageText').value.trim();
             
             if (!message) {
-                alert('Please enter a message');
+                showNotification('Please enter a message', 'error');
                 return;
             }
             
@@ -723,12 +1205,6 @@
                 
                 // Close modal
                 closeModal();
-                
-                // In real implementation, you would:
-                // 1. Send AJAX request to backend
-                // 2. Save message to database
-                // 3. Send email/SMS notification
-                // 4. Update UI with success message
             }, 1000);
         }
         

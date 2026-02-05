@@ -1,0 +1,386 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.user.get_full_name }} - Student Profile | Nirvant Mentor</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --primary-orange: #ff7a00;
+            --light-orange: #fff8dc;
+            --dark-text: #0f172a;
+            --light-text: #64748b;
+            --white: #ffffff;
+            --light-bg: #fffef6;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background: var(--light-orange);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --primary-orange: #ff7a00;
+            --light-orange: #1a1a2e;
+            --dark-text: #e2e8f0;
+            --light-text: #94a3b8;
+            --white: #1e293b;
+            --light-bg: #2d3748;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .back-btn {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .profile-header {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 122, 0, 0.1);
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            font-weight: bold;
+            border: 4px solid rgba(255, 122, 0, 0.2);
+            margin: 0 auto 20px;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .profile-email {
+            color: var(--light-text);
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .info-card {
+            background: rgba(255, 122, 0, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 122, 0, 0.1);
+        }
+        
+        .info-label {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: var(--dark-text);
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 122, 0, 0.2);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 122, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-orange) 0%, #ff9d42 100%);
+            border-radius: 5px;
+        }
+        
+        .badge {
+            background: var(--primary-orange);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .profile-header {
+                padding: 20px;
+            }
+            
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 36px;
+            }
+            
+            .profile-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'my_students' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to My Students
+        </a>
+        
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" alt="Profile Picture">
+                {% else %}
+                    {{ student.user.first_name|first|upper }}{{ student.user.last_name|first|upper }}
+                {% endif %}
+            </div>
+            
+            <h1 class="profile-name">{{ student.user.get_full_name }}</h1>
+            <p class="profile-email">{{ student.user.email }}</p>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">NEET Attempt Year</div>
+                    <div class="info-value">{{ student.attempt_year }}</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Batch Enrolled</div>
+                    <div class="info-value">
+                        {% if student.batch_enrolled %}
+                            {{ student.batch_enrolled }}
+                        {% else %}
+                            <span class="text-muted">Not Assigned</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value">
+                        {% if student.phone %}
+                            {{ student.phone }}
+                        {% else %}
+                            <span class="text-muted">Not Provided</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">
+                        {% if student.address %}
+                            {{ student.address|truncatewords:10 }}
+                        {% else %}
+                            <span class="text-muted">Not Provided</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Section -->
+        <h2 class="section-title">Progress Overview</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-label">Overall Preparation</div>
+                <div class="info-value">
+                    {% if student_progress.overall_preparation %}
+                        {{ student_progress.overall_preparation }}%
+                    {% else %}
+                        <span class="text-muted">Not Available</span>
+                    {% endif %}
+                </div>
+                {% if student_progress.overall_preparation %}
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ student_progress.overall_preparation }}%"></div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Total Study Hours</div>
+                <div class="info-value">
+                    {% if student_progress.total_study_hours %}
+                        {{ student_progress.total_study_hours }} hours
+                    {% else %}
+                        <span class="text-muted">Not Available</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Total Tests Taken</div>
+                <div class="info-value">
+                    {% if student_progress.total_tests_taken %}
+                        {{ student_progress.total_tests_taken }} tests
+                    {% else %}
+                        <span class="text-muted">Not Available</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Days to NEET</div>
+                <div class="info-value">{{ student.days_to_neet }} days</div>
+            </div>
+        </div>
+        
+        <!-- Test Series Section -->
+        <h2 class="section-title">Enrolled Test Series</h2>
+        <div class="info-grid">
+            {% if test_series %}
+                {% for ts in test_series %}
+                <div class="info-card">
+                    <div class="info-label">{{ ts.test_series.series_name }}</div>
+                    <div class="info-value">
+                        Code: {{ ts.test_series.series_code }}
+                        <br>
+                        <small>Tests Completed: {{ ts.tests_completed }}/{{ ts.test_series.total_tests }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="info-card">
+                    <div class="info-value text-muted">No test series assigned</div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Contact Information -->
+        <h2 class="section-title">Contact Information</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-label">Full Name</div>
+                <div class="info-value">{{ student.user.get_full_name }}</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ student.user.email }}</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Phone</div>
+                <div class="info-value">
+                    {% if student.phone %}
+                        {{ student.phone }}
+                    {% else %}
+                        <span class="text-muted">Not provided</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-label">Address</div>
+                <div class="info-value">
+                    {% if student.address %}
+                        {{ student.address|linebreaks }}
+                    {% else %}
+                        <span class="text-muted">Not provided</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Tests -->
+        {% if recent_tests %}
+        <h2 class="section-title">Recent Test Scores</h2>
+        <div class="info-grid">
+            {% for test in recent_tests %}
+            <div class="info-card">
+                <div class="info-label">{{ test.test_name }} ({{ test.subject }})</div>
+                <div class="info-value">
+                    {{ test.score }}/{{ test.max_marks }} ({{ test.percentage }}%)
+                    <br>
+                    <small>Date: {{ test.date_taken|date:"d M Y" }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Dark mode toggle (simplified)
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>

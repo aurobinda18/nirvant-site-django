@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Mentor(models.Model):
     name = models.CharField(max_length=100)
@@ -418,3 +419,61 @@ class MentorProfile(models.Model):
     
     def __str__(self):
         return f"Mentor Profile: {self.user.username}"
+
+# Add this to your models.py, after the Notice model
+class StudentMessage(models.Model):
+    PRIORITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('urgent', 'Urgent'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('read', 'Read'),
+        ('replied', 'Replied'),
+        ('resolved', 'Resolved'),
+    ]
+    
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE, related_name='received_messages')
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    attachment = models.FileField(upload_to='message_attachments/', blank=True, null=True)
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    is_urgent = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    read_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Student Message"
+        verbose_name_plural = "Student Messages"
+    
+    def __str__(self):
+        return f"{self.student.username} to {self.mentor.name}: {self.subject}"
+    
+    def mark_as_read(self):
+        if not self.read_at:
+            self.read_at = timezone.now()
+            self.status = 'read'
+            self.save()
+
+class MessageReply(models.Model):
+    """Store replies to student messages"""
+    original_message = models.ForeignKey(StudentMessage, on_delete=models.CASCADE, related_name='replies')
+    replied_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentor_replies')
+    reply_text = models.TextField()
+    attachment = models.FileField(upload_to='message_replies/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = "Message Reply"
+        verbose_name_plural = "Message Replies"
+    
+    def __str__(self):
+        return f"Reply to: {self.original_message.subject}"

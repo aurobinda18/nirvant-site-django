@@ -233,6 +233,7 @@
             background: #e56b00;
             color: white;
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 122, 0, 0.3);
         }
         
         .btn-outline-orange {
@@ -259,11 +260,12 @@
             box-shadow: var(--shadow);
             margin-bottom: 20px;
             overflow: hidden;
+            border: 1px solid rgba(255, 122, 0, 0.1);
         }
         
         .card-header {
-            background: var(--white);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, rgba(255, 122, 0, 0.05) 0%, rgba(255, 122, 0, 0.1) 100%);
+            border-bottom: 1px solid rgba(255, 122, 0, 0.1);
             padding: 18px 20px;
         }
         
@@ -306,31 +308,19 @@
             border-radius: 50%;
             object-fit: cover;
             border: 5px solid rgba(255, 122, 0, 0.2);
-        }
-        
-        /* Feedback Card */
-        .feedback-card {
-            background: #f8f9fa;
-            padding: 18px;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary-orange);
-            margin-bottom: 15px;
-        }
-        
-        .progress {
-            height: 8px;
-            border-radius: 4px;
+            box-shadow: 0 8px 20px rgba(255, 122, 0, 0.2);
         }
         
         /* Session List */
         .session-item {
             padding: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            transition: background 0.3s;
+            border-bottom: 1px solid rgba(255, 122, 0, 0.1);
+            transition: all 0.3s;
         }
         
         .session-item:hover {
             background: rgba(255, 122, 0, 0.03);
+            transform: translateY(-2px);
         }
         
         .session-item:last-child {
@@ -368,40 +358,19 @@
             font-size: 0.9rem;
         }
         
-        /* Stats Cards */
-        .stat-card {
-            padding: 15px;
-            border-radius: 10px;
-            background: white;
-            border-top: 4px solid var(--primary-orange);
-            margin-bottom: 15px;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--dark-text);
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: var(--light-text);
-            font-size: 0.85rem;
-        }
-        
         /* Message Button */
         .message-mentor-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
             width: 60px;
             height: 60px;
             border-radius: 50%;
             background: var(--primary-orange);
             color: white;
             border: none;
-            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 122, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -411,7 +380,29 @@
         
         .message-mentor-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
+            box-shadow: 0 6px 25px rgba(255, 122, 0, 0.6);
+            background: #e56b00;
+        }
+        
+        /* Grid Layout */
+        .mentor-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 992px) {
+            .mentor-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        /* Badges */
+        .badge {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
         }
         
         /* Responsive Design */
@@ -446,6 +437,11 @@
             .page-title h1 {
                 font-size: 1.4rem;
             }
+            
+            .mentor-avatar {
+                width: 100px;
+                height: 100px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -453,18 +449,17 @@
                 padding: 15px;
             }
             
-            .mentor-avatar {
-                width: 100px;
-                height: 100px;
-            }
-            
             .btn-orange, .btn-outline-orange {
                 padding: 8px 15px;
                 font-size: 0.85rem;
             }
             
-            .stat-value {
-                font-size: 1.5rem;
+            .message-mentor-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
             }
         }
         
@@ -475,17 +470,7 @@
             }
             
             .top-bar {
-                border-radius: 8px;
-            }
-            
-            .row {
-                margin-left: -5px;
-                margin-right: -5px;
-            }
-            
-            .col, .col-md, .col-lg {
-                padding-left: 5px;
-                padding-right: 5px;
+                border-radius: 10px;
             }
             
             .page-title h1 {
@@ -494,6 +479,11 @@
             
             .card-header h5 {
                 font-size: 1rem;
+            }
+            
+            .mentor-avatar {
+                width: 90px;
+                height: 90px;
             }
         }
         
@@ -512,6 +502,16 @@
         
         .mb-0 {
             margin-bottom: 0 !important;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+        
+        .alert-info {
+            background: rgba(255, 122, 0, 0.08);
+            border: 1px solid rgba(255, 122, 0, 0.2);
+            color: var(--dark-text);
         }
     </style>
 </head>
@@ -575,10 +575,10 @@
                 </div>
             </div>
 
-            <!-- Mentor Information Section -->
-            <div class="row">
-                <!-- Left Column: Main Content -->
-                <div class="col-lg-8">
+            <!-- Mentor Grid Layout -->
+            <div class="mentor-grid">
+                <!-- Left Column: Mentor Profile and Live Session -->
+                <div>
                     <!-- Mentor Profile Card -->
                     <div class="card">
                         <div class="card-header">
@@ -590,109 +590,114 @@
                             {% if user.studentprofile.mentor %}
                             <div class="row align-items-center">
                                 <!-- Mentor Photo -->
-<div class="col-md-4 text-center mb-4 mb-md-0">
-    {% if mentor_profile.profile_picture %}
-        <img src="{{ mentor_profile.profile_picture.url }}" 
-             alt="{% if mentor_profile.full_name %}{{ mentor_profile.full_name }}{% else %}{{ user.studentprofile.mentor.name }}{% endif %}"
-             class="mentor-avatar">
-    {% elif user.studentprofile.mentor.photo %}
-        <img src="{{ user.studentprofile.mentor.photo.url }}" 
-             alt="{{ user.studentprofile.mentor.name }}"
-             class="mentor-avatar">
-    {% else %}
-        <div class="mentor-avatar d-flex align-items-center justify-content-center text-white" 
-             style="background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%); font-size: 2.5rem;">
-            {% if mentor_profile.full_name %}
-                {{ mentor_profile.full_name|first|upper }}
-            {% else %}
-                {{ user.studentprofile.mentor.name|first|upper }}
-            {% endif %}
-        </div>
-    {% endif %}
-</div>
+                                <div class="col-md-4 text-center mb-4 mb-md-0">
+                                    {% if mentor_profile.profile_picture %}
+                                        <img src="{{ mentor_profile.profile_picture.url }}" 
+                                             alt="{% if mentor_profile.full_name %}{{ mentor_profile.full_name }}{% else %}{{ user.studentprofile.mentor.name }}{% endif %}"
+                                             class="mentor-avatar">
+                                    {% elif user.studentprofile.mentor.photo %}
+                                        <img src="{{ user.studentprofile.mentor.photo.url }}" 
+                                             alt="{{ user.studentprofile.mentor.name }}"
+                                             class="mentor-avatar">
+                                    {% else %}
+                                        <div class="mentor-avatar d-flex align-items-center justify-content-center text-white" 
+                                             style="background: linear-gradient(135deg, var(--primary-orange) 0%, #ffb224 100%); font-size: 2.5rem;">
+                                            {% if mentor_profile.full_name %}
+                                                {{ mentor_profile.full_name|first|upper }}
+                                            {% else %}
+                                                {{ user.studentprofile.mentor.name|first|upper }}
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
                                 
                                 <!-- Mentor Details -->
                                 <div class="col-md-8">
-<h3 class="text-orange">
-    {% if mentor_profile.full_name %}
-        {{ mentor_profile.full_name }}
-    {% else %}
-        {{ user.studentprofile.mentor.name }}
-    {% endif %}
-</h3>
-
-<div class="mb-3">
-    <span class="badge bg-orange me-2">
-        <i class="fas fa-graduation-cap me-1"></i>
-        {% if mentor_profile.qualifications %}
-            {{ mentor_profile.qualifications }}
-        {% else %}
-            {{ user.studentprofile.mentor.qualification|default:"NEET Mentor" }}
-        {% endif %}
-    </span>
-    <span class="badge bg-success">
-        <i class="fas fa-star me-1"></i>
-        {% if mentor_profile.rating %}
-            {{ mentor_profile.rating }}/5.0
-        {% else %}
-            4.8/5.0
-        {% endif %}
-    </span>
-</div>
-
-<p class="mb-3">
-    <strong>Specialization:</strong> 
-    {% if mentor_profile.specialization %}
-        {{ mentor_profile.specialization }}
-    {% else %}
-        {{ user.studentprofile.mentor.specialization|default:"Physics" }}
-    {% endif %}
-</p>
-
-<p class="mb-3">
-    <strong>Experience:</strong> 
-    {% if mentor_profile.experience %}
-        {{ mentor_profile.experience }}
-    {% else %}
-        5+ years mentoring NEET students
-    {% endif %}
-</p>
-
-<p class="mb-4">
-    <strong>Availability:</strong> 
-    {% if mentor_profile.availability %}
-        {{ mentor_profile.availability }}
-    {% else %}
-        Mon-Fri, 10 AM - 6 PM
-    {% endif %}
-</p>
+                                    <h3 class="text-orange">
+                                        {% if mentor_profile.full_name %}
+                                            {{ mentor_profile.full_name }}
+                                        {% else %}
+                                            {{ user.studentprofile.mentor.name }}
+                                        {% endif %}
+                                    </h3>
+                                    
+                                    <div class="mb-3">
+                                        <span class="badge bg-orange me-2">
+                                            <i class="fas fa-graduation-cap me-1"></i>
+                                            {% if mentor_profile.qualifications %}
+                                                {{ mentor_profile.qualifications }}
+                                            {% else %}
+                                                {{ user.studentprofile.mentor.qualification|default:"NEET Mentor" }}
+                                            {% endif %}
+                                        </span>
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-star me-1"></i>
+                                            {% if mentor_profile.rating %}
+                                                {{ mentor_profile.rating }}/5.0
+                                            {% else %}
+                                                4.8/5.0
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">
+                                            <p class="mb-2">
+                                                <strong>Specialization:</strong><br>
+                                                {% if mentor_profile.specialization %}
+                                                    {{ mentor_profile.specialization }}
+                                                {% else %}
+                                                    {{ user.studentprofile.mentor.specialization|default:"Physics" }}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-2">
+                                                <strong>Experience:</strong><br>
+                                                {% if mentor_profile.experience %}
+                                                    {{ mentor_profile.experience }}
+                                                {% else %}
+                                                    5+ years mentoring NEET students
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="mb-3">
+                                        <strong>Availability:</strong><br>
+                                        {% if mentor_profile.availability %}
+                                            {{ mentor_profile.availability }}
+                                        {% else %}
+                                            Mon-Fri, 10 AM - 6 PM
+                                        {% endif %}
+                                    </p>
                                     
                                     <!-- Active Status -->
-<div class="d-flex align-items-center mb-4">
-    {% if mentor_profile.is_available %}
-        <span class="status-dot status-active me-2"></span>
-        <span class="fw-bold text-success">Active Now</span>
-        <span class="text-muted ms-3">
-            <i class="fas fa-clock me-1"></i>
-            {% if mentor_profile.availability %}
-                Available: {{ mentor_profile.availability }}
-            {% else %}
-                Online for next 3 hours
-            {% endif %}
-        </span>
-    {% else %}
-        <span class="status-dot status-inactive me-2"></span>
-        <span class="fw-bold text-danger">Currently Offline</span>
-        <span class="text-muted ms-3">
-            <i class="fas fa-clock me-1"></i>
-            {% if mentor_profile.availability %}
-                Check back: {{ mentor_profile.availability }}
-            {% else %}
-                Check back during working hours
-            {% endif %}
-        </span>
-    {% endif %}
-</div>
+                                    <div class="d-flex align-items-center mt-4">
+                                        {% if mentor_profile.is_available %}
+                                            <span class="status-dot status-active me-2"></span>
+                                            <span class="fw-bold text-success">Active Now</span>
+                                            <span class="text-muted ms-3">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {% if mentor_profile.availability %}
+                                                    Available: {{ mentor_profile.availability }}
+                                                {% else %}
+                                                    Online for next 3 hours
+                                                {% endif %}
+                                            </span>
+                                        {% else %}
+                                            <span class="status-dot status-inactive me-2"></span>
+                                            <span class="fw-bold text-danger">Currently Offline</span>
+                                            <span class="text-muted ms-3">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {% if mentor_profile.availability %}
+                                                    Check back: {{ mentor_profile.availability }}
+                                                {% else %}
+                                                    Check back during working hours
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                             {% else %}
@@ -717,7 +722,6 @@
                         </div>
                         <div class="card-body">
                             <div id="liveSessionStatus">
-                                <!-- This will be updated by JavaScript -->
                                 <div class="live-session-link" id="sessionLink">
                                     <div class="live-indicator">
                                         <span class="status-dot status-pending"></span>
@@ -735,60 +739,10 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Last Session Feedback -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0 text-orange">
-                                <i class="fas fa-clipboard-check me-2"></i>Last Session Feedback
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="feedback-card">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <h6 class="mb-1">Physics - Electrostatics</h6>
-                                        <p class="text-sm text-muted mb-0">
-                                            <i class="fas fa-calendar me-1"></i>January 20, 2025 | 3:00 PM - 4:30 PM
-                                        </p>
-                                    </div>
-                                    <span class="badge bg-success">Completed</span>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Overall Progress</span>
-                                        <span>85%</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" style="width: 85%"></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <strong class="d-block mb-2">Mentor's Comments:</strong>
-                                    <p class="mb-0">"Excellent work on numerical problems. You've shown great improvement in solving complex electrostatic problems. Need to focus more on theory concepts, especially Gauss's Law applications."</p>
-                                </div>
-                                
-                                <div>
-                                    <strong class="d-block mb-2">Areas for Improvement:</strong>
-                                    <ul class="mb-0">
-                                        <li>Electrostatic potential calculations</li>
-                                        <li>Capacitor combinations and networks</li>
-                                        <li>Application of Gauss's Law in symmetric systems</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <a href="#" class="btn btn-outline-orange w-100">
-                                <i class="fas fa-download me-2"></i>Download Detailed Feedback
-                            </a>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Right Column: Sidebar Content -->
-                <div class="col-lg-4">
+                <!-- Right Column: Upcoming Sessions -->
+                <div>
                     <!-- Upcoming Sessions -->
                     <div class="card">
                         <div class="card-header">
@@ -849,77 +803,16 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Quick Stats -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0 text-orange">
-                                <i class="fas fa-chart-line me-2"></i>Mentorship Stats
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="stat-card">
-                                <div class="stat-value">12</div>
-                                <div class="stat-label">Sessions Completed</div>
-                            </div>
-                            
-                            <div class="stat-card">
-                                <div class="stat-value">4.7/5.0</div>
-                                <div class="stat-label">Average Rating</div>
-                            </div>
-                            
-                            <div class="stat-card">
-                                <div class="stat-value text-success">< 2 hrs</div>
-                                <div class="stat-label">Average Response Time</div>
-                            </div>
-                            
-                            <div class="stat-card">
-                                <div class="stat-value">92%</div>
-                                <div class="stat-label">Attendance Rate</div>
-                            </div>
-                            
-                            <div class="text-center mt-3">
-                                <a href="#" class="text-orange text-decoration-none">
-                                    <i class="fas fa-chart-bar me-2"></i>View Detailed Analytics
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0 text-orange">
-                                <i class="fas fa-bolt me-2"></i>Quick Actions
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-orange">
-                                    <i class="fas fa-comment-dots me-2"></i>Send Message
-                                </button>
-                                <button class="btn btn-outline-orange">
-                                    <i class="fas fa-share-alt me-2"></i>Share Resources
-                                </button>
-                                <button class="btn btn-outline-orange">
-                                    <i class="fas fa-file-alt me-2"></i>Request Feedback
-                                </button>
-                                <button class="btn btn-outline-orange">
-                                    <i class="fas fa-video me-2"></i>Emergency Call
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Floating Message Button (Mobile) -->
+    <!-- Floating Message Button -->
     {% if user.studentprofile.mentor %}
-    <button class="message-mentor-btn" data-bs-toggle="modal" data-bs-target="#messageModal">
+    <a href="{% url 'student_send_message' %}" class="message-mentor-btn" id="messageButton">
         <i class="fas fa-comment"></i>
-    </button>
+    </a>
     {% endif %}
 
     <!-- Schedule Modal -->
@@ -972,42 +865,6 @@
         </div>
     </div>
 
-    <!-- Message Modal -->
-    <div class="modal fade" id="messageModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Message Your Mentor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Subject</label>
-                            <input type="text" class="form-control" placeholder="Enter message subject">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Message</label>
-                            <textarea class="form-control" rows="5" placeholder="Type your message here..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="urgentCheck">
-                                <label class="form-check-label" for="urgentCheck">
-                                    Mark as urgent
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-orange">Send Message</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1015,6 +872,19 @@
         // Mobile Menu Toggle
         document.getElementById('mobileMenuToggle').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth <= 992 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
         });
 
         // Live Session Link Simulation
@@ -1089,19 +959,6 @@
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-        });
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const menuToggle = document.getElementById('mobileMenuToggle');
-            
-            if (window.innerWidth <= 992 && 
-                !sidebar.contains(event.target) && 
-                !menuToggle.contains(event.target) &&
-                sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-            }
         });
     </script>
 </body>

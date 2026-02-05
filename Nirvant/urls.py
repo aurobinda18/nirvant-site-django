@@ -9,6 +9,7 @@ from dashboard import views as dashboard_views
 from video.views import join_call
 
 
+
 # Import ALL views from Home app
 from Home.views import (
     home_view, 
@@ -40,7 +41,11 @@ from dashboard.views import (
     my_students,
     mentor_profile, 
     mentor_profile_update, 
-    mentor_profile_picture  # ADDED ALL THREE HERE
+    mentor_profile_picture,
+    view_student_profile,
+    student_send_message  ,# ADD THIS ONE LINE
+    delete_student_message,
+    view_student_message
 )
 
 from team.views import team_view
@@ -68,6 +73,12 @@ urlpatterns = [
     path('dashboard/assign-students/', assign_students, name='assign_students'),
     path('dashboard/progress/', progress_view, name='progress'),
     path('dashboard/studypack/', studypack_view, name='studypack'),
+    path('dashboard/send-message/', dashboard_views.student_send_message, name='student_send_message'),
+    path('dashboard/delete-message/<int:message_id>/', dashboard_views.delete_student_message, name='delete_student_message'),
+    path('dashboard/mentor-messages/', dashboard_views.mentor_messages, name='mentor_messages'),
+    path('dashboard/delete-message/<int:message_id>/', dashboard_views.delete_message, name='delete_message'),
+    path('dashboard/delete-reply/<int:reply_id>/', dashboard_views.delete_reply, name='delete_reply'),
+    
     
     # ==================== MENTOR SPECIFIC URLS ====================
     path('dashboard/assign-batch/', assign_batch, name='assign_batch'),
@@ -75,6 +86,10 @@ urlpatterns = [
     path('dashboard/upload-pyqs/', upload_pyqs, name='upload_pyqs'),
     path('dashboard/send-notices/', send_notices, name='send_notices'),
     path('my-students/', my_students, name='my_students'),
+    path('dashboard/student-profile/<int:student_id>/', dashboard_views.view_student_profile, name='view_student_profile'),
+    # In urls.py, add this line:
+    path('dashboard/view-student-message/<int:message_id>/', dashboard_views.view_student_message, name='view_student_message'),
+    path('dashboard/reply-to-message/<int:message_id>/', dashboard_views.reply_to_message, name='reply_to_message'),
     
     # ==================== MENTOR PROFILE URLS ====================
     path('dashboard/mentor-profile/', mentor_profile, name='mentor_profile'),

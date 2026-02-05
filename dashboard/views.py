@@ -18,7 +18,6 @@ from scheduler.models import Call
 from django.contrib.auth.decorators import login_required
 from dashboard.models import MentorProfile
 
-
 from .forms import ProfileForm
 from .models import MentorProfile
 
@@ -37,8 +36,33 @@ from .models import (
     StudentBatch,
     StudentTestSeries,
     PYQPDF,
-    Notice
-)
+    Notice,
+    StudentMessage , # ADD THIS LINE
+    MessageReply
+    )
+
+
+
+# Add this helper function at the TOP of views.py, after imports
+def get_student_test_series_display(student_user):
+    """Get formatted test series display for a student"""
+    test_series = StudentTestSeries.objects.filter(
+        student=student_user,
+        is_active=True
+    ).select_related('test_series')
+    
+    if not test_series.exists():
+        return "None"
+    
+    # Get first 2 test series names
+    series_list = [ts.test_series.series_name for ts in test_series[:2]]
+    display = ", ".join(series_list)
+    
+    # Add "+X more" if there are more
+    if test_series.count() > 2:
+        display += f" (+{test_series.count() - 2} more)"
+    
+    return display
 
 @login_required
 def profile_view(request):
@@ -68,17 +92,17 @@ def profile_view(request):
     
     days_to_neet = profile.days_to_neet()
     
+    # FIX: Define month_label as a list of month names
+    month_label = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    
     context = {
         'profile': profile,
         'user': request.user,
         'form': form,
         'days_to_neet': days_to_neet,
-        'mentors': mentors,  # ADDED THIS
-         # 🔽 ADD THESE (schedule data)
-        'month_label': month_label,
-        'upcoming_by_week': upcoming_by_week,
-        'completed_by_week': completed_by_week,
-        
+        'mentors': mentors,
+        'month_label': month_label,  # NOW THIS WILL WORK
     }
     return render(request, 'profile.html', context)
 
@@ -239,7 +263,12 @@ def mentor_dashboard(request):
         mentor=mentor_obj,  # This is the ForeignKey to Mentor model
         user_type='student'
     )
-    
+
+    # Add test series information to each student
+    for student_profile in students:
+        # Get test series for this student
+        student_profile.test_series_display = get_student_test_series_display(student_profile.user)
+
     print(f"DEBUG: Found {students.count()} students")
     
     # Calculate statistics
@@ -268,6 +297,18 @@ def mentor_dashboard(request):
     if progress_count > 0:
         avg_progress = avg_progress // progress_count
     
+    # ==================== GET STUDENT MESSAGES ====================
+    # Get recent student messages for this mentor
+    student_messages = StudentMessage.objects.filter(
+        mentor=mentor_obj
+    ).order_by('-created_at')[:5]  # Show only 5 most recent
+
+    # Count unread messages
+    unread_messages_count = StudentMessage.objects.filter(
+        mentor=mentor_obj,
+        status='pending'
+    ).count()
+    
     context = {
         'mentor': mentor_profile,
         'mentor_obj': mentor_obj,  # Add mentor object
@@ -279,6 +320,8 @@ def mentor_dashboard(request):
         'month_label': month_label,
         'upcoming_by_week': upcoming_by_week,
         'completed_by_week': completed_by_week,
+        'student_messages': student_messages,
+        'unread_messages_count': unread_messages_count,
     }
     
     print(f"DEBUG: Rendering mentor_dashboard.html")
@@ -1162,24 +1205,96 @@ def my_students(request):
         messages.error(request, "No mentor profile found.")
         return redirect('mentor_dashboard')
     
-    # Get mentor's students
+    # Get mentor's students with related data
     students = StudentProfile.objects.filter(
         mentor=mentor_obj,
         user_type='student'
-    ).select_related('user')
+    ).select_related('user').prefetch_related('user__enrolled_test_series__test_series')
     
-    # Get progress for each student
+    # Get progress and test series for each student
     for student in students:
         try:
             student.progress = StudentProgress.objects.get(student=student.user)
         except StudentProgress.DoesNotExist:
             student.progress = None
+        
+        # Get test series for this student
+        student.test_series_list = StudentTestSeries.objects.filter(
+            student=student.user,
+            is_active=True
+        ).select_related('test_series')
     
     context = {
         'students': students,
     }
     
     return render(request, 'my_students.html', context)
+
+@login_required
+def view_student_profile(request, student_id):
+    """
+    Allow mentor to view a student's complete profile
+    """
+    # Check if user is mentor
+    try:
+        mentor_profile = request.user.studentprofile
+        if mentor_profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get the student
+    try:
+        student_user = User.objects.get(id=student_id)
+        student_profile = StudentProfile.objects.get(user=student_user)
+    except (User.DoesNotExist, StudentProfile.DoesNotExist):
+        messages.error(request, "Student not found.")
+        return redirect('my_students')
+    
+    # Check if this mentor is assigned to this student
+    if student_profile.mentor != mentor_profile.mentor:
+        messages.error(request, "You are not assigned as mentor for this student.")
+        return redirect('my_students')
+    
+    # Get student's progress
+    try:
+        student_progress = StudentProgress.objects.get(student=student_user)
+    except StudentProgress.DoesNotExist:
+        student_progress = None
+    
+    # Get student's test series
+    test_series = StudentTestSeries.objects.filter(
+        student=student_user,
+        is_active=True
+    ).select_related('test_series')
+    
+    # Get student's recent test scores
+    recent_tests = TestScore.objects.filter(
+        student=student_user
+    ).order_by('-date_taken')[:5]
+    
+    # Get student's study logs (last 7 days)
+    from datetime import timedelta
+    from django.utils import timezone
+    
+    week_ago = timezone.now().date() - timedelta(days=7)
+    study_logs = StudyLog.objects.filter(
+        student=student_user,
+        date__gte=week_ago
+    ).order_by('-date')
+    
+    context = {
+        'student': student_profile,
+        'student_user': student_user,
+        'student_progress': student_progress,
+        'test_series': test_series,
+        'recent_tests': recent_tests,
+        'study_logs': study_logs,
+    }
+    
+    return render(request, 'mentor_student_profile.html', context)
 
 @login_required
 def mentor_profile(request):
@@ -1444,3 +1559,286 @@ def mentor_calls_view(request):
         "mentor_calls.html",
         {"calls": calls}
     )
+
+@login_required
+def student_send_message(request):
+    """
+    Student sends message to their mentor
+    """
+    # Check if user is student
+    try:
+        student_profile = request.user.studentprofile
+        if student_profile.user_type != 'student':
+            messages.error(request, "Access denied. Students only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get student's mentor
+    mentor = student_profile.mentor
+    if not mentor:
+        messages.error(request, "You don't have an assigned mentor yet.")
+        return redirect('dashboard')
+    
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        priority = request.POST.get('priority', 'medium')
+        attachment = request.FILES.get('attachment')
+        
+        if not subject or not message:
+            messages.error(request, "Please fill in subject and message.")
+        else:
+            try:
+                # Create message
+                student_message = StudentMessage.objects.create(
+                    student=request.user,
+                    mentor=mentor,
+                    subject=subject,
+                    message=message,
+                    priority=priority,
+                    is_urgent=(priority == 'urgent'),
+                    attachment=attachment
+                )
+                
+                messages.success(request, "Message sent to your mentor successfully!")
+                return redirect('student_send_message')
+                
+            except Exception as e:
+                messages.error(request, f"Error sending message: {str(e)}")
+    
+    # Get student's previous messages WITH REPLIES
+    previous_messages = StudentMessage.objects.filter(
+        student=request.user
+    ).order_by('-created_at').prefetch_related('replies')[:5]  # ADDED prefetch_related
+    
+    context = {
+        'mentor': mentor,
+        'previous_messages': previous_messages,
+    }
+    
+    return render(request, 'student_send_message.html', context)
+
+
+@csrf_exempt
+@login_required
+def delete_student_message(request, message_id):
+    """
+    Student can delete their own message (only if pending)
+    """
+    try:
+        message = StudentMessage.objects.get(id=message_id, student=request.user)
+        
+        # Only allow deletion if status is pending (not read/replied by mentor)
+        if message.status == 'pending':
+            message.delete()
+            return JsonResponse({'success': True, 'message': 'Message deleted successfully!'})
+        else:
+            return JsonResponse({
+                'success': False, 
+                'error': 'Cannot delete message that has already been read by mentor.'
+            }, status=400)
+    
+    except StudentMessage.DoesNotExist:
+        return JsonResponse({
+            'success': False, 
+            'error': 'Message not found.'
+        }, status=404)
+    
+@login_required
+def mentor_messages(request):
+    """Mentor view for student messages"""
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get mentor object
+    mentor_obj = profile.mentor
+    if not mentor_obj:
+        messages.error(request, "No mentor profile found.")
+        return redirect('mentor_dashboard')
+    
+    # Get all messages for this mentor
+    student_messages = StudentMessage.objects.filter(
+        mentor=mentor_obj
+    ).order_by('-created_at').select_related('student')
+    
+    context = {
+        'messages': student_messages,
+    }
+    
+    return render(request, 'mentor_messages.html', context)
+
+@login_required
+def view_student_message(request, message_id):
+    """Mentor views a student message"""
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get message
+    try:
+        message = StudentMessage.objects.get(id=message_id)
+        
+        # Check if mentor is authorized to view this message
+        if message.mentor != profile.mentor:
+            messages.error(request, "You are not authorized to view this message.")
+            return redirect('mentor_dashboard')
+        
+        # Mark as read if pending
+        if message.status == 'pending':
+            message.status = 'read'
+            message.read_at = timezone.now()
+            message.save()
+    
+    except StudentMessage.DoesNotExist:
+        messages.error(request, "Message not found.")
+        return redirect('mentor_dashboard')
+    
+    return render(request, 'view_student_message.html', {'message': message})
+
+
+@login_required
+def reply_to_message(request, message_id):
+    """Mentor replies to a student message"""
+    if request.method != 'POST':
+        messages.error(request, "Invalid request.")
+        return redirect('mentor_dashboard')
+    
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    # Get message
+    try:
+        message = StudentMessage.objects.get(id=message_id)
+        
+        # Check if mentor is authorized to reply
+        if message.mentor != profile.mentor:
+            messages.error(request, "You are not authorized to reply to this message.")
+            return redirect('mentor_dashboard')
+        
+        # Get reply data
+        reply_text = request.POST.get('reply_message', '').strip()
+        attachment = request.FILES.get('attachment')
+        
+        if not reply_text:
+            messages.error(request, "Please enter a reply message.")
+            return redirect('view_student_message', message_id=message_id)
+        
+        # Create reply record
+        MessageReply.objects.create(
+            original_message=message,
+            replied_by=request.user,
+            reply_text=reply_text,
+            attachment=attachment
+        )
+        
+        # Update message status
+        message.status = 'replied'
+        message.save()
+        
+        # Create notice for student
+        Notice.objects.create(
+            mentor=message.mentor,
+            title=f"📩 Reply to: {message.subject}",
+            message=f"Your mentor has replied to your message:\n\n{reply_text}",
+            recipient_type='student',
+            specific_student=message.student,
+            priority='medium'
+        )
+        
+        messages.success(request, "✅ Reply sent successfully! Student has been notified.")
+        return redirect('view_student_message', message_id=message_id)
+    
+    except StudentMessage.DoesNotExist:
+        messages.error(request, "Message not found.")
+        return redirect('mentor_dashboard')
+    
+@login_required
+def delete_reply(request, reply_id):
+    """Mentor deletes their own reply"""
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    try:
+        reply = MessageReply.objects.get(id=reply_id)
+        
+        # Check if mentor is authorized to delete this reply
+        if reply.replied_by != request.user:
+            messages.error(request, "You can only delete your own replies.")
+            return redirect('view_student_message', message_id=reply.original_message.id)
+        
+        # Get message ID before deleting
+        message_id = reply.original_message.id
+        
+        # Delete the reply
+        reply.delete()
+        
+        # Update message status back to read (if no replies left)
+        message = StudentMessage.objects.get(id=message_id)
+        if not message.replies.exists():
+            message.status = 'read'
+            message.save()
+        
+        messages.success(request, "Reply deleted successfully.")
+        return redirect('view_student_message', message_id=message_id)
+    
+    except MessageReply.DoesNotExist:
+        messages.error(request, "Reply not found.")
+        return redirect('mentor_dashboard')
+    
+@login_required
+def delete_message(request, message_id):
+    """Mentor deletes a message"""
+    # Check if user is mentor
+    try:
+        profile = request.user.studentprofile
+        if profile.user_type != 'mentor':
+            messages.error(request, "Access denied. Mentor only.")
+            return redirect('dashboard')
+    except:
+        messages.error(request, "Please complete your profile first.")
+        return redirect('profile')
+    
+    try:
+        message = StudentMessage.objects.get(id=message_id)
+        
+        # Check if mentor is authorized
+        if message.mentor != profile.mentor:
+            messages.error(request, "You are not authorized to delete this message.")
+            return redirect('mentor_dashboard')
+        
+        message.delete()
+        messages.success(request, "Message deleted successfully.")
+        
+    except StudentMessage.DoesNotExist:
+        messages.error(request, "Message not found.")
+    
+    return redirect('mentor_dashboard')
